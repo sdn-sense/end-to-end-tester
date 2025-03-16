@@ -1,0 +1,3 @@
+# Run Fetch-crl to get all CAs
+45 */6 * * * root /usr/sbin/fetch-crl -p 5 -r 360 -T 10 > /var/log/fetch-crl 2>&1
+

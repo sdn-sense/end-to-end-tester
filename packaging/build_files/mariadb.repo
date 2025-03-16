@@ -1,0 +1,6 @@
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/11.8/almalinux9-amd64
+module_hotfixes=1
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
