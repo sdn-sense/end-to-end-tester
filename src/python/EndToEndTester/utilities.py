@@ -40,7 +40,8 @@ def moveFile(filePath, newDir):
     """
     try:
         checkCreateDir(newDir)
-        newFilePath = os.path.join(newDir, os.path.basename(filePath))
+        newFName = f"{getUTCnow()}-{os.path.basename(filePath)}"
+        newFilePath = os.path.join(newDir, newFName)
         shutil.move(filePath, newFilePath)
         print(f"File moved to: {newFilePath}")
         return newFilePath

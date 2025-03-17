@@ -22,7 +22,6 @@ from EndToEndTester.utilities import loadJson, dumpJson, getUTCnow, getConfig, c
 from sense.common import classwrapper
 from sense.client.workflow_combined_api import WorkflowCombinedApi
 from sense.client.workflow_phased_api import WorkflowPhasedApi
-#from sense.client.logging_api import LoggingApi
 
 request = {
   "service": "dnc",
@@ -82,7 +81,6 @@ class SENSEWorker():
         setSenseEnv(self.config)
         self.workflowApi = WorkflowCombinedApi()
         self.workflowPhasedApi = WorkflowPhasedApi()
-        #self.loggingApi = LoggingApi()
         self.states = {'create': 'CREATE - READY',
                        'cancel': 'CANCEL - READY'}
                        #'reprovision': 'REINSTATE - READY'}
@@ -226,14 +224,6 @@ class SENSEWorker():
                 self.logger.error(msg)
                 output['validation'] = {}
                 output['validation-error'] = msg
-            #try:
-            #    # get logging information from sense-o
-            #    output['logging'] = self.loggingApi.instance_get_logging(si_uuid=uuid)
-            #except Exception as ex:
-            #    msg = f'Got Exception {ex} while getting logging for {uuid}'
-            #    print(msg)
-            #    output['logging'] = {}
-            #    output['logging-error'] = msg
         return output
 
     @timer_func
