@@ -48,6 +48,16 @@ class Archiver():
             self.logger.error(f"Received not understood exception from SENSE-O: {str(ex)}")
         return False
 
+    def _deleteSenseO(self):
+        """Delete from SENSE-O an instance. Done in the following scenarios:
+         a) Instance failed due to path finding failure"""
+        if self._checkpathfindissue() and not self._checksenseomissing():
+            try:
+                self.workflowApi.instance_delete(si_uuid=self.requestentry['uuid'])
+            except Exception as ex:
+                self.logger.error(f"Received an exception from SENSE-O: {str(ex)}")
+
+
     def _movefile(self):
         """Move file to archived directory"""
         archiveddir = os.path.join(self.config['workdir'],
@@ -70,6 +80,7 @@ class Archiver():
         elif self._checkpathfindissue():
             self.logger.info('Request failed due to path finding. Moving file to archived.')
             newFName = self._movefile()
+            self._deleteSenseO()
         elif self._checksenseomissing():
             self.logger.info('Request deleted manually by admins from SENSE-O. Means we can restart scans. Moving file to archived.')
             newFName = self._movefile()
