@@ -6,6 +6,19 @@ db_sleep () {
     done
 } &> /dev/null
 
+# Check if all env variables are available and set
+if [[ -z $MARIA_DB_HOST || -z $MARIA_DB_USER || -z $MARIA_DB_DATABASE || -z $MARIA_DB_PASSWORD || -z $MARIA_DB_PORT ]]; then
+  if [ -f "/etc/endtoend-mariadb" ]; then
+    set -a
+    source /etc/endtoend-mariadb
+    set +a
+    env
+  else
+    echo 'DB Configuration file not available. exiting.'
+    exit 1
+  fi
+fi
+
 # Replace variables in /root/mariadb.sql with vars from ENV (docker file)
 sed -i "s/##ENV_MARIA_DB_PASSWORD##/$MARIA_DB_PASSWORD/" /root/mariadb.sql
 sed -i "s/##ENV_MARIA_DB_USER##/$MARIA_DB_USER/" /root/mariadb.sql

@@ -51,6 +51,8 @@ COPY build_files/etc/supervisord.d/03-mariadbstart.conf /etc/supervisord.d/
 COPY build_files/usr/local/sbin/dbstart.sh /usr/local/sbin/dbstart.sh
 COPY build_files/usr/local/sbin/dbstart.py /usr/local/sbin/dbstart.py
 COPY build_files/usr/local/sbin/mariadb.sh /usr/local/sbin/mariadb.sh
+COPY build_files/usr/local/sbin/dbrecorder.py /usr/local/sbin/dbrecorder.py
+COPY build_files/usr/local/sbin/endtester.py /usr/local/sbin/endtester.py
 # Install mysql sql file (for startup)
 COPY build_files/root/mariadb.sql /root/mariadb.sql
 

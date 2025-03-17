@@ -8,7 +8,7 @@ Date                    : 2025/03/14
 """
 import os
 from sense.client.workflow_combined_api import WorkflowCombinedApi
-from EndToEndTester.utilities import loadFileJson, loadJson, getConfig, getUTCnow, timestampToDate, moveFile, getLogger, setSenseEnv
+from EndToEndTester.utilities import loadFileJson, loadJson, getConfig, getUTCnow, timestampToDate, moveFile, getLogger, setSenseEnv, checkCreateDir
 from EndToEndTester.DBBackend import dbinterface
 
 
@@ -340,6 +340,7 @@ class FileParser(DBRecorder, Archiver):
     def main(self):
         """Main Run loop all json run output"""
         # loop current directory files and load json
+        checkCreateDir(self.config['workdir'])
         for file in os.listdir(self.config['workdir']):
             if file.endswith(".json"):
                 fullpath = os.path.join(self.config['workdir'], file)
