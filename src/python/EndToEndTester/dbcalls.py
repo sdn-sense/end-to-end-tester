@@ -27,6 +27,8 @@ create_actions = """CREATE TABLE IF NOT EXISTS actions (
     id SERIAL PRIMARY KEY,
     uuid VARCHAR(255) NOT NULL,
     action VARCHAR(255) NOT NULL,
+    site1 VARCHAR(64) NOT NULL,
+    site2 VARCHAR(64) NOT NULL,
     insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );"""
@@ -35,9 +37,13 @@ create_verification = """CREATE TABLE IF NOT EXISTS verification (
     uuid VARCHAR(255) NOT NULL,
     site VARCHAR(64) NOT NULL,
     action VARCHAR(255) NOT NULL,
+    site1 VARCHAR(64) NOT NULL,
+    site2 VARCHAR(64) NOT NULL,
     netstatus VARCHAR(255) NOT NULL,
     urn VARCHAR(4096) NOT NULL,
-    verified INTEGER NOT NULL CHECK (verified IN (0,1))
+    verified INTEGER NOT NULL CHECK (verified IN (0,1)),
+    insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );"""
 create_requeststates = """CREATE TABLE IF NOT EXISTS requeststates (
     id SERIAL PRIMARY KEY,
@@ -45,27 +51,48 @@ create_requeststates = """CREATE TABLE IF NOT EXISTS requeststates (
     state VARCHAR(255) NOT NULL,
     configstate VARCHAR(255) NOT NULL,
     action VARCHAR(255) NOT NULL,
-    entertime TIMESTAMP NOT NULL,
-    insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    site1 VARCHAR(64) NOT NULL,
+    site2 VARCHAR(64) NOT NULL,
+    insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);"""
+
+create_runnerinfo = """CREATE TABLE IF NOT EXISTS runnerinfo (
+    id SERIAL PRIMARY KEY,
+    alive BOOLEAN NOT NULL,
+    totalworkers INTEGER NOT NULL,
+    totalqueue INTEGER NOT NULL,
+    remainingqueue INTEGER NOT NULL,
+    updatedate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    insertdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    starttime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    nextrun TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );"""
 
 
 # INSERT INTO TABLES
 insert_requests = """INSERT INTO requests (uuid, port1, port2, finalstate, pathfindissue, insertdate, updatedate, fileloc, site1, site2, failure)
 VALUES (%(uuid)s, %(port1)s, %(port2)s, %(finalstate)s, %(pathfindissue)s, FROM_UNIXTIME(%(insertdate)s),FROM_UNIXTIME(%(updatedate)s), %(fileloc)s, %(site1)s, %(site2)s, %(failure)s)"""
-insert_actions = """INSERT INTO actions (uuid, action, insertdate, updatedate) VALUES (%(uuid)s, %(action)s, FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
-insert_verification = """INSERT INTO verification (uuid, site, action, netstatus, urn, verified) VALUES (%(uuid)s, %(site)s, %(action)s, %(netstatus)s, %(urn)s, %(verified)s)"""
-insert_requeststates = """INSERT INTO requeststates (uuid, state, configstate, action, entertime)
-VALUES (%(uuid)s, %(state)s, %(configstate)s, %(action)s, FROM_UNIXTIME(%(entertime)s))"""
+insert_actions = """INSERT INTO actions (uuid, action, site1, site2, insertdate, updatedate)
+VALUES (%(uuid)s, %(action)s, %(site1)s, %(site2)s,  FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
+insert_verification = """INSERT INTO verification (uuid, site, action, site1, site2, netstatus, urn, verified, insertdate, updatedate)
+VALUES (%(uuid)s, %(site)s, %(action)s, %(site1)s, %(site2)s, %(netstatus)s, %(urn)s, %(verified)s, FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
+insert_requeststates = """INSERT INTO requeststates (uuid, state, configstate, action, site1, site2, entertime, insertdate, updatedate)
+VALUES (%(uuid)s, %(state)s, %(configstate)s, %(action)s,%(site1)s, %(site2)s, FROM_UNIXTIME(%(entertime)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
+insert_runnerinfo = """INSERT INTO runnerinfo (alive, totalworkers, totalqueue, remainingqueue, updatedate, insertdate, starttime, nextrun)
+VALUES (%(alive)s, %(totalworkers)s, %(totalqueue)s, %(remainingqueue)s, FROM_UNIXTIME(%(updatedate)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(startime)s), FROM_UNIXTIME(%(nextrun)s))"""
+
 
 # SELECT FROM TABLES
 get_requests = """SELECT * FROM requests"""
 get_actions = """SELECT * FROM actions"""
 get_verification = """SELECT * FROM verification"""
 get_requeststates = """SELECT * FROM requeststates"""
+get_runnerinfo = """SELECT * FROM runnerinfo"""
 
 # UPDATE TABLES
 update_requests = "UPDATE requests SET updatedate = FROM_UNIXTIME(%(updatedate)s), fileloc = %(fileloc)s WHERE uuid = %(uuid)s"
+update_runnerinfo = "UPDATE runnerinfo SET alive = %(alive)s, totalworkers = %(totalworkers)s, totalqueue =  %(totalqueue)s, remainingqueue =  %(remainingqueue)s, updatedate = FROM_UNIXTIME(%(updatedate)s), starttime = FROM_UNIXTIME(%(starttime)s), nextrun = FROM_UNIXTIME(%(nextrun)s) WHERE id = %(id)s"
 
 # DELETE FROM TABLES
 delete_models = "DELETE FROM requests"

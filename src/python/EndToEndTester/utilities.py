@@ -68,6 +68,9 @@ def getUTCnow():
 
 def loadFileJson(filename):
     """Load File"""
+    if not os.path.isfile(filename):
+        print(f'Input {filename} is not a file. return empty dict')
+        return {}
     with open(filename, 'rb') as fd:
         try:
             return json.loads(fd.read())

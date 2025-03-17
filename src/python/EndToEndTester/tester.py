@@ -16,9 +16,9 @@ import time
 import copy
 import pprint
 import threading
-import math
+import queue
 from itertools import combinations
-from EndToEndTester.utilities import loadJson, dumpJson, getUTCnow, getConfig, checkCreateDir, getLogger, setSenseEnv
+from EndToEndTester.utilities import loadJson, dumpJson, getUTCnow, getConfig, checkCreateDir, getLogger, setSenseEnv, dumpFileJson
 from sense.common import classwrapper
 from sense.client.workflow_combined_api import WorkflowCombinedApi
 from sense.client.workflow_phased_api import WorkflowPhasedApi
@@ -74,8 +74,8 @@ def timer_func(func):
 class SENSEWorker():
     """SENSE Worker class"""
 
-    def __init__(self, newlist, workerid=0, config=None):
-        self.newlist = newlist
+    def __init__(self, task_queue, workerid=0, config=None):
+        self.task_queue = task_queue
         self.config = config if config else getConfig()
         self.logger = getLogger(name='Tester', logFile='/var/log/EndToEndTester/Tester.log')
         setSenseEnv(self.config)
@@ -335,41 +335,50 @@ class SENSEWorker():
         self.logger.info(f'({self.workerheader}) cancel complete')
         return {'finalstate': 'OKNODELETE', 'response': status}
 
-    def startwork(self):
+    def run(self, pair):
         """Start loop work"""
-        for _i, pair in enumerate(self.newlist):
-            self._reset()
-            self._setWorkerHeader(f"{pair[0]}-{pair[1]}")
-            if self.checkifJsonExists(pair):
-                self.logger.info(f"({self.workerheader}) Skipping: {pair} - Json file already exists")
-                continue
-            self.creatJsonLock(pair)
-            cancelled = False
+        self._reset()
+        self._setWorkerHeader(f"{pair[0]}-{pair[1]}")
+        if self.checkifJsonExists(pair):
+            self.logger.info(f"({self.workerheader}) Skipping: {pair} - Json file already exists")
+            return
+        self.creatJsonLock(pair)
+        cancelled = False
+        try:
+            self.response['create'], errmsg = self.create(pair)
+            self.logger.info(f"({self.workerheader}) response: {self.response}")
+            if errmsg:
+                raise ValueError(errmsg)
+            self.response['cancel'], errmsg = self.cancel(self.response.get('response', {}).get('service_uuid'), True)
+            if errmsg:
+                raise ValueError(errmsg)
+            cancelled = True
+        except ValueError as ex:
+            self.logger.error(f"({self.workerheader}) Error: {ex}")
+            self.logger.error('This will not cancel it if not cancelled. Will keep instance as is')
+        except Exception as ex:
+            self.logger.error(f"({self.workerheader}) Error: {sys.exc_info()}. Exception: {ex}")
+            if self.response and not cancelled:
+                try:
+                    self.cancel(self.response.get('response', {}).get('service_uuid'), False)
+                except Exception as exc:
+                    self.logger.error(f"({self.workerheader}) Error: {exc}")
+        self.logger.info(f"({self.workerheader}) Final response:")
+        self.response['timings'] = self.timings
+        self.logger.info(pprint.pprint(self.response))
+        # Write response into output file
+        self.writeJsonOutput(pair)
+
+    def startwork(self):
+        """Process tasks from the queue"""
+        while not self.task_queue.empty():
             try:
-                self.response['create'], errmsg = self.create(pair)
-                self.logger.info(f"({self.workerheader}) response: {self.response}")
-                if errmsg:
-                    raise ValueError(errmsg)
-                self.response['cancel'], errmsg = self.cancel(self.response.get('response', {}).get('service_uuid'), True)
-                if errmsg:
-                    raise ValueError(errmsg)
-                cancelled = True
-            except ValueError as ex:
-                self.logger.error(f"({self.workerheader}) Error: {ex}")
-                self.logger.error('This will not cancel it if not cancelled. Will keep instance as is')
-            except Exception as ex:
-                self.logger.error(f"({self.workerheader}) Error: {sys.exc_info()}. Exception: {ex}")
-                if self.response and not cancelled:
-                    try:
-                        self.cancel(self.response.get('response', {}).get('service_uuid'), False)
-                    except Exception as exc:
-                        self.logger.error(f"({self.workerheader}) Error: {exc}")
-            self.logger.info(f"({self.workerheader}) Final response:")
-            self.response['timings'] = self.timings
-            self.logger.info(pprint.pprint(self.response))
-            # Write response into output file
-            self.writeJsonOutput(pair)
-        sys.exit(0)
+                pair = self.task_queue.get_nowait()
+                self.logger.info(f"Worker {self.workerid} processing pair: {pair}")
+                self.run(pair)
+                self.task_queue.task_done()
+            except queue.Empty:
+                break
 
 def getAllGroupedHosts(config):
     """Get all grouped hosts"""
@@ -379,29 +388,55 @@ def getAllGroupedHosts(config):
     return uniquePairs
 
 
-def main(config):
+def main(config, starttime, nextRunTime):
     """Main Run"""
     mlogger = getLogger(name='Tester', logFile='/var/log/EndToEndTester/Tester.log')
     unique_pairs = getAllGroupedHosts(config)
     mlogger.info('='*80)
     mlogger.info("Starting multiple threads")
     threads = []
-    totalPerThread = math.ceil(len(unique_pairs) / config['totalThreads'])
-    newlist = [unique_pairs[i:i+totalPerThread] for i in range(0, len(unique_pairs), totalPerThread)]
+    workers = []
+    # Create a queue and populate it with tasks
+    task_queue = queue.Queue()
+    for pair in unique_pairs:
+        task_queue.put(pair)
+
 
     if config['totalThreads'] == 1:
-        worker = SENSEWorker(newlist[0], 0, config)
+        worker = SENSEWorker(task_queue, 0, config)
         worker.startwork()
         return
 
     for i in range(config['totalThreads']):
-        worker = SENSEWorker(newlist[i], i, config)
+        worker = SENSEWorker(task_queue, i, config)
+        workers.append(worker)
         thworker = threading.Thread(target=worker.startwork, args=())
-        threads.append(thworker)
+        threads.append((thworker, worker))
         thworker.start()
     mlogger.info('join all threads and wait for finish')
+    statusout = {'alive': True, 'totalworkers': config['totalThreads'], 'totalqueue': len(unique_pairs),
+                 'remainingqueue': task_queue.qsize(), 'updatedate': getUTCnow(), 'insertdate': getUTCnow(),
+                 'starttime': starttime, 'nextrun': nextRunTime}
+    while any(t[0].is_alive() for t in threads):
+        alive = [t[0].is_alive() for t in threads]
+        statusout['alive'] = any(alive)
+        statusout['remainingqueue'] = task_queue.qsize()
+        dumpFileJson(os.path.join(config['workdir'], "testerinfo.run"), statusout)
+        mlogger.info(f"Remaining queue size: {task_queue.qsize()}")
+        # Write status out file
+        dumpFileJson(os.path.join(config['workdir'], "testerinfo" + '.run'), statusout)
+        time.sleep(30)
+
+    for thworker, _ in threads:
+        thworker.join()
+
     for t in threads:
         t.join()
+    # Write status file again - everything has finished;
+    statusout = {'alive': False, 'totalworkers': 0, 'totalqueue': 0,
+                 'remainingqueue': 0, 'updatedate': getUTCnow(), 'insertdate': getUTCnow(),
+                 'starttime': starttime, 'nextrun': nextRunTime}
+    dumpFileJson(os.path.join(config['workdir'], "testerinfo" + '.run'), statusout)
     mlogger.info('all threads finished')
 
 if __name__ == '__main__':
@@ -413,7 +448,7 @@ if __name__ == '__main__':
         if nextRun <= getUTCnow():
             logger.info("Timer passed. Running main")
             nextRun = getUTCnow() + yamlconfig['runInterval']
-            main(yamlconfig)
+            main(yamlconfig, startimer, nextRun)
         else:
             logger.info(f"Sleeping for {yamlconfig['sleepbetweenruns']} seconds. Timer not passed")
             logger.info(f"Next run: {nextRun}. Current time: {getUTCnow()}. Difference: {nextRun - getUTCnow()}")

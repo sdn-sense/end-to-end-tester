@@ -52,7 +52,7 @@ if __name__ == '__main__':
             if nextRun <= getUTCnow():
                 logger.info("Timer passed. Running main")
                 nextRun = getUTCnow() + yamlconfig['runInterval']
-                main(yamlconfig)
+                main(yamlconfig, startimer, nextRun)
             else:
                 logger.info(f"Sleeping for {yamlconfig['sleepbetweenruns']} seconds. Timer not passed")
                 logger.info(f"Next run: {nextRun}. Current time: {getUTCnow()}. Difference: {nextRun - getUTCnow()}")

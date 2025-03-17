@@ -111,7 +111,6 @@ class DBRecorder():
                                      "fileloc": newFName,
                                      "uuid": self.requestentry['uuid']}])
 
-
     def writeactions(self):
         """Record actions"""
         for action in self.actionsentries:
@@ -128,7 +127,6 @@ class DBRecorder():
             if not dbentry:
                 self.db.insert("verification", [verentry])
 
-
     def writerequeststate(self):
         """Record request state"""
         for reqentry in self.requeststateentries:
@@ -136,6 +134,21 @@ class DBRecorder():
             dbentry = self.db.get("requeststates", search=searchparams)
             if not dbentry:
                 self.db.insert("requeststates", [reqentry])
+
+    def writeworkerstatus(self, data):
+        """Write worker status. Insert if no entries, update if diff"""
+        searchkeys = ['alive', 'totalworkers', 'totalqueue', 'remainingqueue', 'starttime', 'nextrun']
+        searchparams = [[key, data[key]] for key in searchkeys]
+        dbentry = self.db.get("workerstatus", limit=1, search=searchparams)
+        if dbentry:
+            # Data is present and already matches in database
+            return
+        dbentry = self.db.get("workerstatus", limit=1)
+        if dbentry:
+            data[id] = dbentry[0]
+            self.db.update('workerstatus', [data])
+        else:
+            self.db.insert('workerstatus', [data])
 
 # pylint: disable=too-many-instance-attributes
 class FileParser(DBRecorder, Archiver):
@@ -221,7 +234,9 @@ class FileParser(DBRecorder, Archiver):
             action = {'uuid': self.requestentry['uuid'],
                       'action': key,
                       'insertdate': val['starttime'],
-                      'updatedate': val['starttime']}
+                      'updatedate': val['starttime'],
+                      'site1': self.requestentry['site1'],
+                      'site2': self.requestentry['site2']}
             self.actionsentries.append(action)
 
     def _identifyNetworkStatus(self, inputVal, key):
@@ -313,7 +328,11 @@ class FileParser(DBRecorder, Archiver):
                                 'netstatus': netstat,
                                 'site': site,
                                 'urn': ckey,
-                                'verified': 1 if key1 == 'verified' else 0}
+                                'verified': 1 if key1 == 'verified' else 0,
+                                'site1': self.requestentry['site1'],
+                                'site2': self.requestentry['site2'],
+                                'insertdate': self.requestentry['insertdate'],
+                                'updatedate': self.requestentry['updatedate']}
                         self.verificationentries.append(item)
                     if errmsg:
                         self.requestentry["failure"] = errmsg + self.requestentry["failure"]
@@ -329,7 +348,11 @@ class FileParser(DBRecorder, Archiver):
                             'action': key,
                             'state': key1,
                             'configstate': ckey,
-                            'entertime': cval}
+                            'entertime': cval,
+                            'site1': self.requestentry['site1'],
+                            'site2': self.requestentry['site2'],
+                            'insertdate': self.requestentry['insertdate'],
+                            'updatedate': self.requestentry['updatedate']}
                     self.requeststateentries.append(item)
 
     def writedata(self):
@@ -346,7 +369,14 @@ class FileParser(DBRecorder, Archiver):
         self.recordverification()
         self.recordrequeststate()
 
-
+    def checkworkerstatus(self):
+        """Record worker status inside database"""
+        # Report status of tester runner
+        statusout = loadFileJson(os.path.join(self.config['workdir'], "testerinfo" + '.run'))
+        timenow = getUTCnow()
+        statusout['insertdate'] = timenow
+        statusout['updatedate'] = timenow
+        self.writeworkerstatus(statusout)
 
     def main(self):
         """Main Run loop all json run output"""
@@ -370,6 +400,12 @@ class FileParser(DBRecorder, Archiver):
                 except Exception as ex:
                     self.logger.error(f" Error: {ex}")
                     self.logger.error('-'*40)
+        try:
+            self.checkworkerstatus()
+        except Exception as ex:
+            self.logger.error(f" Error: {ex}")
+            self.logger.error('-'*40)
+
 
 if __name__ == '__main__':
     mainconf = getConfig()
