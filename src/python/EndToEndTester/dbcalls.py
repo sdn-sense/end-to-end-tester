@@ -80,7 +80,7 @@ VALUES (%(uuid)s, %(site)s, %(action)s, %(site1)s, %(site2)s, %(netstatus)s, %(u
 insert_requeststates = """INSERT INTO requeststates (uuid, state, configstate, action, site1, site2, entertime, insertdate, updatedate)
 VALUES (%(uuid)s, %(state)s, %(configstate)s, %(action)s,%(site1)s, %(site2)s, FROM_UNIXTIME(%(entertime)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
 insert_runnerinfo = """INSERT INTO runnerinfo (alive, totalworkers, totalqueue, remainingqueue, updatedate, insertdate, starttime, nextrun)
-VALUES (%(alive)s, %(totalworkers)s, %(totalqueue)s, %(remainingqueue)s, FROM_UNIXTIME(%(updatedate)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(startime)s), FROM_UNIXTIME(%(nextrun)s))"""
+VALUES (%(alive)s, %(totalworkers)s, %(totalqueue)s, %(remainingqueue)s, FROM_UNIXTIME(%(updatedate)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(starttime)s), FROM_UNIXTIME(%(nextrun)s))"""
 
 
 # SELECT FROM TABLES

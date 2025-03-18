@@ -13,7 +13,7 @@ RUN wget --progress=dot:giga https://yum.mariadb.org/RPM-GPG-KEY-MariaDB && rpm 
 
 RUN adduser mysql -U -u 4000
 RUN mkdir -p /var/log/mariadb/ && mkdir -p /opt/end-to-end-tester/mysql/ && \
-    mkdir -p /var/log/supervisor && mkdir -p /etc/supervisord.d/ && \
+    mkdir -p /var/log/EndToEndTester && mkdir -p /var/log/supervisor && mkdir -p /etc/supervisord.d/ && \
     chown mysql:mysql /var/log/mariadb/ && \
     chown mysql:mysql /opt/end-to-end-tester/mysql/ && \
     mkdir -p /opt/end-to-end-tester/outputfiles/archived/

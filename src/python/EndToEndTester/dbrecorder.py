@@ -135,20 +135,20 @@ class DBRecorder():
             if not dbentry:
                 self.db.insert("requeststates", [reqentry])
 
-    def writeworkerstatus(self, data):
+    def writerunnerinfo(self, data):
         """Write worker status. Insert if no entries, update if diff"""
         searchkeys = ['alive', 'totalworkers', 'totalqueue', 'remainingqueue', 'starttime', 'nextrun']
         searchparams = [[key, data[key]] for key in searchkeys]
-        dbentry = self.db.get("workerstatus", limit=1, search=searchparams)
+        dbentry = self.db.get("runnerinfo", limit=1, search=searchparams)
         if dbentry:
             # Data is present and already matches in database
             return
-        dbentry = self.db.get("workerstatus", limit=1)
+        dbentry = self.db.get("runnerinfo", limit=1)
         if dbentry:
-            data[id] = dbentry[0]
-            self.db.update('workerstatus', [data])
+            data['id'] = dbentry[0]['id']
+            self.db.update('runnerinfo', [data])
         else:
-            self.db.insert('workerstatus', [data])
+            self.db.insert('runnerinfo', [data])
 
 # pylint: disable=too-many-instance-attributes
 class FileParser(DBRecorder, Archiver):
@@ -369,14 +369,17 @@ class FileParser(DBRecorder, Archiver):
         self.recordverification()
         self.recordrequeststate()
 
-    def checkworkerstatus(self):
+    def checkrunnerinfo(self):
         """Record worker status inside database"""
         # Report status of tester runner
         statusout = loadFileJson(os.path.join(self.config['workdir'], "testerinfo" + '.run'))
+        if not statusout:
+            self.logger.warning('Did not receive status information of thread worker. Will not write to db')
+            return
         timenow = getUTCnow()
         statusout['insertdate'] = timenow
         statusout['updatedate'] = timenow
-        self.writeworkerstatus(statusout)
+        self.writerunnerinfo(statusout)
 
     def main(self):
         """Main Run loop all json run output"""
@@ -401,7 +404,7 @@ class FileParser(DBRecorder, Archiver):
                     self.logger.error(f" Error: {ex}")
                     self.logger.error('-'*40)
         try:
-            self.checkworkerstatus()
+            self.checkrunnerinfo()
         except Exception as ex:
             self.logger.error(f" Error: {ex}")
             self.logger.error('-'*40)

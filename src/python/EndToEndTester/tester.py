@@ -430,8 +430,6 @@ def main(config, starttime, nextRunTime):
     for thworker, _ in threads:
         thworker.join()
 
-    for t in threads:
-        t.join()
     # Write status file again - everything has finished;
     statusout = {'alive': False, 'totalworkers': 0, 'totalqueue': 0,
                  'remainingqueue': 0, 'updatedate': getUTCnow(), 'insertdate': getUTCnow(),
