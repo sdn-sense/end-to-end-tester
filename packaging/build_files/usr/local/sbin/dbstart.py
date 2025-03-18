@@ -30,7 +30,7 @@ class DBStarter:
                                                           'DROP TABLE ', table_name, '_old; '
                                                          ) AS migration_commands
                                             FROM information_schema.tables
-                                            WHERE table_schema = 'sitefe';""")
+                                            WHERE table_schema = 'endtoend';""")
             for row in out[2]:
                 print("Executing SQL Command:", row[0])
                 for item in row[0].split(';'):
