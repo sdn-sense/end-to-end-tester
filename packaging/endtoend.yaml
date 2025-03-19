@@ -3,7 +3,7 @@ sense-auth: /etc/sense-o-auth.yaml
 # Total Threads to run for all pairs
 totalThreads: 2
 # Once run finishes, next run will start after this many seconds (taken out run startup)
-runInterval: 21600
+runInterval: 43200
 # In case run finished earlier - and still not next run, sleep for this many seconds
 sleepbetweenruns: 60 # Sleep if timer has not passed
 # Work directory to save all files;
@@ -33,9 +33,9 @@ timeouts:
 
 # Developement entries remain with-in a single site
 entries:
-  "urn:ogf:network:tier2.ultralight.org:2024:transfer-11.ultralight.org": "T2_US_Caltech_Prod"
-  "urn:ogf:network:tier2.ultralight.org:2024:transfer-15.ultralight.org": "T2_US_Caltech_Prod"
-  "urn:ogf:network:tier2.ultralight.org:2024:transfer-12.ultralight.org": "T2_US_Caltech_Prod"
+  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-gen4-01.ampath.net": "T2_US_Ampath"
+  "urn:ogf:network:ultralight.org:2013:sdn-dtn-1-7.ultralight.org": "T2_US_Caltech_Dev"
+#  "urn:ogf:network:tier2.ultralight.org:2024:transfer-121.ultralight.org": "T2_US_Caltech_Prod"
   "urn:ogf:network:tier2.ultralight.org:2024:transfer-14.ultralight.org": "T2_US_Caltech_Prod"
 
 

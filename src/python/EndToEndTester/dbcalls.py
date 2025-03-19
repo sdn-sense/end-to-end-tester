@@ -15,6 +15,7 @@ create_requests = """CREATE TABLE IF NOT EXISTS requests (
     port2 VARCHAR(255) NOT NULL,
     finalstate INTEGER NOT NULL CHECK (finalstate IN (0,1)),
     pathfindissue INTEGER NOT NULL CHECK (pathfindissue IN (0,1)),
+    requesttype VARCHAR(64) NOT NULL,
     insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     fileloc VARCHAR(4096),
@@ -71,8 +72,8 @@ create_runnerinfo = """CREATE TABLE IF NOT EXISTS runnerinfo (
 
 
 # INSERT INTO TABLES
-insert_requests = """INSERT INTO requests (uuid, port1, port2, finalstate, pathfindissue, insertdate, updatedate, fileloc, site1, site2, failure)
-VALUES (%(uuid)s, %(port1)s, %(port2)s, %(finalstate)s, %(pathfindissue)s, FROM_UNIXTIME(%(insertdate)s),FROM_UNIXTIME(%(updatedate)s), %(fileloc)s, %(site1)s, %(site2)s, %(failure)s)"""
+insert_requests = """INSERT INTO requests (uuid, port1, port2, finalstate, pathfindissue, requesttype, insertdate, updatedate, fileloc, site1, site2, failure)
+VALUES (%(uuid)s, %(port1)s, %(port2)s, %(finalstate)s, %(pathfindissue)s, %(requesttype)s, FROM_UNIXTIME(%(insertdate)s),FROM_UNIXTIME(%(updatedate)s), %(fileloc)s, %(site1)s, %(site2)s, %(failure)s)"""
 insert_actions = """INSERT INTO actions (uuid, action, site1, site2, insertdate, updatedate)
 VALUES (%(uuid)s, %(action)s, %(site1)s, %(site2)s,  FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
 insert_verification = """INSERT INTO verification (uuid, site, action, site1, site2, netstatus, urn, verified, insertdate, updatedate)

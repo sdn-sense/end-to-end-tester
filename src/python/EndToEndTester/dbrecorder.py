@@ -197,6 +197,7 @@ class FileParser(DBRecorder, Archiver):
         self.requestentry['fileloc'] = self.fname
         self.requestentry['insertdate'] = self.data.get('info', {}).get('time', getUTCnow())
         self.requestentry['updatedate'] = self.data.get('info', {}).get('time', getUTCnow())
+        self.requestentry['requesttype'] = self.data.get('info', {}).get('requesttype', 'UNSET')
         self.requestentry['failure'] = self.identifyerrors()
         self.requestentry['finalstate'] = self.identifyfinalstate() # 0 - not final, 1 - final
         self.requestentry['pathfindissue'] = self.identifyPathFindIssue()
@@ -222,10 +223,11 @@ class FileParser(DBRecorder, Archiver):
     def identifyerrors(self):
         """Identify errors from information"""
         errmsg = ""
-        if 'error' in self.data.get('create', {}):
-            errmsg = 'CREATE: ' + self.data.get('create', {}).get('error', '')
-        if 'error' in self.data.get('cancel', {}):
-            errmsg += 'CANCEL: ' + self.data.get('cancel', {}).get('error', '')
+        for key, lookup in {'ERROR': 'error', 'VALIDATION': 'validation-error', 'MANIFEST': 'manifest-error'}.items():
+            if lookup in self.data.get('create', {}):
+                errmsg += f"{key}_CREATE: " + self.data.get('create', {}).get(lookup, '')
+            if lookup in self.data.get('cancel', {}):
+                errmsg += f"{key}_CANCEL: " + self.data.get('create', {}).get(lookup, '')
         return errmsg
 
     def recordactions(self):

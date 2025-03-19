@@ -23,38 +23,44 @@ from sense.common import classwrapper
 from sense.client.workflow_combined_api import WorkflowCombinedApi
 from sense.client.workflow_phased_api import WorkflowPhasedApi
 
-request = {
+
+requests = {'guaranteedCapped': {
   "service": "dnc",
   "alias": "REPLACEME",
   "data": {
     "type": "Multi-Path P2P VLAN",
     "connections": [
-      {
-        "bandwidth": {
-          "qos_class": "guaranteedCapped",
-          "capacity": "1000"
-        },
-        "name": "Connection 1",
-        "ip_address_pool": {
-          "netmask": "/64",
-          "name": "AutoGOLE-Test-IPv6-Pool"
-        },
-        "terminals": [
-          {
-            "vlan_tag": "any",
+      {"bandwidth": {"qos_class": "guaranteedCapped",
+                      "capacity": "1000"},
+       "name": "Connection 1",
+       "ip_address_pool": {"netmask": "/64",
+                            "name": "AutoGOLE-Test-IPv6-Pool"},
+       "terminals": [
+          {"vlan_tag": "any",
             "assign_ip": True,
-            "uri": "REPLACEME"
-          },
-          {
-            "vlan_tag": "any",
+            "uri": "REPLACEME"},
+          {"vlan_tag": "any",
+           "assign_ip": True,
+           "uri": "REPLACEME"}],
+       "assign_debug_ip": True}]}},
+           'bestEffort': {
+  "service": "dnc",
+  "alias": "REPLACEME",
+  "data": {
+    "type": "Multi-Path P2P VLAN",
+    "connections": [
+      {"bandwidth": {"qos_class": "bestEffort"},
+       "name": "Connection 1",
+       "ip_address_pool": {"netmask": "/64",
+                            "name": "AutoGOLE-Test-IPv6-Pool"},
+       "terminals": [
+          {"vlan_tag": "any",
             "assign_ip": True,
-            "uri": "REPLACEME"
-          }
-        ],
-        "assign_debug_ip": True
-      }
-    ]
-  }
+            "uri": "REPLACEME"},
+          {"vlan_tag": "any",
+           "assign_ip": True,
+           "uri": "REPLACEME"}],
+       "assign_debug_ip": True}]}}
 }
 
 def timer_func(func):
@@ -90,6 +96,8 @@ class SENSEWorker():
         self.workerid = workerid
         self.workerheader = f'Worker {self.workerid}'
         self.response = {'create': {}, 'cancel': {}}
+        self.httpretry = {'retries': 3, 'timeout': 30} # todo - pass via config
+        self.finalstats = True
 
     def _setWorkerHeader(self, header):
         self.workerheader = f"Worker {self.workerid} - {header}"
@@ -99,6 +107,7 @@ class SENSEWorker():
         self.timings = {}
         self.response = {'create': {}, 'cancel': {}}
         self.workerheader = f'Worker {self.workerid}'
+        self.finalstats = True
 
 
     def checkifJsonExists(self, pair):
@@ -207,43 +216,82 @@ class SENSEWorker():
         """Get final status and all info to output"""
         if newreq:
             output['req'] = newreq
-        if uuid:
-            try:
-                # get Manifest
-                output['manifest'] = self._getManifest(si_uuid=uuid)
-            except Exception as ex:
-                msg = f'Got Exception {ex} while getting manifest for {uuid}'
-                self.logger.error(msg)
-                output['manifest'] = {}
-                output['manifest-error'] = msg
-            try:
-                # get Validation results
-                output['validation'] = self.workflowPhasedApi.instance_verify(si_uuid=uuid)
-            except Exception as ex:
-                msg = f'Got Exception {ex} while getting validation for {uuid}'
-                self.logger.error(msg)
-                output['validation'] = {}
-                output['validation-error'] = msg
+        if uuid and not self._checkpathfindissue(output, 'guaranteedCapped'):
+            retry = 0
+            while retry <= self.httpretry['retries']:
+                try:
+                    # get Manifest
+                    output['manifest'] = self._getManifest(si_uuid=uuid)
+                    retry = self.httpretry['retries'] + 1
+                except Exception as ex:
+                    msg = f'Got Exception {ex} while getting manifest for {uuid}'
+                    self.logger.error(msg)
+                    output['manifest'] = {}
+                    output['manifest-error'] = msg
+                    self.logger.info(f'Will retry after {self.httpretry["timeout"]}seconds')
+                    retry +=1
+                    time.sleep(self.httpretry['timeout'])
+            retry = 0
+            while retry <= self.httpretry['retries']:
+                try:
+                    # get Validation results
+                    output['validation'] = self.workflowPhasedApi.instance_verify(si_uuid=uuid)
+                    retry = self.httpretry['retries'] + 1
+                except Exception as ex:
+                    msg = f'Got Exception {ex} while getting validation for {uuid}'
+                    self.logger.error(msg)
+                    output['validation'] = {}
+                    output['validation-error'] = msg
+                    self.logger.info(f'Will retry after {self.httpretry["timeout"]}seconds')
+                    retry +=1
+                    time.sleep(self.httpretry['timeout'])
         return output
+
+
+    def _checkpathfindissue(self, retDict, reqtype):
+        """Check if there was path finding issue."""
+        # This only applies if guaranteedCapped and error has string:
+        # cannot find feasible path for connection
+        if reqtype == 'guaranteedCapped':
+            if 'error' in retDict and "cannot find feasible path for connection" in retDict['error']:
+                return True
+        return False
+
+    def _deletefailedpath(self):
+        """Delete failed path request"""
+        if self.workflowApi.si_uuid:
+            try:
+                self.workflowApi.instance_delete(si_uuid=self.workflowApi.si_uuid)
+            except Exception as ex:
+                self.logger.error(f'Failed to delete instance which failed path finding. Ex: {ex}')
 
     @timer_func
     def create(self, pair):
         """Create a service instance in SENSE-0"""
-        try:
-            retDict, newreq, uuid = self.__create(pair)
-            return self._setFinalStats(retDict, newreq, uuid), retDict.get('error')
-        except Exception as ex:
-            uuid = None if not self.workflowApi.si_uuid else self.workflowApi.si_uuid
-            return self._setFinalStats({'error': f"({self.workerheader}) Error: {ex}"}, None, uuid), ex
+        for reqtype, template in requests.items():
+            try:
+                retDict, newreq, uuid = self.__create(pair, reqtype, template)
+                # Check if there is an error and path failure. guaranteedCapped
+                if not self._checkpathfindissue(retDict, reqtype):
+                    return self._setFinalStats(retDict, newreq, uuid), retDict.get('error')
+                # If we reach here - means guaranteedCapped failed with pathFinding.
+                if reqtype == 'guaranteedCapped':
+                    self.logger.warning(f'{self.workerheader} {reqtype} for path request failed with path find. will retry bestEffort')
+                    self._deletefailedpath()
+            except Exception as ex:
+                uuid = None if not self.workflowApi.si_uuid else self.workflowApi.si_uuid
+                return self._setFinalStats({'error': f"({self.workerheader}) Error: {ex}"}, None, uuid), ex
+        errmsg = f"({self.workerheader}) reached point it should not reach. Script issue!"
+        return {'error': errmsg}, None, errmsg
 
     @timer_func
-    def __create(self, pair):
+    def __create(self, pair, reqtype, template):
         """Create a service instance in SENSE-0"""
         self.starttime = getUTCnow()
         self._logTiming('CREATE', 'create', 'create', getUTCnow())
         self.workflowApi = WorkflowCombinedApi()
-        newreq = copy.deepcopy(request)
-        self.response['info'] = {'pair': pair, 'worker': self.workerid, 'time': getUTCnow()}
+        newreq = copy.deepcopy(template)
+        self.response['info'] = {'pair': pair, 'worker': self.workerid, 'time': getUTCnow(), 'requesttype': reqtype}
         newreq['data']['connections'][0]['terminals'][0]['uri'] = pair[0]
         newreq['data']['connections'][0]['terminals'][1]['uri'] = pair[1]
         newreq['alias'] = f'AUTO-{self.workerid} {pair[0].split(":")[-1]}-{pair[1].split(":")[-1]}'
@@ -328,7 +376,7 @@ class SENSEWorker():
                 return {'error': 'Timeout while validating cancel for instance', 'state': status['state'], 'response': status}
 
         status = self.workflowApi.instance_get_status(si_uuid=serviceuuid, verbose=True)
-        self.logger.info(f'({self.workerheader}) Final cancel status:')
+        self.logger.info(f'({self.workerheader}) Final cancel status: {status}')
         if self._validateState(status, 'cancel') and delete:
             self.workflowApi.instance_delete(si_uuid=serviceuuid)
             return {'finalstate': 'OK', 'response': status}
@@ -365,7 +413,7 @@ class SENSEWorker():
                     self.logger.error(f"({self.workerheader}) Error: {exc}")
         self.logger.info(f"({self.workerheader}) Final response:")
         self.response['timings'] = self.timings
-        self.logger.info(pprint.pprint(self.response))
+        self.logger.info(pprint.pformat(self.response))
         # Write response into output file
         self.writeJsonOutput(pair)
 
