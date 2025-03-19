@@ -336,12 +336,16 @@ class SENSEWorker():
             return {'error': errmsg, 'errorlevel': 'senseo'}, newreq, newuuid
         status = {'state': 'CREATE - PENDING', 'configState': 'UNKNOWN'}
         raiseTimeout = False
+        iterationcounter = 0
+        sleeptime = 1
+        runUntil = getUTCnow() + self.timeouts['create']
         while not self._validateState(status, 'create'):
-            time.sleep(3)
-            self.logger.info(f'{self.workerid} Get status')
+            sleeptime = (iterationcounter // 15) + 1
+            iterationcounter += 1
+            time.sleep(sleeptime)
             status = self.workflowApi.instance_get_status(si_uuid=response['service_uuid'], verbose=True)
-            self.timeouts['create'] -= 3
-            if self.timeouts['create'] <= 0:
+            self.logger.info(f'{self.workerid} Get status timings create: Remaining runtime {runUntil - getUTCnow()} Iteration: {iterationcounter}. Sleep time: {sleeptime}')
+            if runUntil - getUTCnow() <= 0:
                 raiseTimeout = True
                 break
         status = self.workflowApi.instance_get_status(si_uuid=response['service_uuid'], verbose=True)
@@ -392,11 +396,16 @@ class SENSEWorker():
         else:
             self._cancelwrap(serviceuuid, 'false')
         status = {'state': 'CANCEL - PENDING', 'configState': 'UNKNOWN'}
+        iterationcounter = 0
+        sleeptime = 1
+        runUntil = getUTCnow() + self.timeouts['cancel']
         while not self._validateState(status, 'cancel'):
-            time.sleep(3)
+            sleeptime = (iterationcounter // 15) + 1
+            iterationcounter += 1
+            time.sleep(sleeptime)
             status = self.workflowApi.instance_get_status(si_uuid=serviceuuid, verbose=True)
-            self.timeouts['cancel'] -= 3
-            if self.timeouts['cancel'] <= 0:
+            self.logger.info(f'{self.workerid} Get status timings. Remaining runtime {runUntil - getUTCnow()} Iteration: {iterationcounter}. Sleep time: {sleeptime}')
+            if runUntil - getUTCnow() <= 0:
                 return {'error': 'Timeout while validating cancel for instance', 'state': status['state'], 'response': status}
 
         status = self.workflowApi.instance_get_status(si_uuid=serviceuuid, verbose=True)
