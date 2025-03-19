@@ -5,7 +5,6 @@ RUN yum -y install wget epel-release && yum clean all
 
 # Maria DB Configuration
 COPY build_files/mariadb.repo /etc/yum.repos.d/mariadb.repo
-COPY build_files/mariadb.sql /root/mariadb.sql
 COPY build_files/server.cnf /etc/my.cnf.d/server.cnf
 # Import GPG Keys for MariaDB and EPEL
 WORKDIR /etc/pki/rpm-gpg/
