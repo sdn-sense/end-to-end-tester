@@ -19,7 +19,7 @@ import threading
 import queue
 from itertools import combinations
 from EndToEndTester.utilities import loadJson, dumpJson, getUTCnow, getConfig, checkCreateDir
-from EndToEndTester.utilities import getLogger, setSenseEnv, dumpFileJson, timestampToDate
+from EndToEndTester.utilities import getLogger, setSenseEnv, dumpFileJson, timestampToDate, pauseTesting
 from sense.common import classwrapper
 from sense.client.workflow_combined_api import WorkflowCombinedApi
 from sense.client.workflow_phased_api import WorkflowPhasedApi
@@ -456,10 +456,14 @@ class SENSEWorker():
         """Process tasks from the queue"""
         while not self.task_queue.empty():
             try:
-                pair = self.task_queue.get_nowait()
-                self.logger.info(f"Worker {self.workerid} processing pair: {pair}")
-                self.run(pair)
-                self.task_queue.task_done()
+                if pauseTesting():
+                    self.logger.info('Pause testing flag set. Will not get new work from the queue')
+                    time.sleep(30)
+                else:
+                    pair = self.task_queue.get_nowait()
+                    self.logger.info(f"Worker {self.workerid} processing pair: {pair}")
+                    self.run(pair)
+                    self.task_queue.task_done()
             except queue.Empty:
                 break
 
@@ -509,6 +513,8 @@ def main(config, starttime, nextRunTime):
         # Write status out file
         dumpFileJson(os.path.join(config['workdir'], "testerinfo" + '.run'), statusout)
         time.sleep(30)
+        if pauseTesting():
+            mlogger.info('Pause testing flag set. Queue might not be decreasing!')
 
     for thworker, _ in threads:
         thworker.join()

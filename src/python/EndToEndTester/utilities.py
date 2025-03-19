@@ -16,6 +16,12 @@ from yaml import safe_load as yload
 from yaml import safe_dump as ydump
 
 
+def pauseTesting():
+    """Pause testing - in future action might come from SENSE-O"""
+    if os.path.isfile('/tmp/pause-endtoend-testing'):
+        return True
+    return False
+
 def getLogger(name="loggerName", logLevel=logging.DEBUG, logFile="/tmp/app.log"):
     """
     Get or create a logger that works across processes by logging to a file.
