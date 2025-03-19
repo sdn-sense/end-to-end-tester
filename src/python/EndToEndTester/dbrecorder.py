@@ -122,7 +122,7 @@ class DBRecorder():
     def writeverification(self):
         """Record verification"""
         for verentry in self.verificationentries:
-            searchparams = [[key, value] for key, value in verentry.items()]
+            searchparams = [[key, value] for key, value in verentry.items() if key not in ['insertdate', 'updatedate']]
             dbentry = self.db.get("verification", search=searchparams)
             if not dbentry:
                 self.db.insert("verification", [verentry])
@@ -130,7 +130,7 @@ class DBRecorder():
     def writerequeststate(self):
         """Record request state"""
         for reqentry in self.requeststateentries:
-            searchparams = [[key, value] for key, value in reqentry.items()]
+            searchparams = [[key, value] for key, value in reqentry.items() if key not in ['entertime', 'insertdate', 'updatedate']]
             dbentry = self.db.get("requeststates", search=searchparams)
             if not dbentry:
                 self.db.insert("requeststates", [reqentry])
