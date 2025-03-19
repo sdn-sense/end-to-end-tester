@@ -7,7 +7,7 @@ db_sleep () {
 } &> /dev/null
 
 # Check if all env variables are available and set
-if [[ -z $MARIA_DB_HOST || -z $MARIA_DB_USER || -z $MARIA_DB_DATABASE || -z $MARIA_DB_PASSWORD || -z $MARIA_DB_PORT ]]; then
+if [[ -z $MARIA_DB_HOST || -z $MARIA_DB_USER || -z $GRAFANA_DB_USER || -z $MARIA_DB_DATABASE || -z $MARIA_DB_PASSWORD ||  -z $GRAFANA_DB_PASSWORD || -z $MARIA_DB_PORT ]]; then
   if [ -f "/etc/endtoend-mariadb" ]; then
     set -a
     source /etc/endtoend-mariadb
@@ -24,6 +24,8 @@ sed -i "s/##ENV_MARIA_DB_PASSWORD##/$MARIA_DB_PASSWORD/" /root/mariadb.sql
 sed -i "s/##ENV_MARIA_DB_USER##/$MARIA_DB_USER/" /root/mariadb.sql
 sed -i "s/##ENV_MARIA_DB_HOST##/$MARIA_DB_HOST/" /root/mariadb.sql
 sed -i "s/##ENV_MARIA_DB_DATABASE##/$MARIA_DB_DATABASE/" /root/mariadb.sql
+sed -i "s/##ENV_GRAFANA_DB_USER##/$GRAFANA_DB_USER/" /root/mariadb.sql
+sed -i "s/##ENV_GRAFANA_DB_PASSWORD##/$GRAFANA_DB_PASSWORD/" /root/mariadb.sql
 
 # Execute /root/mariadb.sql
 while true; do
