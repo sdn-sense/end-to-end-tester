@@ -81,6 +81,7 @@ def timer_func(func):
 class SENSEWorker():
     """SENSE Worker class"""
 
+    @timer_func
     def __init__(self, task_queue, workerid=0, config=None):
         self.task_queue = task_queue
         self.config = config if config else getConfig()
@@ -100,19 +101,23 @@ class SENSEWorker():
         self.httpretry = {'retries': 3, 'timeout': 30} # todo - pass via config
         self.finalstats = True
 
+    @timer_func
     def _setWorkerHeader(self, header):
         self.workerheader = f"Worker {self.workerid} - {header}"
 
+    @timer_func
     def _reset(self):
+        self.logger.info(f'{self.workerid} called reset parameters')
         self.timeouts = copy.deepcopy(self.config['timeouts'])
         self.timings = {}
         self.response = {'create': {}, 'cancel': {}}
         self.workerheader = f'Worker {self.workerid}'
         self.finalstats = True
 
-
+    @timer_func
     def checkifJsonExists(self, pair):
         """Check if json exists"""
+        self.logger.info(f'{self.workerid} checking if {pair} exists and locked')
         checkCreateDir(self.config['workdir'])
         fnames = [str(pair[0]) + '-' + str(pair[1]), str(pair[1]) + '-' + str(pair[0])]
         for fname in fnames:
@@ -124,14 +129,17 @@ class SENSEWorker():
                 return True
         return False
 
+    @timer_func
     def creatJsonLock(self, pair):
         """Create json lock"""
+        self.logger.info(f'{self.workerid} creating lock file for {pair}')
         checkCreateDir(self.config['workdir'])
         fname = str(pair[0]) + '-' + str(pair[1])
         filename = os.path.join(self.config['workdir'], fname + '.json.lock')
         with open(filename, 'w', encoding='utf-8') as fd:
             json.dump({'worker': self.workerheader, 'timestamp': getUTCnow()}, fd)
 
+    @timer_func
     def writeJsonOutput(self, pair):
         """Write json output"""
         # Generate filename (it can either pair (0,1) or (1,0))
@@ -144,6 +152,7 @@ class SENSEWorker():
         if os.path.exists(filename):
             os.remove(filename)
 
+    @timer_func
     def _logTiming(self, status, call, configstatus, timestamp):
         """Log the timing of the function"""
         self.timings.setdefault(call, {})
@@ -154,8 +163,10 @@ class SENSEWorker():
         if configstatus not in self.timings[call][status]['configStatus']:
             self.timings[call][status]['configStatus'][configstatus] = timestamp
 
+    @timer_func
     def _getManifest(self, si_uuid):
         """Get manifest from sense-o"""
+        self.logger.info(f'{self.workerid} Get manifest for {si_uuid}')
         template = {"Ports": [{
               "Port": "?terminal?",
               "Name": "?port_name?",
@@ -194,6 +205,7 @@ class SENSEWorker():
         manifest = loadJson(json_response['jsonTemplate'])
         return manifest
 
+    @timer_func
     def _validateState(self, status, call):
         """Validate the state of the service instance creation"""
         states = []
@@ -213,6 +225,7 @@ class SENSEWorker():
             return False
         return all(states)
 
+    @timer_func
     def _setFinalStats(self, output, newreq, uuid):
         """Get final status and all info to output"""
         if newreq:
@@ -248,16 +261,18 @@ class SENSEWorker():
                     time.sleep(self.httpretry['timeout'])
         return output
 
-
+    @timer_func
     def _checkpathfindissue(self, retDict, reqtype):
         """Check if there was path finding issue."""
         # This only applies if guaranteedCapped and error has string:
         # cannot find feasible path for connection
         if reqtype == 'guaranteedCapped':
             if 'error' in retDict and "cannot find feasible path for connection" in retDict['error']:
+                self.logger.info(f'{self.workerid} Failed to find path. Return True')
                 return True
         return False
 
+    @timer_func
     def _deletefailedpath(self):
         """Delete failed path request"""
         if self.workflowApi.si_uuid:
@@ -301,30 +316,36 @@ class SENSEWorker():
         newuuid = self.workflowApi.instance_new()
         self.response['info']['uuid'] = newuuid
         try:
+            self.logger.info(f'{self.workerid} Create new instance {newreq}')
             response = self.workflowApi.instance_create(json.dumps(newreq))
             self.logger.info(f"({self.workerheader}) creating service instance: {response}")
         except ValueError as ex:
             errmsg = f"Error during create: {ex}"
+            self.logger.error(errmsg)
             return {'error': errmsg, 'errorlevel': 'senseo'}, newreq, newuuid
         except Exception as ex:
             errmsg = f"Exception error during create: {ex}"
+            self.logger.error(errmsg)
             return {'error': errmsg}, newreq, newuuid
         try:
+            self.logger.info(f'{self.workerid} Call provision.')
             self.workflowApi.instance_operate('provision', async_req=True, sync=False)
         except Exception as ex:
             errmsg = f"Exception during instance operate: {ex}"
+            self.logger.error(errmsg)
             return {'error': errmsg, 'errorlevel': 'senseo'}, newreq, newuuid
         status = {'state': 'CREATE - PENDING', 'configState': 'UNKNOWN'}
         raiseTimeout = False
         while not self._validateState(status, 'create'):
-            time.sleep(1)
+            time.sleep(3)
+            self.logger.info(f'{self.workerid} Get status')
             status = self.workflowApi.instance_get_status(si_uuid=response['service_uuid'], verbose=True)
-            self.timeouts['create'] -= 1
+            self.timeouts['create'] -= 3
             if self.timeouts['create'] <= 0:
                 raiseTimeout = True
                 break
         status = self.workflowApi.instance_get_status(si_uuid=response['service_uuid'], verbose=True)
-        self.logger.info(f'({self.workerheader}) Final submit status:')
+        self.logger.info(f'({self.workerheader}) Final submit status: {status}')
         state = self._validateState(status, 'create')
         response['state'] = state
         self.logger.info(f'({self.workerheader}) provision complete')
@@ -337,6 +358,7 @@ class SENSEWorker():
     def _cancelwrap(self, si_uuid, force):
         """Wrap the cancel function"""
         try:
+            self.logger.info(f'{self.workerid} call cancel for {si_uuid} with force: {force}')
             self.workflowApi.instance_operate('cancel', si_uuid=si_uuid, force=force)
         except ValueError as ex:
             self.logger.error(f"({self.workerheader}) Error: {ex}")
@@ -359,6 +381,7 @@ class SENSEWorker():
         """Cancel a service instance in SENSE-0"""
         self.starttime = getUTCnow()
         self._logTiming('CREATE', 'cancel', 'create', getUTCnow())
+        self.logger.info(f'{self.workerid} Get instance status for {serviceuuid}')
         status = self.workflowApi.instance_get_status(si_uuid=serviceuuid)
         if 'error' in status:
             return {'error': status['error'], 'response': status}
@@ -370,9 +393,9 @@ class SENSEWorker():
             self._cancelwrap(serviceuuid, 'false')
         status = {'state': 'CANCEL - PENDING', 'configState': 'UNKNOWN'}
         while not self._validateState(status, 'cancel'):
-            time.sleep(1)
+            time.sleep(3)
             status = self.workflowApi.instance_get_status(si_uuid=serviceuuid, verbose=True)
-            self.timeouts['cancel'] -= 1
+            self.timeouts['cancel'] -= 3
             if self.timeouts['cancel'] <= 0:
                 return {'error': 'Timeout while validating cancel for instance', 'state': status['state'], 'response': status}
 
@@ -384,6 +407,7 @@ class SENSEWorker():
         self.logger.info(f'({self.workerheader}) cancel complete')
         return {'finalstate': 'OKNODELETE', 'response': status}
 
+    @timer_func
     def run(self, pair):
         """Start loop work"""
         self._reset()
@@ -418,6 +442,7 @@ class SENSEWorker():
         # Write response into output file
         self.writeJsonOutput(pair)
 
+    @timer_func
     def startwork(self):
         """Process tasks from the queue"""
         while not self.task_queue.empty():
