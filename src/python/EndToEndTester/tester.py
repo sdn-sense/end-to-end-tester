@@ -18,7 +18,8 @@ import pprint
 import threading
 import queue
 from itertools import combinations
-from EndToEndTester.utilities import loadJson, dumpJson, getUTCnow, getConfig, checkCreateDir, getLogger, setSenseEnv, dumpFileJson
+from EndToEndTester.utilities import loadJson, dumpJson, getUTCnow, getConfig, checkCreateDir
+from EndToEndTester.utilities import getLogger, setSenseEnv, dumpFileJson, timestampToDate
 from sense.common import classwrapper
 from sense.client.workflow_combined_api import WorkflowCombinedApi
 from sense.client.workflow_phased_api import WorkflowPhasedApi
@@ -294,7 +295,7 @@ class SENSEWorker():
         self.response['info'] = {'pair': pair, 'worker': self.workerid, 'time': getUTCnow(), 'requesttype': reqtype}
         newreq['data']['connections'][0]['terminals'][0]['uri'] = pair[0]
         newreq['data']['connections'][0]['terminals'][1]['uri'] = pair[1]
-        newreq['alias'] = f'AUTO-{self.workerid} {pair[0].split(":")[-1]}-{pair[1].split(":")[-1]}'
+        newreq['alias'] = f'{timestampToDate(getUTCnow())} {pair[0].split(":")[-1]}-{pair[1].split(":")[-1]}'
         self.response['info']['req'] = newreq
         self.workflowApi.si_uuid = None
         newuuid = self.workflowApi.instance_new()
