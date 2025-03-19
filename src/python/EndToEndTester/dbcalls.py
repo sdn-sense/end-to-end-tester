@@ -64,6 +64,7 @@ create_runnerinfo = """CREATE TABLE IF NOT EXISTS runnerinfo (
     totalworkers INTEGER NOT NULL,
     totalqueue INTEGER NOT NULL,
     remainingqueue INTEGER NOT NULL,
+    lockedrequests INTEGER NOT NULL,
     updatedate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     insertdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     starttime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -80,8 +81,8 @@ insert_verification = """INSERT INTO verification (uuid, site, action, site1, si
 VALUES (%(uuid)s, %(site)s, %(action)s, %(site1)s, %(site2)s, %(netstatus)s, %(urn)s, %(verified)s, FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
 insert_requeststates = """INSERT INTO requeststates (uuid, state, configstate, action, site1, site2, entertime, insertdate, updatedate)
 VALUES (%(uuid)s, %(state)s, %(configstate)s, %(action)s,%(site1)s, %(site2)s, FROM_UNIXTIME(%(entertime)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
-insert_runnerinfo = """INSERT INTO runnerinfo (alive, totalworkers, totalqueue, remainingqueue, updatedate, insertdate, starttime, nextrun)
-VALUES (%(alive)s, %(totalworkers)s, %(totalqueue)s, %(remainingqueue)s, FROM_UNIXTIME(%(updatedate)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(starttime)s), FROM_UNIXTIME(%(nextrun)s))"""
+insert_runnerinfo = """INSERT INTO runnerinfo (alive, totalworkers, totalqueue, remainingqueue, lockedrequests, updatedate, insertdate, starttime, nextrun)
+VALUES (%(alive)s, %(totalworkers)s, %(totalqueue)s, %(remainingqueue)s, %(lockedrequests)s, FROM_UNIXTIME(%(updatedate)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(starttime)s), FROM_UNIXTIME(%(nextrun)s))"""
 
 
 # SELECT FROM TABLES
@@ -93,7 +94,7 @@ get_runnerinfo = """SELECT * FROM runnerinfo"""
 
 # UPDATE TABLES
 update_requests = "UPDATE requests SET updatedate = FROM_UNIXTIME(%(updatedate)s), fileloc = %(fileloc)s WHERE uuid = %(uuid)s"
-update_runnerinfo = "UPDATE runnerinfo SET alive = %(alive)s, totalworkers = %(totalworkers)s, totalqueue =  %(totalqueue)s, remainingqueue =  %(remainingqueue)s, updatedate = FROM_UNIXTIME(%(updatedate)s), starttime = FROM_UNIXTIME(%(starttime)s), nextrun = FROM_UNIXTIME(%(nextrun)s) WHERE id = %(id)s"
+update_runnerinfo = "UPDATE runnerinfo SET alive = %(alive)s, totalworkers = %(totalworkers)s, lockedrequests = %(lockedrequests)s, totalqueue =  %(totalqueue)s, remainingqueue =  %(remainingqueue)s, updatedate = FROM_UNIXTIME(%(updatedate)s), starttime = FROM_UNIXTIME(%(starttime)s), nextrun = FROM_UNIXTIME(%(nextrun)s) WHERE id = %(id)s"
 
 # DELETE FROM TABLES
 delete_models = "DELETE FROM requests"

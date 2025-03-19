@@ -87,6 +87,8 @@ class Archiver():
         # Check if newFName is set - if so - we update DB Record with new location
         if newFName:
             self.updaterequest(newFName)
+            return True
+        return False
 
 class DBRecorder():
     # pylint: disable=no-member
@@ -137,7 +139,7 @@ class DBRecorder():
 
     def writerunnerinfo(self, data):
         """Write worker status. Insert if no entries, update if diff"""
-        searchkeys = ['alive', 'totalworkers', 'totalqueue', 'remainingqueue', 'starttime', 'nextrun']
+        searchkeys = ['alive', 'totalworkers', 'totalqueue', 'remainingqueue', 'starttime', 'nextrun', 'lockedrequests']
         searchparams = [[key, data[key]] for key in searchkeys]
         dbentry = self.db.get("runnerinfo", limit=1, search=searchparams)
         if dbentry:
@@ -161,6 +163,7 @@ class FileParser(DBRecorder, Archiver):
         self.actionsentries = {}
         self.verificationentries = {}
         self.requeststateentries = {}
+        self.lockedfiles = 0
         self.data = {}
         self.fname = {}
         self.db = dbinterface()
@@ -379,6 +382,7 @@ class FileParser(DBRecorder, Archiver):
             self.logger.warning('Did not receive status information of thread worker. Will not write to db')
             return
         timenow = getUTCnow()
+        statusout['lockedrequests'] = self.lockedfiles
         statusout['insertdate'] = timenow
         statusout['updatedate'] = timenow
         self.writerunnerinfo(statusout)
@@ -386,6 +390,7 @@ class FileParser(DBRecorder, Archiver):
     def main(self):
         """Main Run loop all json run output"""
         # loop current directory files and load json
+        self.lockedfiles = 0
         checkCreateDir(self.config['workdir'])
         for file in os.listdir(self.config['workdir']):
             if file.endswith(".json"):
@@ -401,7 +406,8 @@ class FileParser(DBRecorder, Archiver):
                 try:
                     self.recorddata()
                     self.writedata()
-                    self.runArchiver()
+                    if not self.runArchiver():
+                        self.lockedfiles += 1
                 except Exception as ex:
                     self.logger.error(f" Error: {ex}")
                     self.logger.error('-'*40)
