@@ -16,6 +16,7 @@ import time
 import copy
 import pprint
 import threading
+import random
 import queue
 from itertools import combinations
 from EndToEndTester.utilities import loadJson, dumpJson, getUTCnow, getConfig, checkCreateDir
@@ -483,6 +484,8 @@ def main(config, starttime, nextRunTime):
     mlogger.info("Starting multiple threads")
     threads = []
     workers = []
+    # Shuffle randomly
+    random.shuffle(unique_pairs)
     # Create a queue and populate it with tasks
     task_queue = queue.Queue()
     for pair in unique_pairs:
