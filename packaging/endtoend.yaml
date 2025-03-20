@@ -30,6 +30,7 @@ timeouts:
 #  "urn:ogf:network:tier2-unl.edu:2024:red-sense-dtn3.unl.edu": "T2_US_Nebraska"
 #  "urn:ogf:network:mghpcc.org:2025:nrp-sense01.rnd.net2.mghpcc.org": "T2_US_MGHPCC"
 #  "urn:ogf:network:uhnet.net:2021:hawaii-scidmz:prp01.ifa.hawaii.edu": "T2_US_SDSC_HAWAII"
+#  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-igrok-02.calit2.optiputer.net": "T2_US_UCSD"
 
 # Developement entries remain with-in a single site
 entries:
