@@ -71,6 +71,23 @@ create_runnerinfo = """CREATE TABLE IF NOT EXISTS runnerinfo (
     nextrun TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );"""
 
+create_lockedrequests = """CREATE TABLE IF NOT EXISTS lockedrequests (
+    id SERIAL PRIMARY KEY,
+    uuid VARCHAR(255) NOT NULL,
+    port1 VARCHAR(255) NOT NULL,
+    port2 VARCHAR(255) NOT NULL,
+    finalstate INTEGER NOT NULL CHECK (finalstate IN (0,1)),
+    pathfindissue INTEGER NOT NULL CHECK (pathfindissue IN (0,1)),
+    requesttype VARCHAR(64) NOT NULL,
+    insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    fileloc VARCHAR(4096),
+    site1 VARCHAR(64) NOT NULL,
+    site2 VARCHAR(64) NOT NULL,
+    failure VARCHAR(4096),
+    UNIQUE(uuid)
+);"""
+
 
 # INSERT INTO TABLES
 insert_requests = """INSERT INTO requests (uuid, port1, port2, finalstate, pathfindissue, requesttype, insertdate, updatedate, fileloc, site1, site2, failure)
@@ -83,6 +100,8 @@ insert_requeststates = """INSERT INTO requeststates (uuid, state, configstate, a
 VALUES (%(uuid)s, %(state)s, %(configstate)s, %(action)s,%(site1)s, %(site2)s, FROM_UNIXTIME(%(entertime)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
 insert_runnerinfo = """INSERT INTO runnerinfo (alive, totalworkers, totalqueue, remainingqueue, lockedrequests, updatedate, insertdate, starttime, nextrun)
 VALUES (%(alive)s, %(totalworkers)s, %(totalqueue)s, %(remainingqueue)s, %(lockedrequests)s, FROM_UNIXTIME(%(updatedate)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(starttime)s), FROM_UNIXTIME(%(nextrun)s))"""
+insert_lockedrequests = """INSERT INTO lockedrequests (uuid, port1, port2, finalstate, pathfindissue, requesttype, insertdate, updatedate, fileloc, site1, site2, failure)
+VALUES (%(uuid)s, %(port1)s, %(port2)s, %(finalstate)s, %(pathfindissue)s, %(requesttype)s, FROM_UNIXTIME(%(insertdate)s),FROM_UNIXTIME(%(updatedate)s), %(fileloc)s, %(site1)s, %(site2)s, %(failure)s)"""
 
 
 # SELECT FROM TABLES
@@ -91,6 +110,7 @@ get_actions = """SELECT * FROM actions"""
 get_verification = """SELECT * FROM verification"""
 get_requeststates = """SELECT * FROM requeststates"""
 get_runnerinfo = """SELECT * FROM runnerinfo"""
+get_lockedrequests = """SELECT * FROM lockedrequests"""
 
 # UPDATE TABLES
 update_requests = "UPDATE requests SET updatedate = FROM_UNIXTIME(%(updatedate)s), fileloc = %(fileloc)s WHERE uuid = %(uuid)s"
@@ -101,3 +121,4 @@ delete_models = "DELETE FROM requests"
 delete_deltas = "DELETE FROM actions"
 delete_delta_connections = "DELETE FROM verification"
 delete_requeststates = "DELETE FROM requeststates"
+delete_lockedrequests ="DELETE FROM lockedrequests"

@@ -457,7 +457,7 @@ class SENSEWorker():
         """Process tasks from the queue"""
         while not self.task_queue.empty():
             try:
-                if pauseTesting():
+                if pauseTesting(os.path.join(self.config['workdir'], "pause-endtoend-testing")):
                     self.logger.info('Pause testing flag set. Will not get new work from the queue')
                     time.sleep(30)
                 else:
@@ -516,7 +516,7 @@ def main(config, starttime, nextRunTime):
         # Write status out file
         dumpFileJson(os.path.join(config['workdir'], "testerinfo" + '.run'), statusout)
         time.sleep(30)
-        if pauseTesting():
+        if pauseTesting(os.path.join(config['workdir'], "pause-endtoend-testing")):
             mlogger.info('Pause testing flag set. Queue might not be decreasing!')
 
     for thworker, _ in threads:

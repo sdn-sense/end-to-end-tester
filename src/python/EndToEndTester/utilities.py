@@ -16,9 +16,9 @@ from yaml import safe_load as yload
 from yaml import safe_dump as ydump
 
 
-def pauseTesting():
+def pauseTesting(fname):
     """Pause testing - in future action might come from SENSE-O"""
-    if os.path.isfile('/tmp/pause-endtoend-testing'):
+    if os.path.isfile(fname):
         return True
     return False
 

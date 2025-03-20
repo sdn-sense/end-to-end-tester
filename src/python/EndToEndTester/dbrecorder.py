@@ -152,6 +152,24 @@ class DBRecorder():
         else:
             self.db.insert('runnerinfo', [data])
 
+    def writelockedinfo(self, data):
+        """Write all locked requests"""
+        dbentry = self.db.get("lockedrequests", limit=1, search=[['uuid', data['uuid']]])
+        if not dbentry:
+            self.db.insert("lockedrequests", [data])
+
+    def getlockedinfo(self):
+        """Get Locked info requests"""
+        dbout = self.db.get("lockedrequests", limit=100)
+        return dbout
+
+    def deletelockedinfo(self, data):
+        """Delete Locked info request"""
+        dbentry = self.db.get("lockedrequests", limit=1, search=[['uuid', data['uuid']]])
+        if dbentry:
+            self.db.delete("lockedrequests", [['uuid', data['uuid']]])
+
+
 # pylint: disable=too-many-instance-attributes
 class FileParser(DBRecorder, Archiver):
     """Parses files, extracts data, and records information into the database."""
@@ -163,7 +181,7 @@ class FileParser(DBRecorder, Archiver):
         self.actionsentries = {}
         self.verificationentries = {}
         self.requeststateentries = {}
-        self.lockedfiles = 0
+        self.lockedfiles = []
         self.data = {}
         self.fname = {}
         self.db = dbinterface()
@@ -382,15 +400,32 @@ class FileParser(DBRecorder, Archiver):
             self.logger.warning('Did not receive status information of thread worker. Will not write to db')
             return
         timenow = getUTCnow()
-        statusout['lockedrequests'] = self.lockedfiles
+        statusout['lockedrequests'] = len(self.lockedfiles)
         statusout['insertdate'] = timenow
         statusout['updatedate'] = timenow
         self.writerunnerinfo(statusout)
 
+    def checklockedrequests(self):
+        """Check all locked requests"""
+        # Get all locked requests from DB;
+        alllocked = {}
+        for item in self.getlockedinfo():
+            alllocked[item['uuid']] = item
+        # For each in self.lockedfiles - check if uuid exists in db output
+        for item in self.lockedfiles:
+            if item['uuid'] in alllocked:
+                del alllocked[item['uuid']]
+            else:
+                self.writelockedinfo(item)
+        # If we have any locked remaining here - we delete them - means lock is gone;
+        for key, val in alllocked.items():
+            self.logger.info(f'The following lock file gone. Removing from locked db {key}')
+            self.deletelockedinfo(val)
+
     def main(self):
         """Main Run loop all json run output"""
         # loop current directory files and load json
-        self.lockedfiles = 0
+        self.lockedfiles = []
         checkCreateDir(self.config['workdir'])
         for file in os.listdir(self.config['workdir']):
             if file.endswith(".json"):
@@ -407,10 +442,15 @@ class FileParser(DBRecorder, Archiver):
                     self.recorddata()
                     self.writedata()
                     if not self.runArchiver():
-                        self.lockedfiles += 1
+                        self.lockedfiles.append(self.requestentry)
                 except Exception as ex:
                     self.logger.error(f" Error: {ex}")
                     self.logger.error('-'*40)
+        try:
+            self.checklockedrequests()
+        except Exception as ex:
+            self.logger.error(f" Error: {ex}")
+            self.logger.error('-'*40)
         try:
             self.checkrunnerinfo()
         except Exception as ex:
