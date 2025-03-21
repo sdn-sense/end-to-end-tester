@@ -187,11 +187,11 @@ class FileParser(DBRecorder, Archiver):
         self.db = dbinterface()
         # Default vals if not specified by hasNetworkStatus
         # create, verified - activated
-        # create, unverified - activate-error
+        # create, unverified - create-unverified
         # cancel, verified - deactivated
         # cancel, unverified - deactivate-error
-        self.defaultvals = {'create-verified': 'activated', 'create-unverified': 'activate-error',
-                            'cancel-verified': 'deactivated', 'cancel-unverified': 'deactivate-error'}
+        self.defaultvals = {'create-verified': 'activated', 'create-unverified': 'create-unverified',
+                            'cancel-verified': 'deactivated', 'cancel-unverified': 'cancel-unverified'}
 
     def _cleanup(self):
         """Clean up variables"""
