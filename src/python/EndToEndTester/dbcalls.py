@@ -88,6 +88,27 @@ create_lockedrequests = """CREATE TABLE IF NOT EXISTS lockedrequests (
     UNIQUE(uuid)
 );"""
 
+create_pingresults = """CREATE TABLE IF NOT EXISTS pingresults (
+    id SERIAL PRIMARY KEY,
+    uuid VARCHAR(255) NOT NULL,
+    site1 VARCHAR(64) NOT NULL,
+    site2 VARCHAR(64) NOT NULL,
+    port1 VARCHAR(255) NOT NULL,
+    port2 VARCHAR(255) NOT NULL,
+    ipto VARCHAR(255) NOT NULL,
+    ipfrom VARCHAR(255) NOT NULL,
+    insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    failed INTEGER NOT NULL CHECK (failed IN (0,1)),
+    transmitted INTEGER NOT NULL,
+    received INTEGER NOT NULL,
+    packetloss FLOAT NOT NULL,
+    rttmin FLOAT NOT NULL,
+    rttavg FLOAT NOT NULL,
+    rttmax FLOAT NOT NULL,
+    rttmdev FLOAT NOT NULL
+);"""
+
 
 # INSERT INTO TABLES
 insert_requests = """INSERT INTO requests (uuid, port1, port2, finalstate, pathfindissue, requesttype, insertdate, updatedate, fileloc, site1, site2, failure)
@@ -102,6 +123,8 @@ insert_runnerinfo = """INSERT INTO runnerinfo (alive, totalworkers, totalqueue, 
 VALUES (%(alive)s, %(totalworkers)s, %(totalqueue)s, %(remainingqueue)s, %(lockedrequests)s, FROM_UNIXTIME(%(updatedate)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(starttime)s), FROM_UNIXTIME(%(nextrun)s))"""
 insert_lockedrequests = """INSERT INTO lockedrequests (uuid, port1, port2, finalstate, pathfindissue, requesttype, insertdate, updatedate, fileloc, site1, site2, failure)
 VALUES (%(uuid)s, %(port1)s, %(port2)s, %(finalstate)s, %(pathfindissue)s, %(requesttype)s, FROM_UNIXTIME(%(insertdate)s),FROM_UNIXTIME(%(updatedate)s), %(fileloc)s, %(site1)s, %(site2)s, %(failure)s)"""
+insert_pingresults = """INSERT INTO pingresults (uuid, site1, site2, port1, port2, ipto, ipfrom, insertdate, updatedate, failed, transmitted, received, packetloss, rttmin, rttavg, rttmax, rttmdev)
+VALUES (%(uuid)s, %(site1)s, %(site2)s, %(port1)s, %(port2)s, %(ipto)s, %(ipfrom)s, FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s), %(failed)s, %(transmitted)s, %(received)s, %(packetloss)s, %(rttmin)s, %(rttavg)s, %(rttmax)s, %(rttmdev)s)"""
 
 
 # SELECT FROM TABLES
@@ -111,6 +134,7 @@ get_verification = """SELECT * FROM verification"""
 get_requeststates = """SELECT * FROM requeststates"""
 get_runnerinfo = """SELECT * FROM runnerinfo"""
 get_lockedrequests = """SELECT * FROM lockedrequests"""
+get_pingresults = """SELECT * FROM pingresults"""
 
 # UPDATE TABLES
 update_requests = "UPDATE requests SET updatedate = FROM_UNIXTIME(%(updatedate)s), fileloc = %(fileloc)s WHERE uuid = %(uuid)s"
@@ -122,3 +146,4 @@ delete_deltas = "DELETE FROM actions"
 delete_delta_connections = "DELETE FROM verification"
 delete_requeststates = "DELETE FROM requeststates"
 delete_lockedrequests ="DELETE FROM lockedrequests"
+delete_pingresults = "DELETE FROM pingresults"

@@ -18,12 +18,16 @@ import pprint
 import threading
 import random
 import queue
+import traceback
 from itertools import combinations
 from EndToEndTester.utilities import loadJson, dumpJson, getUTCnow, getConfig, checkCreateDir
-from EndToEndTester.utilities import getLogger, setSenseEnv, dumpFileJson, timestampToDate, pauseTesting
+from EndToEndTester.utilities import getLogger, setSenseEnv, dumpFileJson, timestampToDate
+from EndToEndTester.utilities import fetchRemoteConfig, loadYaml, pauseTesting
+from EndToEndTester.siterm import SiteRMApi
 from sense.common import classwrapper
 from sense.client.workflow_combined_api import WorkflowCombinedApi
 from sense.client.workflow_phased_api import WorkflowPhasedApi
+from sense.client.discover_api import DiscoverApi
 
 
 requests = {'guaranteedCapped': {
@@ -64,6 +68,31 @@ requests = {'guaranteedCapped': {
            "uri": "REPLACEME"}],
        "assign_debug_ip": True}]}}
 }
+net_request = {'nettest': {"service": "dnc",
+               "alias": "REPLACEME",
+               "data": {"type": "Multi-Path P2P VLAN",
+                        "connections": [
+                            {"bandwidth": {"qos_class": "guaranteedCapped", "capacity": "1000"},
+                             "name": "Connection 1",
+                             "terminals": [
+                                 {"vlan_tag": "any",
+                                  "assign_ip": False,
+                                  "uri": "REPLACEME"},
+                                 {"vlan_tag": "any",
+                                  "assign_ip": False,
+                                  "uri": "REPLACEME"}],
+                             "assign_debug_ip": False}]}}}
+
+
+def getFullTraceback(ex):
+    """Get full traceback"""
+    tracebackMsg = ""
+    tracebackMsg += "Exception occurred:"
+    tracebackMsg += f"\nType: {str(type(ex).__name__)}"
+    tracebackMsg += f"\nMessage: {str(ex)}"
+    tracebackMsg += "\nTraceback:\b"
+    tracebackMsg += traceback.format_exc()
+    return tracebackMsg
 
 def timer_func(func):
     """Decorator function to calculate the execution time of a function"""
@@ -87,6 +116,7 @@ class SENSEWorker():
         self.task_queue = task_queue
         self.config = config if config else getConfig()
         self.logger = getLogger(name='Tester', logFile='/var/log/EndToEndTester/Tester.log')
+        self.siterm = SiteRMApi(**{'config': self.config, 'logger': self.logger})
         setSenseEnv(self.config)
         self.workflowApi = WorkflowCombinedApi()
         self.workflowPhasedApi = WorkflowPhasedApi()
@@ -99,7 +129,8 @@ class SENSEWorker():
         self.workerid = workerid
         self.workerheader = f'Worker {self.workerid}'
         self.response = {'create': {}, 'cancel': {}}
-        self.httpretry = {'retries': 3, 'timeout': 30} # todo - pass via config
+        self.httpretry = {'retries': self.config.get('httpretries', {}).get('retries', 3),
+                          'timeout': self.config.get('httpretries', {}).get('timeout', 30)}
         self.finalstats = True
 
     @timer_func
@@ -122,10 +153,17 @@ class SENSEWorker():
         checkCreateDir(self.config['workdir'])
         fnames = [str(pair[0]) + '-' + str(pair[1]), str(pair[1]) + '-' + str(pair[0])]
         for fname in fnames:
+            # If this file present - means data was not recorded yet. Look at DBRecorder process
             filename = os.path.join(self.config['workdir'], fname + '.json')
             if os.path.exists(filename):
                 return True
+            # If this file present - means there is another process keeps lock (or failed for some unexpected reason)
             filename = os.path.join(self.config['workdir'], fname + '.json.lock')
+            if os.path.exists(filename):
+                return True
+            # If this file present - means DB Recorded results - but identified that there was failure. Keep it
+            # for 3 days (and cancel then) or until manual intervention.
+            filename = os.path.join(self.config['workdir'], fname + '.json.dbdone')
             if os.path.exists(filename):
                 return True
         return False
@@ -216,6 +254,8 @@ class SENSEWorker():
         # If state in failed, raise exception
         if status.get('state') == 'CREATE - FAILED':
             raise ValueError('Create status in SENSE-O is FAILED.')
+        if status.get('state') == 'CANCEL - FAILED':
+            raise ValueError('Cancel status in SENSE-O is FAILED.')
         if status.get('state') == self.states[call]:
             states.append(True)
         if status.get('configState') == 'STABLE':
@@ -241,6 +281,7 @@ class SENSEWorker():
                 except Exception as ex:
                     msg = f'Got Exception {ex} while getting manifest for {uuid}'
                     self.logger.error(msg)
+                    self.logger.debug(getFullTraceback(ex))
                     output['manifest'] = {}
                     output['manifest-error'] = msg
                     self.logger.info(f'Will retry after {self.httpretry["timeout"]}seconds')
@@ -255,6 +296,7 @@ class SENSEWorker():
                 except Exception as ex:
                     msg = f'Got Exception {ex} while getting validation for {uuid}'
                     self.logger.error(msg)
+                    self.logger.debug(getFullTraceback(ex))
                     output['validation'] = {}
                     output['validation-error'] = msg
                     self.logger.info(f'Will retry after {self.httpretry["timeout"]}seconds')
@@ -281,25 +323,53 @@ class SENSEWorker():
                 self.workflowApi.instance_delete(si_uuid=self.workflowApi.si_uuid)
             except Exception as ex:
                 self.logger.error(f'Failed to delete instance which failed path finding. Ex: {ex}')
+                self.logger.debug(getFullTraceback(ex))
 
     @timer_func
     def create(self, pair):
         """Create a service instance in SENSE-0"""
-        for reqtype, template in requests.items():
+        submittests = {}
+        if self.config.get('submissiontemplate', None) == 'nettest':
+            submittests = net_request
+        else:
+            submittests = requests
+        for reqtype, template in submittests.items():
             try:
                 retDict, newreq, uuid = self.__create(pair, reqtype, template)
                 # Check if there is an error and path failure. guaranteedCapped
                 if not self._checkpathfindissue(retDict, reqtype):
-                    return self._setFinalStats(retDict, newreq, uuid), retDict.get('error')
+                    # If there was no create timeout issue - submit and monitor ping
+                    finalReturn = self._setFinalStats(retDict, newreq, uuid)
+                    if 'finalstate' in retDict and retDict['finalstate'] == 'OK':
+                        if not self.config.get('ignoreping', False):
+                            return self.siterm.testPing(finalReturn), retDict.get('error')
+                        self.logger.info(f'{self.workerheader} Ignoring ping test due to config parameter set')
+                    return finalReturn, retDict.get('error')
                 # If we reach here - means guaranteedCapped failed with pathFinding.
                 if reqtype == 'guaranteedCapped':
                     self.logger.warning(f'{self.workerheader} {reqtype} for path request failed with path find. will retry bestEffort')
                     self._deletefailedpath()
             except Exception as ex:
                 uuid = None if not self.workflowApi.si_uuid else self.workflowApi.si_uuid
+                self.logger.debug(getFullTraceback(ex))
                 return self._setFinalStats({'error': f"({self.workerheader}) Error: {ex}"}, None, uuid), ex
         errmsg = f"({self.workerheader}) reached point it should not reach. Script issue!"
         return {'error': errmsg}, None, errmsg
+
+    @staticmethod
+    def __getpart(part):
+        """Get part - if + then return last 2 parts. If fails - return full part"""
+        ret = part.split(":")[-1]
+        if ret == "+":
+            try:
+                ret = ":".join(part.split(':')[-3:-1])
+            except Exception:
+                ret = part
+        return ret
+
+    def _getAlias(self, pair):
+        """Get alias for the pair"""
+        return f'{timestampToDate(getUTCnow())} {self.__getpart(pair[0])}-{self.__getpart(pair[1])}'
 
     @timer_func
     def __create(self, pair, reqtype, template):
@@ -311,7 +381,7 @@ class SENSEWorker():
         self.response['info'] = {'pair': pair, 'worker': self.workerid, 'time': getUTCnow(), 'requesttype': reqtype}
         newreq['data']['connections'][0]['terminals'][0]['uri'] = pair[0]
         newreq['data']['connections'][0]['terminals'][1]['uri'] = pair[1]
-        newreq['alias'] = f'{timestampToDate(getUTCnow())} {pair[0].split(":")[-1]}-{pair[1].split(":")[-1]}'
+        newreq['alias'] = self._getAlias(pair)
         self.response['info']['req'] = newreq
         self.workflowApi.si_uuid = None
         newuuid = self.workflowApi.instance_new()
@@ -327,6 +397,7 @@ class SENSEWorker():
         except Exception as ex:
             errmsg = f"Exception error during create: {ex}"
             self.logger.error(errmsg)
+            self.logger.debug(getFullTraceback(ex))
             return {'error': errmsg}, newreq, newuuid
         try:
             self.logger.info(f'{self.workerid} Call provision.')
@@ -334,6 +405,7 @@ class SENSEWorker():
         except Exception as ex:
             errmsg = f"Exception during instance operate: {ex}"
             self.logger.error(errmsg)
+            self.logger.debug(getFullTraceback(ex))
             return {'error': errmsg, 'errorlevel': 'senseo'}, newreq, newuuid
         status = {'state': 'CREATE - PENDING', 'configState': 'UNKNOWN'}
         raiseTimeout = False
@@ -373,25 +445,26 @@ class SENSEWorker():
             self.logger.info(status)
 
     @timer_func
-    def cancel(self, serviceuuid, delete=True):
+    def cancel(self, serviceuuid, delete=False, archive=False):
         """Cancel a service instance in SENSE-0"""
         try:
-            retDict = self.__cancel(serviceuuid, delete)
+            retDict = self.__cancel(serviceuuid, delete, archive)
             return self._setFinalStats(retDict, None, serviceuuid), retDict.get('error')
         except Exception as ex:
-            return self._setFinalStats({'error': f"Exception during Cancel: {ex}"}, None, serviceuuid), ex
+            self.logger.debug(getFullTraceback(ex))
+            return self._setFinalStats({'error': f"Exception during Cancel: {ex}", "finalstate": "NOTOK"}, None, serviceuuid), ex
 
     @timer_func
-    def __cancel(self, serviceuuid, delete=True):
+    def __cancel(self, serviceuuid, delete=False, archive=False):
         """Cancel a service instance in SENSE-0"""
         self.starttime = getUTCnow()
         self._logTiming('CREATE', 'cancel', 'create', getUTCnow())
         self.logger.info(f'{self.workerid} Get instance status for {serviceuuid}')
         status = self.workflowApi.instance_get_status(si_uuid=serviceuuid)
         if 'error' in status:
-            return {'error': status['error'], 'response': status}
+            return {'error': status['error'], 'finalstate': "NOTOK", 'response': status}
         if 'CREATE' not in status and 'REINSTATE' not in status and 'MODIFY' not in status:
-            return {'error': f"Cannot cancel an instance in '{status}' status..."}
+            return {'error': f"Cannot cancel an instance in '{status}' status...", 'finalstate': "NOTOK"}
         if 'READY' not in status:
             self._cancelwrap(serviceuuid, 'true')
         else:
@@ -407,15 +480,23 @@ class SENSEWorker():
             status = self.workflowApi.instance_get_status(si_uuid=serviceuuid, verbose=True)
             self.logger.info(f'{self.workerid} Get status timings. Remaining runtime {runUntil - getUTCnow()} Iteration: {iterationcounter}. Sleep time: {sleeptime}')
             if runUntil - getUTCnow() <= 0:
-                return {'error': 'Timeout while validating cancel for instance', 'state': status['state'], 'response': status}
+                return {'error': 'Timeout while validating cancel for instance', 'finalstate': 'NOTOK', 'state': status['state'], 'response': status}
 
         status = self.workflowApi.instance_get_status(si_uuid=serviceuuid, verbose=True)
         self.logger.info(f'({self.workerheader}) Final cancel status: {status}')
-        if self._validateState(status, 'cancel') and delete:
+        if archive and delete:
+            self.logger.debug('Archive and Delete set at same time. Should not happen!')
+        elif self._validateState(status, 'cancel') and delete:
             self.workflowApi.instance_delete(si_uuid=serviceuuid)
             return {'finalstate': 'OK', 'response': status}
+        elif self._validateState(status, 'cancel') and archive:
+            self.workflowApi.instance_archive(si_uuid=serviceuuid)
+            return {'finalstate': 'OKARCHIVE', 'response': status}
+        elif archive:
+            self.workflowApi.instance_archive(si_uuid=serviceuuid)
+            return {'finalstate': 'NOTOKARCHIVE', 'response': status}
         self.logger.info(f'({self.workerheader}) cancel complete')
-        return {'finalstate': 'OKNODELETE', 'response': status}
+        return {'finalstate': 'NOTOKDELETE', 'response': status}
 
     @timer_func
     def run(self, pair):
@@ -432,7 +513,7 @@ class SENSEWorker():
             self.logger.info(f"({self.workerheader}) response: {self.response}")
             if errmsg:
                 raise ValueError(errmsg)
-            self.response['cancel'], errmsg = self.cancel(self.response.get('response', {}).get('service_uuid'), True)
+            self.response['cancel'], errmsg = self.cancel(self.response.get('response', {}).get('service_uuid'), True, False)
             if errmsg:
                 raise ValueError(errmsg)
             cancelled = True
@@ -441,11 +522,13 @@ class SENSEWorker():
             self.logger.error('This will not cancel it if not cancelled. Will keep instance as is')
         except Exception as ex:
             self.logger.error(f"({self.workerheader}) Error: {sys.exc_info()}. Exception: {ex}")
-            if self.response and not cancelled:
-                try:
-                    self.cancel(self.response.get('response', {}).get('service_uuid'), False)
-                except Exception as exc:
-                    self.logger.error(f"({self.workerheader}) Error: {exc}")
+            self.logger.debug(getFullTraceback(ex))
+        if self.response and not cancelled:
+            try:
+                self.cancel(self.response.get('response', {}).get('service_uuid'), False, True)
+            except Exception as exc:
+                self.logger.error(f"({self.workerheader}) Error: {exc}")
+                self.logger.debug(getFullTraceback(exc))
         self.logger.info(f"({self.workerheader}) Final response:")
         self.response['timings'] = self.timings
         self.logger.info(pprint.pformat(self.response))
@@ -468,35 +551,87 @@ class SENSEWorker():
             except queue.Empty:
                 break
 
-def getAllGroupedHosts(config):
+def getPortsFromSense(config, mlogger):
+    """Call SENSE and get all ports"""
+    workflowApi = WorkflowCombinedApi()
+    client = DiscoverApi()
+    alldomains = client.discover_get()
+    allEntries = []
+    for domdict in alldomains.get('domains', []):
+        if domdict.get('domain_uri') != config['entriesdynamic']:
+            continue
+        sparql = "SELECT ?port   WHERE { &lt;REPLACEME&gt; nml:hasBidirectionalPort ?port.  }"
+        sparql = sparql.replace("REPLACEME", config['entriesdynamic'])
+        query = {"All Endpoint Ports": [{"URI": "?port?", "sparql-ext": sparql, "required": "true"}]}
+        try:
+            allhosts = workflowApi.manifest_create(json.dumps(query))
+            allhosts['jsonTemplate'] = json.loads(allhosts.get('jsonTemplate'))
+            for host in allhosts.get('jsonTemplate', {}).get('All Endpoint Ports', []):
+                if host['URI'] not in allEntries:
+                    allEntries.append(host['URI'])
+        except Exception as ex:
+            mlogger.debug(f'Received an exception: {ex}')
+            mlogger.debug(getFullTraceback(ex))
+    mlogger.info(f'Here is full list of entries received: {allEntries}')
+    return allEntries
+
+
+
+def getAllGroupedHosts(config, mlogger):
     """Get all grouped hosts"""
-    # TODO - this come from configuration file for now. Later from SENSE-O Discover API
-    allEntries = config['entries'].keys()
+    allEntries = []
+    # First we use entries config
+    for key, val in config.get('entries', {}).items():
+        if val.get('disabled', False):
+            mlogger.info(f'Entry {key} is disabled. Will not include in test. Config params for entry: {val}')
+            continue
+        allEntries.append(key)
+    # Second - if not available - we check if dynamic parameter set for a specific domain
+    # entriesdynamic: <domainname>
+    if not allEntries and config.get('entriesdynamic', None):
+        mlogger.info(f'No entries found in config. Will use dynamic entries from domain: {config["entriesdynamic"]}')
+        allEntries = getPortsFromSense(config, mlogger)
+    # Generate a list of combinations
     uniquePairs = list(combinations(allEntries, 2))
+    mlogger.info(f"Here is new list of unique pairs to test: {uniquePairs}")
     return uniquePairs
 
 
 def main(config, starttime, nextRunTime):
     """Main Run"""
     mlogger = getLogger(name='Tester', logFile='/var/log/EndToEndTester/Tester.log')
-    unique_pairs = getAllGroupedHosts(config)
+    while pauseTesting(os.path.join(config['workdir'], "pause-endtoend-testing")):
+        mlogger.info('Seems Flag to Pause testing is set. Will postpone for 30s')
+        statusout = {'alive': False, 'totalworkers': config['totalThreads'], 'totalqueue': 0,
+                     'remainingqueue': 0, 'updatedate': getUTCnow(), 'insertdate': getUTCnow(),
+                     'starttime': starttime, 'nextrun': nextRunTime}
+        dumpFileJson(os.path.join(config['workdir'], "testerinfo" + '.run'), statusout)
+        time.sleep(30)
     mlogger.info('='*80)
-    mlogger.info("Starting multiple threads")
+    mlogger.info("Get all group host pairs")
+    unique_pairs = getAllGroupedHosts(config, mlogger)
     threads = []
     workers = []
     # Shuffle randomly
     random.shuffle(unique_pairs)
+    # Limit the number of pairs to test based on configuration
+    if len(unique_pairs) > config.get('maxpairs', 100):
+        unique_pairs = unique_pairs[:config.get('maxpairs', 100)]
+        mlogger.info(f"List of unique pairs is more than {config.get('maxpairs', 100)}")
+        mlogger.info(f"Here is new list: {unique_pairs}")
     # Create a queue and populate it with tasks
     task_queue = queue.Queue()
     for pair in unique_pairs:
         task_queue.put(pair)
 
-
+    mlogger.info('='*80)
     if config['totalThreads'] == 1:
+        mlogger.info("Starting one threads")
         worker = SENSEWorker(task_queue, 0, config)
         worker.startwork()
         return
 
+    mlogger.info(f"Starting {config['totalThreads']} threads (Multithreading)")
     for i in range(config['totalThreads']):
         worker = SENSEWorker(task_queue, i, config)
         workers.append(worker)
@@ -511,7 +646,6 @@ def main(config, starttime, nextRunTime):
         alive = [t[0].is_alive() for t in threads]
         statusout['alive'] = any(alive)
         statusout['remainingqueue'] = task_queue.qsize()
-        dumpFileJson(os.path.join(config['workdir'], "testerinfo.run"), statusout)
         mlogger.info(f"Remaining queue size: {task_queue.qsize()}")
         # Write status out file
         dumpFileJson(os.path.join(config['workdir'], "testerinfo" + '.run'), statusout)
@@ -537,6 +671,8 @@ if __name__ == '__main__':
     while True:
         if nextRun <= getUTCnow():
             logger.info("Timer passed. Running main")
+            if yamlconfig.get('configlocation', None):
+                yamlconfig = loadYaml(fetchRemoteConfig(yamlconfig['configlocation']))
             nextRun = getUTCnow() + yamlconfig['runInterval']
             main(yamlconfig, startimer, nextRun)
         else:
@@ -546,46 +682,6 @@ if __name__ == '__main__':
 
 
 
-
-# from sense.client.discover_api import DiscoverApi # TODO - In future use all hosts;
-# Keep as reference code for future to use all hosts;
-# TODO Use in Future all hosts;
-#def getAllGroupedHosts():
-#    """Get all grouped hosts"""
-    # workflowApi = WorkflowCombinedApi()
-    # client = DiscoverApi()
-    # groupedhosts = {}
-    # allentries = client.discover_get()
-    # for domdict in allentries.get('domains', []):
-    #     print(domdict.get('domain_uri'))
-    #     print('-'*50)
-    #     domain = domdict.get('domain_uri')
-    #     sparql = "SELECT DISTINCT ?host ?hostname WHERE { ?site nml:hasNode ?host. ?host nml:hostname  ?hostname. FILTER regex(str(?site),"
-    #     sparql += f"'{domain}')"
-    #     sparql += "}"
-    #     query = {"Hosts": [{"URI": "?host?", "Name": "?hostname?", "sparql-ext": sparql, "required": "true"}]}
-    #     try:
-    #         allhosts = workflowApi.manifest_create(json.dumps(query))
-    #         allhosts['jsonTemplate'] = json.loads(allhosts.get('jsonTemplate'))
-    #         for host in allhosts.get('jsonTemplate', {}).get('Hosts', []):
-    #             groupedhosts.setdefault(domain, [])
-    #             groupedhosts[domain].append(host['URI'])
-    #     except Exception as ex:
-    #         print(ex)
-    # Flatten all lists into a single list
-# def main(userargs):
-#for pair in unique_pairs:
-#    workflowApi = WorkflowCombinedApi()
-#    newreq = copy.deepcopy(request)
-#    newreq['data']['connections'][0]['terminals'][0]['uri'] = pair[0]
-#    newreq['data']['connections'][0]['terminals'][1]['uri'] = pair[1]
-#    newreq['alias'] = f'AUTO {pair[0]}-{pair[1]}'
-#    workflowApi.si_uuid = None
-#    workflowApi.instance_new()
-#    response = workflowApi.instance_create(json.dumps(newreq))
-#    print(response)
-#    status = workflowApi.instance_operate('provision', sync='true')
-#    print(f'provision status={status}')
 # TODO: In future also do reprovision.
 #@timer_func
 # def reprovision(self, response, incr):

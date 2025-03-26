@@ -17,21 +17,43 @@ timeouts:
 # All entries to use for SENSE Request. It will make all possible combination pairs
 # from these
 entries:
-  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-gen4-01.ampath.net": "T2_US_SDSC_AMPATH"
-  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-ceph-01.ampath.net": "T2_US_SDSC_AMPATH"
-  "urn:ogf:network:tier2.ultralight.org:2024:transfer-16.ultralight.org": "T2_US_Caltech_Prod"
-  "urn:ogf:network:ultralight.org:2013:sandie-6.ultralight.org": "T2_US_Caltech_SDN"
-  "urn:ogf:network:nrp-nautilus.io:2020:node-2-6.sdsc.optiputer.net": "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:k8s-gen5-01.sdsc.optiputer.net": "T2_US_SDSC"
-  "urn:ogf:network:maxgigapop.net:2013:ptxn-sense-v1.maxgigapop.net": "T2_US_UMD"
-  "urn:ogf:network:nrp-nautilus-prod.io:2020:ucsd-nrp.cern.ch": "T3_FABRIC_CERN"
-  "urn:ogf:network:starlight.org:2022:r740xd4.it.northwestern.edu": "T3_US_Starlight"
-  "urn:ogf:network:fnal.gov:2023:cmssense4.fnal.gov": "T1_US_FNAL"
-  "urn:ogf:network:tier2-unl.edu:2024:red-sense-dtn3.unl.edu": "T2_US_Nebraska"
-  "urn:ogf:network:mghpcc.org:2025:nrp-sense01.rnd.net2.mghpcc.org": "T2_US_MGHPCC"
-  "urn:ogf:network:uhnet.net:2021:hawaii-scidmz:prp01.ifa.hawaii.edu": "T2_US_SDSC_HAWAII"
-  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-igrok-02.calit2.optiputer.net": "T2_US_UCSD"
+  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-gen4-01.ampath.net": 
+    site: "T2_US_SDSC_AMPATH"
+  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-ceph-01.ampath.net":
+    site: "T2_US_SDSC_AMPATH"
+  "urn:ogf:network:tier2.ultralight.org:2024:transfer-16.ultralight.org":
+    site: "T2_US_Caltech_Prod"
+  "urn:ogf:network:ultralight.org:2013:sandie-6.ultralight.org":
+    site: "T2_US_Caltech_SDN"
+  "urn:ogf:network:nrp-nautilus.io:2020:node-2-6.sdsc.optiputer.net":
+    site: "T2_US_SDSC"
+  "urn:ogf:network:nrp-nautilus.io:2020:k8s-gen5-01.sdsc.optiputer.net":
+    site: "T2_US_SDSC"
+  "urn:ogf:network:maxgigapop.net:2013:ptxn-sense-v1.maxgigapop.net":
+    site: "T2_US_UMD"
+  "urn:ogf:network:nrp-nautilus-prod.io:2020:ucsd-nrp.cern.ch":
+    site: "T3_FABRIC_CERN"
+  "urn:ogf:network:starlight.org:2022:r740xd4.it.northwestern.edu":
+    site: "T3_US_Starlight"
+  "urn:ogf:network:fnal.gov:2023:cmssense4.fnal.gov":
+    site: "T1_US_FNAL"
+  "urn:ogf:network:tier2-unl.edu:2024:red-sense-dtn3.unl.edu":
+    site: "T2_US_Nebraska"
+  "urn:ogf:network:mghpcc.org:2025:nrp-sense01.rnd.net2.mghpcc.org":
+    site: "T2_US_MGHPCC"
+  "urn:ogf:network:uhnet.net:2021:hawaii-scidmz:prp01.ifa.hawaii.edu": 
+    site: "T2_US_SDSC_HAWAII"
+    disabled: true
+  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-igrok-02.calit2.optiputer.net":
+    site: "T2_US_UCSD"
+    disabled: true
 
+# Location to fetch config file from. Very helpful if we need to control
+# or change list of nodes without restarting service.
+# This is fetch for every new run.
+# p.s. It points to this config file - you can have it on Github/your own server
+# and control a list of entries to test.
+configlocation: 'https://raw.githubusercontent.com/sdn-sense/end-to-end-tester/refs/heads/main/packaging/endtoend.yaml'
 
 # All mappings used to map full path to a SiteName
 mappings:

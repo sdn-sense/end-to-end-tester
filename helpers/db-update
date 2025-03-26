@@ -1,0 +1,46 @@
+# Actions table
+ALTER TABLE actions ADD COLUMN site1 VARCHAR(64) NOT NULL DEFAULT '';
+ALTER TABLE actions ADD COLUMN site2 VARCHAR(64) NOT NULL DEFAULT '';
+UPDATE actions a
+JOIN requests r ON a.uuid = r.uuid
+SET a.site1 = r.site1, a.site2 = r.site2;
+ALTER TABLE actions MODIFY COLUMN site1 VARCHAR(64) NOT NULL;
+ALTER TABLE actions MODIFY COLUMN site2 VARCHAR(64) NOT NULL;
+
+# Requests table
+ALTER TABLE requeststates 
+ADD COLUMN site1 VARCHAR(64) NOT NULL DEFAULT '',
+ADD COLUMN site2 VARCHAR(64) NOT NULL DEFAULT '',
+ADD COLUMN updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+UPDATE requeststates rs
+JOIN requests r ON rs.uuid = r.uuid
+SET rs.site1 = r.site1, 
+    rs.site2 = r.site2, 
+    rs.insertdate = r.insertdate, 
+    rs.updatedate = r.updatedate;
+
+ALTER TABLE requeststates MODIFY COLUMN site1 VARCHAR(64) NOT NULL;
+ALTER TABLE requeststates MODIFY COLUMN site2 VARCHAR(64) NOT NULL;
+
+# Verification
+ALTER TABLE verification 
+ADD COLUMN site1 VARCHAR(64) NOT NULL DEFAULT '',
+ADD COLUMN site2 VARCHAR(64) NOT NULL DEFAULT '',
+ADD COLUMN insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+UPDATE verification v
+JOIN requests r ON v.uuid = r.uuid
+SET v.site1 = r.site1, 
+    v.site2 = r.site2, 
+    v.insertdate = r.insertdate, 
+    v.updatedate = r.updatedate;
+
+ALTER TABLE verification MODIFY COLUMN site1 VARCHAR(64) NOT NULL;
+ALTER TABLE verification MODIFY COLUMN site2 VARCHAR(64) NOT NULL;
+
+
+# Requests
+ALTER TABLE requests 
+ADD COLUMN requesttype VARCHAR(64) NOT NULL DEFAULT 'NOTSET';

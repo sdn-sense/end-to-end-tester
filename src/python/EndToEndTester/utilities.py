@@ -7,11 +7,13 @@ Email                   : jbalcas (at) es.net
 Date                    : 2025/03/14
 """
 import os
+import time
 import json
 import shutil
 import logging
 import logging.handlers
 from datetime import datetime, timezone
+import requests
 from yaml import safe_load as yload
 from yaml import safe_dump as ydump
 
@@ -41,12 +43,22 @@ def getLogger(name="loggerName", logLevel=logging.DEBUG, logFile="/tmp/app.log")
 
 
 def moveFile(filePath, newDir):
-    """
-    Move a file to a new directory.
-    """
+    """Move a file to a new directory."""
     try:
         checkCreateDir(newDir)
         newFName = f"{getUTCnow()}-{os.path.basename(filePath)}"
+        newFilePath = os.path.join(newDir, newFName)
+        shutil.move(filePath, newFilePath)
+        print(f"File moved to: {newFilePath}")
+        return newFilePath
+    except Exception as ex:
+        print(f"Error moving file: {ex}")
+    return None
+
+def renameFile(filePath, newDir, newFName):
+    """Rename a file and move it to a new directory."""
+    try:
+        checkCreateDir(newDir)
         newFilePath = os.path.join(newDir, newFName)
         shutil.move(filePath, newFilePath)
         print(f"File moved to: {newFilePath}")
@@ -155,3 +167,35 @@ def setSenseEnv(config=None):
         os.environ['SENSE_AUTH_OVERRIDE'] = config["sense-auth"]
         return True
     return False
+
+
+def fetchRemoteConfig(url, retries=3, sleep_time=30):
+    """Fetch remote configuration."""
+    errmsg = []
+    for attempt in range(1, retries + 1):
+        try:
+            response = requests.get(url, timeout=60)
+            if response.status_code == 200:
+                return response.text
+            msg = f"Attempt {attempt}: Failed with status code {response.status_code}"
+            print(msg)
+            errmsg.append(msg)
+        except requests.RequestException as ex:
+            msg = f"Attempt {attempt}: Exception occurred - {ex}"
+            print(msg)
+            errmsg.append(msg)
+        msg = f"Retrying in {sleep_time} seconds..."
+        print(msg)
+        errmsg.append(msg)
+        time.sleep(sleep_time)
+    print("Failed to fetch the URL after multiple attempts.")
+    if errmsg:
+        raise Exception("\n".join(errmsg))
+    return None
+
+def refreshConfig(config):
+    """Refresh config from remote location, if no remote - from local and return new config"""
+    if config.get('configlocaction', None):
+        config = loadYaml(fetchRemoteConfig(config['configlocation']))
+        return config
+    return getConfig()
