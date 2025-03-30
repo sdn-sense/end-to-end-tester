@@ -525,7 +525,7 @@ class SENSEWorker():
             self.logger.debug(getFullTraceback(ex))
         if self.response and not cancelled:
             try:
-                self.cancel(self.response.get('response', {}).get('service_uuid'), False, True)
+                self.response['cancel'], errmsg = self.cancel(self.response.get('response', {}).get('service_uuid'), False, True)
             except Exception as exc:
                 self.logger.error(f"({self.workerheader}) Error: {exc}")
                 self.logger.debug(getFullTraceback(exc))

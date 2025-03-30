@@ -54,9 +54,11 @@ create_requeststates = """CREATE TABLE IF NOT EXISTS requeststates (
     action VARCHAR(255) NOT NULL,
     site1 VARCHAR(64) NOT NULL,
     site2 VARCHAR(64) NOT NULL,
+    entertime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );"""
+
 
 create_runnerinfo = """CREATE TABLE IF NOT EXISTS runnerinfo (
     id SERIAL PRIMARY KEY,

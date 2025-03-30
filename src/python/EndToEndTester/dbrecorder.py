@@ -28,6 +28,9 @@ class Archiver():
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.workflowApi = WorkflowCombinedApi()
+        self.senseouuid = ""
+        self.senseodata = {}
+        self.senseoexc = None
 
     def _checkfinal(self):
         """Check if it reached final state"""
@@ -37,27 +40,53 @@ class Archiver():
         """Check if there was path issue identified"""
         return bool(self.requestentry.get('pathfindissue', 0))
 
+    def _getsenseodata(self):
+        """Get data from SENSE-O"""
+        if self.senseouuid == self.requestentry['uuid']:
+            return self.senseodata, self.senseoexc
+        self.senseouuid = self.requestentry['uuid']
+        self.senseoexc = None
+        try:
+            status = self.workflowApi.instance_get_status(si_uuid=self.requestentry['uuid'], verbose=True)
+            self.senseodata = status
+            self.senseoexc = ""
+            return status, ""
+        except Exception as ex:
+            self.senseodata = {}
+            self.senseoexc = ex
+            return {}, ex
+
     def _checksenseomissing(self):
         """Check if si-uuid exists in sense-o"""
         self.workflowApi.si_uuid = None
         try:
-            status = self.workflowApi.instance_get_status(si_uuid=self.requestentry['uuid'], verbose=True)
-            self.logger.info('Instance still inside SENSE-O. Will not archive file (also means this pair will not get new request)')
-            self.logger.info(status)
+            status, errmsg = self._getsenseodata()
+            if status:
+                self.logger.info('Instance still inside SENSE-O. Will not archive file (also means this pair will not get new request)')
+                self.logger.info(status)
+            if errmsg:
+                raise Exception from errmsg
         except Exception as ex:
             if 'NOT_FOUND' in str(ex):
                 return True
             self.logger.error(f"Received not understood exception from SENSE-O: {str(ex)}")
         return False
 
-    def _deleteSenseO(self):
+    def _deleteSenseO(self, expired=True):
         """Delete from SENSE-O an instance. Done in the following scenarios:
-         a) Instance failed due to path finding failure"""
+         a) Instance failed due to path finding failure
+         b) Request expired after timeout."""
+        delete = False
         if self._checkpathfindissue() and not self._checksenseomissing():
+            delete = True
+        if not self._checksenseomissing() and expired:
+            delete = True
+        if delete:
             try:
                 self.workflowApi.instance_delete(si_uuid=self.requestentry['uuid'])
             except Exception as ex:
                 self.logger.error(f"Received an exception from SENSE-O: {str(ex)}")
+
 
     def _checkExpiredArchive(self):
         """Check if file is expired and should be archived"""
@@ -66,7 +95,17 @@ class Archiver():
         # OKARCHIVE
         self.logger.info(f"Checking if file is expired (3days in OKARCHIVE): {self.requestentry['uuid']}")
         self.logger.info(f'cancel final state: {self.data.get("cancel", {}).get("finalstate", "")}')
-        if self.data.get('cancel', {}).get('finalstate', '') == 'OKARCHIVE':
+        if not self.data.get('cancel', {}) or not self.data.get('cancel', {}).get('finalstate', ''):
+            # We have no record information on finalstate. checking sense-o
+            senseodata, exc = self._getsenseodata()
+            if exc:
+                self.logger.error('Got an exception receiving data from SENSE-O: {str(exc)}')
+            elif senseodata['superState'] == 'CANCEL' and senseodata['subState'] == 'READY' and \
+                 senseodata['configState'] == 'STABLE' and senseodata['archived'] and not senseodata['locked']:
+                self.logger.info(f'{self.requestentry["uuid"]} is in correct state to be removed. Checking time')
+                if getUTCnow() - self.requestentry['insertdate'] >= 259200: # 3 days
+                    return True
+        elif self.data.get('cancel', {}).get('finalstate', '') == 'OKARCHIVE':
             if getUTCnow() - self.requestentry['insertdate'] >= 259200: # 3 days
                 return True
         return False
@@ -106,13 +145,15 @@ class Archiver():
         elif self._checkExpiredArchive():
             self.logger.info('Request expired. Moving file to archived.')
             newFName = self._movefile()
+            self._deleteSenseO(expired=True)
         # Check if newFName is set - if so - we update DB Record with new location
         if newFName:
             self.updaterequest(newFName)
             return True
         # DB Record entered into database, so we move file as .json.dbdone
-        self._movefile(dbdone=True)
-        self.updaterequest(newFName)
+        if not self.requestentry['fileloc'].endswith('.dbdone'):
+            self._movefile(dbdone=True)
+            self.updaterequest(newFName)
         return False
 
 class DBRecorder():
@@ -194,7 +235,7 @@ class DBRecorder():
 
     def getlockedinfo(self):
         """Get Locked info requests"""
-        dbout = self.db.get("lockedrequests", limit=100)
+        dbout = self.db.get("lockedrequests", limit=1000)
         return dbout
 
     def deletelockedinfo(self, data):
@@ -552,6 +593,7 @@ class FileParser(DBRecorder, Archiver):
             else:
                 self.writelockedinfo(item)
         # If we have any locked remaining here - we delete them - means lock is gone;
+        self.getlockedinfo()
         for key, val in alllocked.items():
             self.logger.info(f'The following lock file gone. Removing from locked db {key}')
             self.deletelockedinfo(val)
@@ -564,7 +606,9 @@ class FileParser(DBRecorder, Archiver):
         checkCreateDir(self.config['workdir'])
         for file in os.listdir(self.config['workdir']):
             self.dbdone = False
-            if file.endswith(".json"):
+            self.data = {}
+            self.fname = None
+            if file.endswith(".json") or file.endswith('.dbdone'):
                 fullpath = os.path.join(self.config['workdir'], file)
                 # Check if lock file present, means running now
                 if os.path.exists(fullpath + '.lock'):
@@ -575,7 +619,9 @@ class FileParser(DBRecorder, Archiver):
                 self.logger.info(f"Checking file: {fullpath}")
                 self._cleanup()
                 self.fname = fullpath
+            if self.fname:
                 self.data = loadFileJson(self.fname)
+            if self.data:
                 try:
                     self.recorddata()
                     self.writedata()
