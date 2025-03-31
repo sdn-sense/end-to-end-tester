@@ -625,7 +625,7 @@ def main(config, starttime, nextRunTime):
         task_queue.put(pair)
 
     mlogger.info('='*80)
-    if config['totalThreads'] == 1:
+    if config['totalThreads'] == 1 and config.get('nothreading', False):
         mlogger.info("Starting one threads")
         worker = SENSEWorker(task_queue, 0, config)
         worker.startwork()

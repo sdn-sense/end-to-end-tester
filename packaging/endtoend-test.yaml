@@ -2,6 +2,9 @@
 sense-auth: /etc/sense-o-auth.yaml
 # Total Threads to run for all pairs
 totalThreads: 1
+# No threading - run everything in a single thread: (default False)
+# useful for debugging. Only works if totalThreads == 1
+# nothreading: False
 # Once run finishes, next run will start after this many seconds (taken out run startup)
 runInterval: 43200
 # In case run finished earlier - and still not next run, sleep for this many seconds
