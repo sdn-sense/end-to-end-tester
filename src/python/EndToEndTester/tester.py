@@ -354,7 +354,7 @@ class SENSEWorker():
                 self.logger.debug(getFullTraceback(ex))
                 return self._setFinalStats({'error': f"({self.workerheader}) Error: {ex}"}, None, uuid), ex
         errmsg = f"({self.workerheader}) reached point it should not reach. Script issue!"
-        return {'error': errmsg}, None, errmsg
+        return {'error': errmsg}, errmsg
 
     @staticmethod
     def __getpart(part):
