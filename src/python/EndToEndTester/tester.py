@@ -520,6 +520,7 @@ class SENSEWorker():
         except ValueError as ex:
             self.logger.error(f"({self.workerheader}) Error: {ex}")
             self.logger.error('This will not cancel it if not cancelled. Will keep instance as is')
+            cancelled = True
         except Exception as ex:
             self.logger.error(f"({self.workerheader}) Error: {sys.exc_info()}. Exception: {ex}")
             self.logger.debug(getFullTraceback(ex))
