@@ -45,7 +45,7 @@ archiveifFailure: False
 # Max pairs - control how many pairs to run in a single run
 # Default: 100
 # Useful in case of big model and a lot of pairs. Will choose first 100 from randomized list
-maxpairs: 100
+maxpairs: 50
 
 # Location to fetch config file from. Very helpful if we need to control
 # or change list of nodes without restarting service.
