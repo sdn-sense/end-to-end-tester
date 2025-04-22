@@ -526,7 +526,11 @@ class SENSEWorker():
             self.logger.debug(getFullTraceback(ex))
         if self.response and not cancelled:
             try:
-                self.response['cancel'], errmsg = self.cancel(self.response.get('response', {}).get('service_uuid'), False, True)
+                if self.config.get('archiveifFailure', True):
+                    self.logger.info('Archive if Failed Flag is True. Got error. Will issue cancel and archive.')
+                    self.response['cancel'], errmsg = self.cancel(self.response.get('response', {}).get('service_uuid'), False, True)
+                else:
+                    self.logger.info('Archive flag is False and we got Error. Leave instance not canceled/archived')
             except Exception as exc:
                 self.logger.error(f"({self.workerheader}) Error: {exc}")
                 self.logger.debug(getFullTraceback(exc))

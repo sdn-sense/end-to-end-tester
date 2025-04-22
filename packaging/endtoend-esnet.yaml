@@ -39,6 +39,9 @@ submissiontemplate: "nettest"
 # If set to True, it will not run ping test
 ignoreping: True
 
+# Archive request if failure happens (timeout, or any other). This is useful for debugging.
+archiveifFailure: False
+
 # Max pairs - control how many pairs to run in a single run
 # Default: 100
 # Useful in case of big model and a lot of pairs. Will choose first 100 from randomized list
