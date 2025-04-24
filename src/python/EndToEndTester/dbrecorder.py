@@ -507,7 +507,7 @@ class FileParser(DBRecorder, Archiver):
                             self.requeststateentries[-1]['totaltime'] = diff if diff > 0 else 0
                             self.requeststateentries[-1]['sincestart'] = item['entertime'] - firststart
                             lasttimestamp = item['entertime']
-                            self.logger.info(f"({self.requestentry['uuid']}) Found state transition: {item['state']} - {item['configstate']} - {item['action']} - {diff}")
+                            self.logger.info(f"({self.requestentry['uuid']}) Found state transition: {item['state']} - {item['configstate']} - {item['action']} - {diff}. Since start: {item['entertime'] - firststart}")
                         self.requeststateentries.append(item)
                         counter = total
                     counter += 1

@@ -556,6 +556,17 @@ class SENSEWorker():
             except queue.Empty:
                 break
 
+def filterIncludes(config, item):
+    """Filter includes/excludes"""
+    if 'filter' in config:
+        if 'exclude' in config['filter']:
+            if item in config['filter']['exclude']:
+                return False
+        if 'include' in config['filter']:
+            if item in config['filter']['include']:
+                return True
+    return True
+
 def getPortsFromSense(config, mlogger):
     """Call SENSE and get all ports"""
     workflowApi = WorkflowCombinedApi()
@@ -573,7 +584,8 @@ def getPortsFromSense(config, mlogger):
             allhosts['jsonTemplate'] = json.loads(allhosts.get('jsonTemplate'))
             for host in allhosts.get('jsonTemplate', {}).get('All Endpoint Ports', []):
                 if host['URI'] not in allEntries:
-                    allEntries.append(host['URI'])
+                    if filterIncludes(config, host['URI']):
+                        allEntries.append(host['URI'])
         except Exception as ex:
             mlogger.debug(f'Received an exception: {ex}')
             mlogger.debug(getFullTraceback(ex))
