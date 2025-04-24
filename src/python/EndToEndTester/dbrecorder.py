@@ -486,6 +486,7 @@ class FileParser(DBRecorder, Archiver):
                         "CANCEL - READY%scancel",
                         "CANCEL - FAILED%scancel"]
         lasttimestamp = 0
+        firststart = 0
         for stfind in createstates:
             for configstate in configstates:
                 findstate = stfind.replace("%s", configstate)
@@ -499,9 +500,12 @@ class FileParser(DBRecorder, Archiver):
                         item = tmplist.pop(counter)
                         if lasttimestamp == 0:
                             lasttimestamp = item['entertime']
+                            firststart = item['entertime']
                         else:
+                            # This is the diff time spent in previous state.
                             diff = item['entertime'] - lasttimestamp
-                            item['totaltime'] = diff if diff > 0 else 0
+                            self.requeststateentries[-1]['totaltime'] = diff if diff > 0 else 0
+                            self.requeststateentries[-1]['sincestart'] = item['entertime'] - firststart
                             lasttimestamp = item['entertime']
                             self.logger.info(f"({self.requestentry['uuid']}) Found state transition: {item['state']} - {item['configstate']} - {item['action']} - {diff}")
                         self.requeststateentries.append(item)
@@ -532,6 +536,7 @@ class FileParser(DBRecorder, Archiver):
                             'site1': self.requestentry['site1'],
                             'site2': self.requestentry['site2'],
                             'totaltime': 0, # This will be updated later
+                            'sincestart': 0, # This will be updated later
                             'insertdate': self.requestentry['insertdate'],
                             'updatedate': self.requestentry['updatedate']}
                     tmplist.append(item)
