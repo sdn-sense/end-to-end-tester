@@ -562,9 +562,11 @@ def filterIncludes(config, item):
         if 'exclude' in config['filter']:
             if item in config['filter']['exclude']:
                 return False
+            return True
         if 'include' in config['filter']:
             if item in config['filter']['include']:
                 return True
+            return False
     return True
 
 def getPortsFromSense(config, mlogger):
