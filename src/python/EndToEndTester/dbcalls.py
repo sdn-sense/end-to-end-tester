@@ -54,6 +54,7 @@ create_requeststates = """CREATE TABLE IF NOT EXISTS requeststates (
     action VARCHAR(255) NOT NULL,
     site1 VARCHAR(64) NOT NULL,
     site2 VARCHAR(64) NOT NULL,
+    totaltime INTEGER NOT NULL,
     entertime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -111,7 +112,6 @@ create_pingresults = """CREATE TABLE IF NOT EXISTS pingresults (
     rttmdev FLOAT NOT NULL
 );"""
 
-
 # INSERT INTO TABLES
 insert_requests = """INSERT INTO requests (uuid, port1, port2, finalstate, pathfindissue, requesttype, insertdate, updatedate, fileloc, site1, site2, failure)
 VALUES (%(uuid)s, %(port1)s, %(port2)s, %(finalstate)s, %(pathfindissue)s, %(requesttype)s, FROM_UNIXTIME(%(insertdate)s),FROM_UNIXTIME(%(updatedate)s), %(fileloc)s, %(site1)s, %(site2)s, %(failure)s)"""
@@ -119,8 +119,8 @@ insert_actions = """INSERT INTO actions (uuid, action, site1, site2, insertdate,
 VALUES (%(uuid)s, %(action)s, %(site1)s, %(site2)s,  FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
 insert_verification = """INSERT INTO verification (uuid, site, action, site1, site2, netstatus, urn, verified, insertdate, updatedate)
 VALUES (%(uuid)s, %(site)s, %(action)s, %(site1)s, %(site2)s, %(netstatus)s, %(urn)s, %(verified)s, FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
-insert_requeststates = """INSERT INTO requeststates (uuid, state, configstate, action, site1, site2, entertime, insertdate, updatedate)
-VALUES (%(uuid)s, %(state)s, %(configstate)s, %(action)s,%(site1)s, %(site2)s, FROM_UNIXTIME(%(entertime)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
+insert_requeststates = """INSERT INTO requeststates (uuid, state, configstate, action, site1, site2, totaltime, entertime, insertdate, updatedate)
+VALUES (%(uuid)s, %(state)s, %(configstate)s, %(action)s,%(site1)s, %(site2)s, %(totaltime)s, FROM_UNIXTIME(%(entertime)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s))"""
 insert_runnerinfo = """INSERT INTO runnerinfo (alive, totalworkers, totalqueue, remainingqueue, lockedrequests, updatedate, insertdate, starttime, nextrun)
 VALUES (%(alive)s, %(totalworkers)s, %(totalqueue)s, %(remainingqueue)s, %(lockedrequests)s, FROM_UNIXTIME(%(updatedate)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(starttime)s), FROM_UNIXTIME(%(nextrun)s))"""
 insert_lockedrequests = """INSERT INTO lockedrequests (uuid, port1, port2, finalstate, pathfindissue, requesttype, insertdate, updatedate, fileloc, site1, site2, failure)

@@ -99,7 +99,9 @@ class Archiver():
             # We have no record information on finalstate. checking sense-o
             senseodata, exc = self._getsenseodata()
             if exc:
-                self.logger.error('Got an exception receiving data from SENSE-O: {str(exc)}')
+                self.logger.error(f'Got an exception receiving data from SENSE-O: {str(exc)}')
+                if 'Returned code 404' in str(exc) and 'was not found' in str(exc):
+                    return True
             elif senseodata['superState'] == 'CANCEL' and senseodata['subState'] == 'READY' and \
                  senseodata['configState'] == 'STABLE' and senseodata['archived'] and not senseodata['locked']:
                 self.logger.info(f'{self.requestentry["uuid"]} is in correct state to be removed. Checking time')
@@ -199,7 +201,7 @@ class DBRecorder():
     def writerequeststate(self):
         """Record request state"""
         for reqentry in self.requeststateentries:
-            searchparams = [[key, value] for key, value in reqentry.items() if key not in ['entertime', 'insertdate', 'updatedate']]
+            searchparams = [[key, value] for key, value in reqentry.items() if key not in ['totaltime', 'entertime', 'insertdate', 'updatedate']]
             dbentry = self.db.get("requeststates", search=searchparams)
             if not dbentry:
                 self.db.insert("requeststates", [reqentry])
@@ -463,8 +465,60 @@ class FileParser(DBRecorder, Archiver):
                     if errmsg:
                         self.requestentry["failure"] = errmsg + self.requestentry["failure"]
 
+    def _calculateTotalTime(self, tmplist):
+        """Calculate total time to transition from one state to another"""
+        # 1. Need to define all correct states what state goes to what
+        configstates = ["create", "UNKNOWN", "PENDING", "SCHEDULED", "UNSTABLE", "STABLE"]
+        createstates = ["CREATE%screate",
+                        "CREATE - PENDING%screate",
+                        "CREATE - COMPILED%screate",
+                        "CREATE - PROPAGATED%screate",
+                        "CREATE - COMMITTING%screate",
+                        "CREATE - COMMITTED%screate",
+                        "CREATE - READY%screate",
+                        "CREATE - FAILED%screate",
+                        "CREATE%scancel",
+                        "CANCEL - PENDING%scancel",
+                        "CANCEL - COMPILED%scancel",
+                        "CANCEL - PROPAGATED%scancel",
+                        "CANCEL - COMMITTING%scancel",
+                        "CANCEL - COMMITTED%scancel",
+                        "CANCEL - READY%scancel",
+                        "CANCEL - FAILED%scancel"]
+        lasttimestamp = 0
+        for stfind in createstates:
+            for configstate in configstates:
+                findstate = stfind.replace("%s", configstate)
+                # loop via index via tmplist
+                total = len(tmplist)
+                counter = 0
+                while counter < total:
+                    fullstate = tmplist[counter]['state'] + tmplist[counter]['configstate'] + tmplist[counter]['action']
+                    if fullstate == findstate:
+                        # pop item from list
+                        item = tmplist.pop(counter)
+                        if lasttimestamp == 0:
+                            lasttimestamp = item['entertime']
+                        else:
+                            diff = item['entertime'] - lasttimestamp
+                            item['totaltime'] = diff if diff > 0 else 0
+                            lasttimestamp = item['entertime']
+                            self.logger.info(f"({self.requestentry['uuid']}) Found state transition: {item['state']} - {item['configstate']} - {item['action']} - {diff}")
+                        self.requeststateentries.append(item)
+                        counter = total
+                    counter += 1
+        # If we still have entries remaining here, we need to loop via them and add
+        for item in tmplist:
+            self.logger.info('Was not able to identify state transition for: {item}')
+            self.requeststateentries.append(item)
+
+
+        # 2. Loop via all items and see if we can find the next state
+        # 3. If we find the next state - we need to calculate time difference from entertime to next state
+
     def recordrequeststate(self):
         """Identify request information"""
+        tmplist = []
         for key, val in self.data.get('timings', {}).items():
             for key1, val1 in val.items():
                 if not isinstance(val1, dict):
@@ -477,9 +531,12 @@ class FileParser(DBRecorder, Archiver):
                             'entertime': cval,
                             'site1': self.requestentry['site1'],
                             'site2': self.requestentry['site2'],
+                            'totaltime': 0, # This will be updated later
                             'insertdate': self.requestentry['insertdate'],
                             'updatedate': self.requestentry['updatedate']}
-                    self.requeststateentries.append(item)
+                    tmplist.append(item)
+        # Now we need to calculate total time for each entry
+        self._calculateTotalTime(tmplist)
 
     def _parsepingstdout(self, line):
         """Parse a line containing ping results and set output values."""
