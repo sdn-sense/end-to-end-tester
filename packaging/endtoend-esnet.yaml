@@ -34,13 +34,9 @@ filter:
   include:
   - "urn:ogf:network:es.net:2013::losa-cr6:2_1_c4_1:+"
   - "urn:ogf:network:es.net:2013::fnalfcc-cr6:lag-2:+"
-  - "urn:ogf:network:es.net:2013::seat-cr6:2_1_c2_1:+"
-  - "urn:ogf:network:es.net:2013::eqxam3-cr6:2_1_c1_1:+"
-  - "urn:ogf:network:es.net:2013::newy32aoa-cr6:1_1_c13_1:fabric"
-  - "urn:ogf:network:es.net:2013::wash-cr6:lag-50:wix"
   - "urn:ogf:network:es.net:2013::star-cr6:2_1_c5_1:+"
-  - "urn:ogf:network:es.net:2013::sunn-cr6:1_1_c3_1:al2s"
   - "urn:ogf:network:es.net:2013::newy32aoa-cr6:1_1_c26_1:mghpcc"
+  - "urn:ogf:network:es.net:2013::newy32aoa-cr6:1_1_c13_1:fabric"
   - "urn:ogf:network:es.net:2013::kans-cr6:lag-30:+"
 # Submission template to use for requests
 # By default - it will use guaranteedCapped and bestEffort as fallback
