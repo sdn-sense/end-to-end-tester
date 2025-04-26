@@ -168,6 +168,7 @@ class SENSEWorker():
         self.response = {'create': {}, 'cancel': {}}
         self.workerheader = f'Worker {self.workerid}'
         self.finalstats = True
+        self.vlan = "any"
 
     @timer_func
     def checkifJsonExists(self, pair):
@@ -526,7 +527,6 @@ class SENSEWorker():
     @timer_func
     def run(self, pair):
         """Start loop work"""
-        self._reset()
         self._setWorkerHeader(f"{pair[0]}-{pair[1]}-{self.vlan}")
         if self.checkifJsonExists(pair):
             self.logger.info(f"({self.workerheader}) Skipping: {pair} - Json file already exists")
@@ -589,6 +589,7 @@ class SENSEWorker():
                         if vlan in successvlans:
                             self.logger.info(f'Worker {self.workerid} already processed with vlan: {vlan}')
                             continue
+                        self._reset()
                         self.vlan = vlan
                         self.logger.info(f'Worker {self.workerid} processing pair: {pair} with vlan: {vlan}')
                         self.run(pair)
