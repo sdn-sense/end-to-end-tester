@@ -327,6 +327,7 @@ class FileParser(DBRecorder, Archiver):
         self.requestentry['failure'] = self.identifyerrors()
         self.requestentry['finalstate'] = self.identifyfinalstate() # 0 - not final, 1 - final
         self.requestentry['pathfindissue'] = self.identifyPathFindIssue()
+        self.requestentry['vlan'] = self.data['info']['req']['data']['connections'][0]['terminals'][0]['vlan_tag']
 
     def identifyfinalstate(self):
         """Identify request information"""
@@ -598,6 +599,9 @@ class FileParser(DBRecorder, Archiver):
             if requestdict['hostname'] in self.data.get('create', {}).get('pingresults', {}).get('submit', {}).get('hostips', {}):
                 ipfrom = self.data['create']['pingresults']['submit']['hostips'][requestdict['hostname']]
             self.newpingentry['ipfrom'] = ipfrom
+            # Identify vlan from request
+            self.newpingentry['vlanfrom'] = self.data['info']['req']['data']['connections'][0]['terminals'][0]['vlan_tag']
+            self.newpingentry['vlanto'] = self.data['info']['req']['data']['connections'][0]['terminals'][1]['vlan_tag']
             # parse the stdout
             for line in output.get('stdout', []):
                 self._parsepingstdout(line)

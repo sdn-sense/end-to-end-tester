@@ -583,6 +583,9 @@ class SENSEWorker():
                     successvlans = []
                     # Loop via all vlans.
                     for vlan in vlanrange:
+                        while pauseTesting(os.path.join(self.config['workdir'], "pause-endtoend-testing")):
+                            self.logger.info('Pause testing flag set. Will not get new to execute new vlan test')
+                            time.sleep(30)
                         if vlan in successvlans:
                             self.logger.info(f'Worker {self.workerid} already processed with vlan: {vlan}')
                             continue
