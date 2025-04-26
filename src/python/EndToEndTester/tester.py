@@ -42,10 +42,10 @@ requests = {'guaranteedCapped': {
        "ip_address_pool": {"netmask": "/64",
                             "name": "AutoGOLE-Test-IPv6-Pool"},
        "terminals": [
-          {"vlan_tag": "any",
+          {"vlan_tag": "REPLACEME",
             "assign_ip": True,
             "uri": "REPLACEME"},
-          {"vlan_tag": "any",
+          {"vlan_tag": "REPLACEME",
            "assign_ip": True,
            "uri": "REPLACEME"}],
        "assign_debug_ip": True}]}},
@@ -60,10 +60,10 @@ requests = {'guaranteedCapped': {
        "ip_address_pool": {"netmask": "/64",
                             "name": "AutoGOLE-Test-IPv6-Pool"},
        "terminals": [
-          {"vlan_tag": "any",
+          {"vlan_tag": "REPLACEME",
             "assign_ip": True,
             "uri": "REPLACEME"},
-          {"vlan_tag": "any",
+          {"vlan_tag": "REPLACEME",
            "assign_ip": True,
            "uri": "REPLACEME"}],
        "assign_debug_ip": True}]}}
@@ -75,10 +75,10 @@ net_request = {'nettest': {"service": "dnc",
                             {"bandwidth": {"qos_class": "guaranteedCapped", "capacity": "1000"},
                              "name": "Connection 1",
                              "terminals": [
-                                 {"vlan_tag": "any",
+                                 {"vlan_tag": "REPLACEME",
                                   "assign_ip": False,
                                   "uri": "REPLACEME"},
-                                 {"vlan_tag": "any",
+                                 {"vlan_tag": "REPLACEME",
                                   "assign_ip": False,
                                   "uri": "REPLACEME"}],
                              "assign_debug_ip": False}]}}}
@@ -107,6 +107,28 @@ def timer_func(func):
         return result
     return wrap_func
 
+def getvlanrange(config):
+    """Get VLAN range"""
+    vlanrange = []
+    if config.get('vlans', None):
+        #vlans: [1779-1799. 3110-3139]
+        for vlans in config.get('vlans', []):
+            if '-' in vlans:
+                try:
+                    start, end = vlans.split('-')
+                    start = int(start)
+                    end = int(end)
+                    if start > end:
+                        raise ValueError(f"VLAN range {vlans} is invalid. Start is greater than end.")
+                    vlanrange.extend([str(i) for i in range(start, end + 1)])
+                except Exception as ex:
+                    raise ValueError(f"VLAN range {vlans} is invalid. Error: {ex}") from ex
+            else:
+                vlanrange.append(vlans)
+    else:
+        vlanrange = ["any"]
+    return vlanrange
+
 @classwrapper
 class SENSEWorker():
     """SENSE Worker class"""
@@ -132,6 +154,7 @@ class SENSEWorker():
         self.httpretry = {'retries': self.config.get('httpretries', {}).get('retries', 3),
                           'timeout': self.config.get('httpretries', {}).get('timeout', 30)}
         self.finalstats = True
+        self.vlan = "any"
 
     @timer_func
     def _setWorkerHeader(self, header):
@@ -145,13 +168,14 @@ class SENSEWorker():
         self.response = {'create': {}, 'cancel': {}}
         self.workerheader = f'Worker {self.workerid}'
         self.finalstats = True
+        self.vlan = "any"
 
     @timer_func
     def checkifJsonExists(self, pair):
         """Check if json exists"""
         self.logger.info(f'{self.workerid} checking if {pair} exists and locked')
         checkCreateDir(self.config['workdir'])
-        fnames = [str(pair[0]) + '-' + str(pair[1]), str(pair[1]) + '-' + str(pair[0])]
+        fnames = [str(pair[0]) + '-' + str(pair[1]), str(pair[1]) + '-' + str(pair[0]) + '-' + str(self.vlan)]
         for fname in fnames:
             # If this file present - means data was not recorded yet. Look at DBRecorder process
             filename = os.path.join(self.config['workdir'], fname + '.json')
@@ -173,7 +197,7 @@ class SENSEWorker():
         """Create json lock"""
         self.logger.info(f'{self.workerid} creating lock file for {pair}')
         checkCreateDir(self.config['workdir'])
-        fname = str(pair[0]) + '-' + str(pair[1])
+        fname = str(pair[0]) + '-' + str(pair[1]) + '-' + str(self.vlan)
         filename = os.path.join(self.config['workdir'], fname + '.json.lock')
         with open(filename, 'w', encoding='utf-8') as fd:
             json.dump({'worker': self.workerheader, 'timestamp': getUTCnow()}, fd)
@@ -182,7 +206,7 @@ class SENSEWorker():
     def writeJsonOutput(self, pair):
         """Write json output"""
         # Generate filename (it can either pair (0,1) or (1,0))
-        fname = str(pair[0]) + '-' + str(pair[1])
+        fname = str(pair[0]) + '-' + str(pair[1]) + '-' + str(self.vlan)
         filename = os.path.join(self.config['workdir'], fname + '.json')
         with open(filename, 'w', encoding='utf-8') as fd:
             json.dump(self.response, fd)
@@ -379,7 +403,9 @@ class SENSEWorker():
         self.workflowApi = WorkflowCombinedApi()
         newreq = copy.deepcopy(template)
         self.response['info'] = {'pair': pair, 'worker': self.workerid, 'time': getUTCnow(), 'requesttype': reqtype}
+        newreq['data']['connections'][0]['terminals'][0]['vlan_tag'] = self.vlan
         newreq['data']['connections'][0]['terminals'][0]['uri'] = pair[0]
+        newreq['data']['connections'][0]['terminals'][1]['vlan_tag'] = self.vlan
         newreq['data']['connections'][0]['terminals'][1]['uri'] = pair[1]
         newreq['alias'] = self._getAlias(pair)
         self.response['info']['req'] = newreq
@@ -502,7 +528,7 @@ class SENSEWorker():
     def run(self, pair):
         """Start loop work"""
         self._reset()
-        self._setWorkerHeader(f"{pair[0]}-{pair[1]}")
+        self._setWorkerHeader(f"{pair[0]}-{pair[1]}-{self.vlan}")
         if self.checkifJsonExists(pair):
             self.logger.info(f"({self.workerheader}) Skipping: {pair} - Json file already exists")
             return
@@ -551,7 +577,22 @@ class SENSEWorker():
                 else:
                     pair = self.task_queue.get_nowait()
                     self.logger.info(f"Worker {self.workerid} processing pair: {pair}")
-                    self.run(pair)
+                    # In case we have vlans, we need also to use vlan tag. Otherwise, we use default
+                    self.vlan = "any"
+                    vlanrange = getvlanrange(self.config)
+                    self.logger.info(f'Worker {self.workerid} vlan range: {vlanrange}')
+                    successvlans = []
+                    # Loop via all vlans.
+                    for vlan in vlanrange:
+                        if vlan in successvlans:
+                            self.logger.info(f'Worker {self.workerid} already processed with vlan: {vlan}')
+                            continue
+                        self.vlan = vlan
+                        self.logger.info(f'Worker {self.workerid} processing pair: {pair} with vlan: {vlan}')
+                        self.run(pair)
+                        if self.response.get('create', {}).get('finalstate', None) == 'OK' and self.vlan != "any":
+                            self.logger.info(f'Worker {self.workerid} processing pair: {pair} with vlan: {vlan} - success')
+                            successvlans.append(vlan)
                     self.task_queue.task_done()
             except queue.Empty:
                 break
@@ -611,10 +652,49 @@ def getAllGroupedHosts(config, mlogger):
         mlogger.info(f'No entries found in config. Will use dynamic entries from domain: {config["entriesdynamic"]}')
         allEntries = getPortsFromSense(config, mlogger)
     # Generate a list of combinations
+    # if vlans defined, we need to do combinations between vlansto
+    if config.get('vlans', None):
+        uniquePairs = []
+        for urn in config.get('vlansto', []):
+            for urn1 in allEntries:
+                if urn == urn1:
+                    continue
+                combo = (urn, urn1)
+                if combo not in uniquePairs:
+                    uniquePairs.append(combo)
+                    continue
+                combo = (urn1, urn)
+                if combo not in uniquePairs:
+                    uniquePairs.append(combo)
+                    continue
+        mlogger.info(f"Here is new list of unique pairs to test: {uniquePairs}")
+        return uniquePairs
     uniquePairs = list(combinations(allEntries, 2))
     mlogger.info(f"Here is new list of unique pairs to test: {uniquePairs}")
     return uniquePairs
 
+def checkconfig(config):
+    """Check config"""
+    if config.get('entries', None) and config.get('entriesdynamic', None):
+        raise ValueError("Both entries and entriesdynamic are set. Please use only one of them.")
+    if config.get('entries', None) and config.get('entriessitename', None):
+        raise ValueError("Both entries and entriessitename are set. Please use only one of them.")
+    if not config.get('entries', None) and not config.get('entriesdynamic', None):
+        raise ValueError("Neither entries nor entriesdynamic are set. Please use one of them.")
+    if not config.get('entries', None) and (not config.get('entriesdynamic', None) or not config.get('entriessitename', None)):
+        raise ValueError("entriesdynamic or entriessitename is not set. Please set both of them.")
+    if not config.get('totalThreads', None):
+        raise ValueError("totalThreads is not set. Please set it.")
+    if not config.get('workdir', None):
+        raise ValueError("workdir is not set. Please set it.")
+    if not config.get('runInterval', None):
+        raise ValueError("runInterval is not set. Please set it.")
+    # if vlans defined, that works only with entries;
+    if config.get('vlans', None) and not config.get('entries', None):
+        raise ValueError("VLANs are defined, but entries are not. Please set entries.")
+    if config.get('vlans', None) and not config.get('vlansto', None):
+        raise ValueError("VLANs are defined, but vlansto is not. Please set vlansto.")
+        
 
 def main(config, starttime, nextRunTime):
     """Main Run"""
@@ -627,6 +707,7 @@ def main(config, starttime, nextRunTime):
         dumpFileJson(os.path.join(config['workdir'], "testerinfo" + '.run'), statusout)
         time.sleep(30)
     mlogger.info('='*80)
+    checkconfig(config)
     mlogger.info("Get all group host pairs")
     unique_pairs = getAllGroupedHosts(config, mlogger)
     threads = []
