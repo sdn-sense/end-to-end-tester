@@ -168,7 +168,6 @@ class SENSEWorker():
         self.response = {'create': {}, 'cancel': {}}
         self.workerheader = f'Worker {self.workerid}'
         self.finalstats = True
-        self.vlan = "any"
 
     @timer_func
     def checkifJsonExists(self, pair):
