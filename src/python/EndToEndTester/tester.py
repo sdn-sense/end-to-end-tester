@@ -392,7 +392,7 @@ class SENSEWorker():
 
     def _getAlias(self, pair):
         """Get alias for the pair"""
-        return f'{timestampToDate(getUTCnow())} {self.__getpart(pair[0])}-{self.__getpart(pair[1])}'
+        return f'{timestampToDate(getUTCnow())} {self.__getpart(pair[0])}-{self.__getpart(pair[1])}-{self.vlan}'
 
     @timer_func
     def __create(self, pair, reqtype, template):
