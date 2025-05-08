@@ -1,0 +1,3664 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 5161,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 15,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "rawSql": "SELECT starttime, updatedate, nextrun FROM endtoend.runnerinfo LIMIT 50 ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "starttime",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "updatedate",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "nextrun",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "runnerinfo"
+        }
+      ],
+      "transparent": true,
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 14,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "rawSql": "SELECT alive FROM endtoend.runnerinfo LIMIT 50 ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "alive",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "runnerinfo"
+        },
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "hide": false,
+          "rawSql": "SELECT totalworkers FROM endtoend.runnerinfo LIMIT 50 ",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "totalworkers",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "runnerinfo"
+        },
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "hide": false,
+          "rawSql": "SELECT totalqueue FROM endtoend.runnerinfo LIMIT 50 ",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "totalqueue",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "runnerinfo"
+        },
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "hide": false,
+          "rawSql": "SELECT remainingqueue FROM endtoend.runnerinfo LIMIT 50 ",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "remainingqueue",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "runnerinfo"
+        },
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "hide": false,
+          "rawSql": "SELECT lockedrequests FROM endtoend.runnerinfo LIMIT 50 ",
+          "refId": "E",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "lockedrequests",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "runnerinfo"
+        }
+      ],
+      "title": "Runner Information",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "qjScxmmVz"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 9,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "Configuration File: [Github link](https://github.com/sdn-sense/end-to-end-tester/blob/main/packaging/endtoend.yaml)\n\n# Test Process:\n- Generates unique pairs for all valid endpoints (see `entries` key in the configuration file).\n- Runs every 12 hours (or as configured by `runInterval`).\n- Submits a new path request using the template:  \n  - **1Gb Guaranteed Capped**  \n  - **Assign IPv6 address** with both terminal endpoints.\n- If the path request fails, it retries using best effort and records only the best-effort result in the database.\n\n# Timeouts:\n- Defined in the configuration file (e.g., if set to **20 minutes**, creation, validation, and resource activation must complete within this timeframe).\n- Similar constraints apply to cancellation requests.\n\n# Path Creation Scenarios and Workflow (Step by Step):\n\n## **CREATE: Successful and Validated, CANCEL: Successful and Validated**\n- Log information inside database.\n- Remove request from **SENSE-O**.\n\n## **In any of CREATE/CANCEL: Successfully Accepted but Validation Failed**\n- Log information inside database.\n- The entry remains in **SENSE-O** for debugging.\n- The endpoint pair is excluded from future tests until manually deleted.\n\n## **Any Other Failures**\n- **If failure is due to \"Failed to find path\":**  \n  - Log information inside database.  \n  - Remove request from **SENSE-O**, and the pair is retested in the next cycle.\n- **If path creation fails due to other reasons** (e.g., timeout, RM no reply, any other exception):  \n  - Log information inside database.  \n  - The entry remains in **SENSE-O** for debugging.  \n  - The pair is not tested again until deleted from **SENSE-O**.\n\n# Testing Restrictions:\n- As long as an endpoint pair exists in **SENSE-O** and was created by `EndToEndTester`, it is excluded from future tests.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.5.19",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "percent"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [
+            {
+              "options": {
+                "successful": {
+                  "color": "purple",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "successful"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "failed_pathfind"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "failed_other"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "hideTimeOverride": true,
+      "id": 11,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(DATE(insertdate)) AS time,\n  SUM(finalstate = 1) * 100.0 / COUNT(*) AS successful,\n  SUM(finalstate = 0 AND pathfindissue = 1) * 100.0 / COUNT(*) AS failed_pathfind,\n  SUM(finalstate = 0 AND pathfindissue = 0) * 100.0 / COUNT(*) AS failed_other\nFROM requests\nWHERE insertdate >= NOW() - INTERVAL 8 DAY\nAND ($UUID = 'All' OR uuid = ${UUID})\nAND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY DATE(insertdate)\nORDER BY time;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "timeFrom": "7d",
+      "title": "Last 7 days (100% Percentage Scaling)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "successful"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "failed_pathfind"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "failed_other"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 29
+      },
+      "hideTimeOverride": true,
+      "id": 12,
+      "interval": "6h",
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(DATE(insertdate)) AS time,\n  SUM(finalstate = 1) * 100.0 / COUNT(*) AS successful,\n  SUM(finalstate = 0 AND pathfindissue = 1) AS failed_pathfind,\n  SUM(finalstate = 0 AND pathfindissue = 0) AS failed_other\nFROM requests\nWHERE insertdate >= NOW() - INTERVAL 8 DAY\nAND ($UUID = 'All' OR uuid = ${UUID})\nAND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY DATE(insertdate)\nORDER BY time;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "timeFrom": "7d",
+      "title": "Last 7 days (Count)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 37
+      },
+      "id": 10,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": []
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(DATE(insertdate)) AS time,\n  SUM(finalstate = 1) * 100.0 / COUNT(*) AS successful,\n  SUM(finalstate = 0 AND pathfindissue = 1) * 100.0 / COUNT(*) AS failed_pathfind,\n  SUM(finalstate = 0 AND pathfindissue = 0) * 100.0 / COUNT(*) AS failed_other\nFROM requests\nWHERE $__timeFilter(insertdate)\nAND ($UUID = 'All' OR uuid = ${UUID})\nAND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY DATE(insertdate)\nORDER BY time;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Percentage of Success",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 3,
+        "x": 4,
+        "y": 37
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) from requests WHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}));",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Total requests",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 3,
+        "x": 7,
+        "y": 37
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) from requests WHERE $__timeFilter(insertdate) AND finalstate = 1 AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}));",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Successful requests",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 3,
+        "x": 10,
+        "y": 37
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) from requests WHERE $__timeFilter(insertdate) AND finalstate != 1 AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}));",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Failed requests",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 3,
+        "x": 13,
+        "y": 37
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select count(*) from requests WHERE $__timeFilter(insertdate) AND pathfindissue = 1 AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}));",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Failed PathFinding",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "activated": {
+                  "color": "green",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 16,
+        "y": 37
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "#select count(*) from verification #WHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR site = ${SITE});\nSELECT COUNT(*) AS count, netstatus FROM verification WHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR site = ${SITE}) GROUP BY netstatus;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Network Status summary",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 20,
+        "y": 37
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "#select count(*) from verification #WHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR site = ${SITE});\nSELECT COUNT(*) AS count, CASE WHEN verified = 1 THEN 'True' ELSE 'False' END AS verified FROM verification WHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR site = ${SITE}) GROUP BY verified;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Verified Summary",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 44
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uuid"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 319
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "finalstate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pathfindissue"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 49
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "insertdate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 124
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "fileloc"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 42
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site1"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 192
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site2"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 175
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 44
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "pathfindissue"
+          }
+        ]
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT insertdate, uuid, site1, site2, finalstate, pathfindissue, requesttype, failure, port1, port2\nFROM endtoend.requests\nWHERE $__timeFilter(insertdate)\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nLIMIT 1000;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "*",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [],
+              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
+              "type": "group"
+            }
+          },
+          "table": "requests"
+        }
+      ],
+      "title": "All Entries (Requests table)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "This looks at success rate of creation and path were successful. This show only for endsites. For activation/deactivation - look at Activation chart.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 20,
+        "x": 0,
+        "y": 58
+      },
+      "id": 18,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "limit": 1000,
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    site,\n    ROUND((SUM(success_count) * 100.0) / SUM(total_count), 2) AS success_percentage\nFROM (\n    SELECT\n        site1 AS site,\n        SUM(CASE WHEN finalstate = 1 THEN 1 ELSE 0 END) AS success_count,\n        COUNT(*) AS total_count\n    FROM requests\n    WHERE $__timeFilter(insertdate)\n    AND ($UUID = 'All' OR uuid = ${UUID})\n    AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\n    GROUP BY site1\n    UNION ALL\n    SELECT\n        site2 AS site,\n        SUM(CASE WHEN finalstate = 1 THEN 1 ELSE 0 END) AS success_count,\n        COUNT(*) AS total_count\n    FROM requests\n    WHERE $__timeFilter(insertdate)\n    AND ($UUID = 'All' OR uuid = ${UUID})\n    AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\n    GROUP BY site2\n) AS result\nGROUP BY site\nORDER BY success_percentage ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "site",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "netstatus",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "verification"
+        }
+      ],
+      "title": "Success rate (CREATION) Distinct Sites",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "This shows what percentage of requests went through with guaranteed capped. The only time it goes to bestEffort - if path finding failed for a to b and 1gb guaranteed capped. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 85
+              },
+              {
+                "color": "yellow",
+                "value": 90
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 58
+      },
+      "id": 20,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    ROUND((COUNT(CASE WHEN requesttype = 'guaranteedCapped' THEN 1 END) * 100.0) / COUNT(*), 2) AS guaranteedCapped_percentage\nFROM requests\nWHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Guaranteed Capped Requests",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "This shows what percentage of requests went through with guaranteed capped. The only time it goes to bestEffort - if path finding failed for a to b and 1gb guaranteed capped. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "orange",
+                "value": 2
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 63
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    ROUND((COUNT(CASE WHEN requesttype = 'bestEffort' THEN 1 END) * 100.0) / COUNT(*), 2) AS guaranteedCapped_percentage\nFROM requests\nWHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Best Effort Requests",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "This looks at success rate of creation and path were successful. This show only for endsites. For activation/deactivation - look at Activation chart.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 20,
+        "x": 0,
+        "y": 68
+      },
+      "id": 22,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "limit": 1000,
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    site,\n    ROUND((SUM(success_count) * 100.0) / SUM(total_count), 2) AS success_percentage\nFROM (\n    SELECT\n        site1 AS site,\n        SUM(CASE WHEN finalstate = 1 THEN 1 ELSE 0 END) AS success_count,\n        COUNT(*) AS total_count\n    FROM requests\n    WHERE $__timeFilter(insertdate)\n    AND ($UUID = 'All' OR uuid = ${UUID})\n    AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\n    AND pathfindissue = 0\n    GROUP BY site1\n    UNION ALL\n    SELECT\n        site2 AS site,\n        SUM(CASE WHEN finalstate = 1 THEN 1 ELSE 0 END) AS success_count,\n        COUNT(*) AS total_count\n    FROM requests\n    WHERE $__timeFilter(insertdate)\n    AND ($UUID = 'All' OR uuid = ${UUID})\n    AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\n    AND pathfindissue = 0\n    GROUP BY site2\n) AS result\nGROUP BY site\nORDER BY success_percentage ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "site",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "netstatus",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "verification"
+        }
+      ],
+      "title": "Success rate (CREATION) Distinct Sites exclude path find failures",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "This shows what percentage of requests went through with guaranteed capped. The only time it goes to bestEffort - if path finding failed for a to b and 1gb guaranteed capped. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 85
+              },
+              {
+                "color": "yellow",
+                "value": 90
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 68
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    ROUND((COUNT(CASE WHEN requesttype = 'guaranteedCapped' THEN 1 END) * 100.0) / COUNT(*), 2) AS guaranteedCapped_percentage\nFROM requests\nWHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nAND pathfindissue = 0",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Guaranteed Capped Requests (exclude path find issue)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "This shows what percentage of requests went through with guaranteed capped. The only time it goes to bestEffort - if path finding failed for a to b and 1gb guaranteed capped. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "orange",
+                "value": 2
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 73
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    ROUND((COUNT(CASE WHEN requesttype = 'bestEffort' THEN 1 END) * 100.0) / COUNT(*), 2) AS guaranteedCapped_percentage\nFROM requests\nWHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nAND pathfindissue = 0",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Best Effort Requests (exclude path finding issue)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "This looks at success rate of creation and path were successful. This show only for endsites. For activation/deactivation - look at Activation chart.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 78
+      },
+      "id": 19,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "limit": 1000,
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    site1, \n    site2, \n    ROUND((SUM(CASE WHEN finalstate = 1 THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS success_percentage\nFROM requests\nWHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY site1, site2 ORDER BY success_percentage ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "site",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "netstatus",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "verification"
+        }
+      ],
+      "title": "Success rate (CREATION) Site pairs",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "This looks at success rate of creation and path were successful. This show only for endsites. For activation/deactivation - look at Activation chart.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 88
+      },
+      "id": 25,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "/^success_percentage$/",
+          "limit": 1000,
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    site1, \n    site2,\n    ROUND((SUM(CASE WHEN finalstate = 1 THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS success_percentage\nFROM requests\nWHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nAND pathfindissue = 0\nGROUP BY site1, site2\nORDER BY success_percentage ASC;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "site",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "netstatus",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "verification"
+        }
+      ],
+      "title": "Success rate (CREATION) Site pairs (exclude path finding issue)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 98
+      },
+      "id": 17,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "limit": 1000,
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    site, \n    ROUND((SUM(CASE WHEN netstatus = 'activated' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS activated_percentage\nFROM verification\nWHERE $__timeFilter(insertdate) AND ($UUID = 'All' OR uuid = ${UUID}) AND ($SITE = 'All' OR (site = ${SITE} OR site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY site ORDER BY activated_percentage ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "site",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "netstatus",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "verification"
+        }
+      ],
+      "title": "Success rate (Activated/Deactivated)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 156
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "netstatus"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 159
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 110
+      },
+      "id": 8,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS count, netstatus, site, site1 as from_site, site2 as to_site, uuid\nFROM verification \nWHERE $__timeFilter(insertdate) AND\n  (${UUID} = 'All' OR uuid = ${UUID}) \nGROUP BY netstatus, site, site1, site2, uuid;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Verification Entries",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 156
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "netstatus"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 159
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 110
+      },
+      "id": 27,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "netstatus"
+          }
+        ]
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS count, netstatus, site\nFROM verification \nWHERE $__timeFilter(insertdate) AND\n  (${UUID} = 'All' OR uuid = ${UUID}) \nGROUP BY netstatus, site;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Verification Entries (grouped by sites)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 44
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uuid"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 319
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "finalstate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pathfindissue"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 49
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "insertdate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 124
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "fileloc"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 42
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site1"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 192
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site2"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 175
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 120
+      },
+      "id": 13,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "request_count"
+          }
+        ]
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    COUNT(*) AS request_count, \n    site1, \n    site2, \n    finalstate,\n    pathfindissue,\n    MIN(uuid) AS sample_uuid, \n    MIN(failure) AS sample_failure, \n    MIN(port1) AS sample_port1, \n    MIN(port2) AS sample_port2\nFROM endtoend.requests\nWHERE $__timeFilter(insertdate)\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY site1, site2, finalstate, pathfindissue\nLIMIT 1000;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "*",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [],
+              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
+              "type": "group"
+            }
+          },
+          "table": "requests"
+        }
+      ],
+      "title": "All Entries Grouped by Site Pairs (Requests table)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "To see specific request - select UUID or use Filter, time range change",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": true,
+            "minWidth": 200
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 44
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uuid"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 319
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "finalstate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pathfindissue"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 49
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "insertdate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 124
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "fileloc"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 42
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site1"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 192
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site2"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 175
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 134
+      },
+      "id": 16,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "uuid"
+          }
+        ]
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT *\nFROM endtoend.requeststates\nWHERE $__timeFilter(insertdate)\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nORDER BY updatedate desc",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "*",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [],
+              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
+              "type": "group"
+            }
+          },
+          "table": "requests"
+        }
+      ],
+      "title": "Request states (last 1000)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "To see specific request - select UUID or use Filter, time range change",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": true,
+            "minWidth": 200
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 44
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uuid"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 319
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "finalstate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pathfindissue"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 49
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "insertdate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 124
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "fileloc"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 42
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site1"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 192
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site2"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 175
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 148
+      },
+      "id": 26,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "failed"
+          }
+        ]
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT *\nFROM endtoend.pingresults\nWHERE $__timeFilter(insertdate)\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nORDER BY updatedate desc LIMIT 1000",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "*",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [],
+              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
+              "type": "group"
+            }
+          },
+          "table": "requests"
+        }
+      ],
+      "title": "Ping Results",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "To see specific request - select UUID or use Filter, time range change",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": true,
+            "minWidth": 200
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 44
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uuid"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 319
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "finalstate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pathfindissue"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 49
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "insertdate"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 124
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "fileloc"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 42
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site1"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 192
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "site2"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 175
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 162
+      },
+      "id": 30,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT *\nFROM endtoend.lockedrequests\nWHERE $__timeFilter(insertdate)\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nORDER BY updatedate desc LIMIT 1000",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "*",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [],
+              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
+              "type": "group"
+            }
+          },
+          "table": "requests"
+        }
+      ],
+      "title": "Locked requests (last 1000)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "To see specific request - select UUID or use Filter, time range change",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 176
+      },
+      "id": 28,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "  SELECT \n    state, \n    configstate, \n    action, \n    AVG(totaltime) AS timetoreachstatefromprev\nFROM \n    requeststates\nWHERE $__timeFilter(insertdate)\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY \n    state, \n    configstate, \n    action\nORDER BY \n    CASE\n        -- CREATE %s create\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'create' THEN 1\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'UNKNOWN' THEN 2\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'PENDING' THEN 3\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'SCHEDULED' THEN 4\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'UNSTABLE' THEN 5\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'STABLE' THEN 6\n\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'create' THEN 7\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'UNKNOWN' THEN 8\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'PENDING' THEN 9\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'SCHEDULED' THEN 10\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'UNSTABLE' THEN 11\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'STABLE' THEN 12\n\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'create' THEN 13\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 14\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'PENDING' THEN 15\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 16\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 17\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'STABLE' THEN 18\n\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'create' THEN 19\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 20\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'PENDING' THEN 21\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 22\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 23\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'STABLE' THEN 24\n\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'create' THEN 25\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'UNKNOWN' THEN 26\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'PENDING' THEN 27\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'SCHEDULED' THEN 28\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'UNSTABLE' THEN 29\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'STABLE' THEN 30\n\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'create' THEN 31\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 32\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'PENDING' THEN 33\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 34\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 35\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'STABLE' THEN 36\n\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'create' THEN 37\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'UNKNOWN' THEN 38\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'PENDING' THEN 39\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'SCHEDULED' THEN 40\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'UNSTABLE' THEN 41\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'STABLE' THEN 42\n\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'create' THEN 43\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 44\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'PENDING' THEN 45\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 46\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 47\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'STABLE' THEN 48\n\n        -- CANCEL %s cancel\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'create' THEN 49\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 50\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'PENDING' THEN 51\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 52\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 53\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'STABLE' THEN 54\n\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'create' THEN 55\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 56\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'PENDING' THEN 57\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 58\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 59\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'STABLE' THEN 60\n\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'create' THEN 61\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 62\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'PENDING' THEN 63\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 64\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 65\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'STABLE' THEN 66\n\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'create' THEN 67\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 68\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'PENDING' THEN 69\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 70\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 71\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'STABLE' THEN 72\n\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'create' THEN 73\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 74\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'PENDING' THEN 75\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 76\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 77\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'STABLE' THEN 78\n\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'create' THEN 79\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 80\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'PENDING' THEN 81\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 82\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 83\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'STABLE' THEN 84\n\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'create' THEN 85\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 86\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'PENDING' THEN 87\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 88\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 89\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'STABLE' THEN 90\n\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'create' THEN 91\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 92\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'PENDING' THEN 93\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 94\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 95\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'STABLE' THEN 96\n\n        ELSE 999\n    END;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "*",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [],
+              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
+              "type": "group"
+            }
+          },
+          "table": "requests"
+        }
+      ],
+      "title": "Transition times",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "To see specific request - select UUID or use Filter, time range change",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+           "children1": [],
+              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
+                      "y": 190
+      },
+      "id": 29,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "dataset": "endtoend",
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    rs.state, \n    rs.configstate, \n    rs.action, \n    AVG(rs.sincestart) AS timetoreachstatefromprev\nFROM \n    requeststates rs\nJOIN \n    requests r ON rs.uuid = r.uuid\nWHERE \n    $__timeFilter(rs.insertdate)\n    AND ($UUID = 'All' OR rs.uuid = ${UUID})\n    AND ($SITE = 'All' OR (r.site1 = ${SITE} OR r.site2 = ${SITE}))\n    AND r.finalstate = 1\nGROUP BY \n    state, \n    configstate, \n    action\nORDER BY \n    CASE\n        -- CREATE %s create\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'create' THEN 1\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'UNKNOWN' THEN 2\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'PENDING' THEN 3\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'SCHEDULED' THEN 4\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'UNSTABLE' THEN 5\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'STABLE' THEN 6\n\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'create' THEN 7\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'UNKNOWN' THEN 8\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'PENDING' THEN 9\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'SCHEDULED' THEN 10\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'UNSTABLE' THEN 11\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'STABLE' THEN 12\n\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'create' THEN 13\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 14\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'PENDING' THEN 15\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 16\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 17\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'STABLE' THEN 18\n\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'create' THEN 19\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 20\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'PENDING' THEN 21\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 22\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 23\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'STABLE' THEN 24\n\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'create' THEN 25\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'UNKNOWN' THEN 26\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'PENDING' THEN 27\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'SCHEDULED' THEN 28\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'UNSTABLE' THEN 29\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'STABLE' THEN 30\n\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'create' THEN 31\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 32\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'PENDING' THEN 33\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 34\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 35\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'STABLE' THEN 36\n\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'create' THEN 37\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'UNKNOWN' THEN 38\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'PENDING' THEN 39\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'SCHEDULED' THEN 40\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'UNSTABLE' THEN 41\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'STABLE' THEN 42\n\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'create' THEN 43\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 44\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'PENDING' THEN 45\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 46\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 47\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'STABLE' THEN 48\n\n        -- CANCEL %s cancel\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'create' THEN 49\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 50\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'PENDING' THEN 51\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 52\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 53\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'STABLE' THEN 54\n\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'create' THEN 55\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 56\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'PENDING' THEN 57\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 58\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 59\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'STABLE' THEN 60\n\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'create' THEN 61\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 62\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'PENDING' THEN 63\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 64\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 65\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'STABLE' THEN 66\n\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'create' THEN 67\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 68\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'PENDING' THEN 69\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 70\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 71\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'STABLE' THEN 72\n\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'create' THEN 73\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 74\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'PENDING' THEN 75\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 76\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 77\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'STABLE' THEN 78\n\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'create' THEN 79\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 80\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'PENDING' THEN 81\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 82\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 83\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'STABLE' THEN 84\n\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'create' THEN 85\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 86\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'PENDING' THEN 87\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 88\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 89\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'STABLE' THEN 90\n\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'create' THEN 91\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 92\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'PENDING' THEN 93\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 94\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 95\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'STABLE' THEN 96\n\n        ELSE 999\n    END;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "*",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [],
+              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
+              "type": "group"
+            }
+          },
+          "table": "requests"
+        }
+      ],
+      "title": "Transition times (since start, only success)",
+      "type": "bargauge"
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": "'All'",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "mysql",
+          "uid": "REPLACEME_DATASOURCE"
+        },
+        "definition": "select uuid from requests WHERE $__timeFilter(insertdate);",
+        "description": "UUID",
+        "hide": 0,
+        "includeAll": true,
+        "label": "UUID",
+        "multi": false,
+        "name": "UUID",
+        "options": [],
+        "query": "select uuid from requests WHERE $__timeFilter(insertdate);",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": "'All'",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "mysql",
+          "uid": "REPLACEME_DATASOURCE"
+        },
+        "definition": "SELECT DISTINCT site FROM (\n    SELECT site1 AS site FROM endtoend.requests\n    UNION ALL\n    SELECT site2 FROM endtoend.requests\n) AS combined_sites;",
+        "description": "Site",
+        "hide": 0,
+        "includeAll": true,
+        "label": "SITE",
+        "multi": false,
+        "name": "SITE",
+        "options": [],
+        "query": "SELECT DISTINCT site FROM (\n    SELECT site1 AS site FROM endtoend.requests\n    UNION ALL\n    SELECT site2 FROM endtoend.requests\n) AS combined_sites;",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "REPLACEME_TITLE",
+  "uid": "a359ae04-2f0b-4ffa-b721-a11b63b1295b",
+  "version": 4,
+  "weekStart": ""
+}
