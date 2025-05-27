@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# pylint: disable=line-too-long
 """Automatic testing of SENSE Endpoints. (Utilities, like config loader)
 Title                   : end-to-end-tester
 Author                  : Justas Balcas
@@ -7,6 +8,7 @@ Email                   : jbalcas (at) es.net
 Date                    : 2025/03/14
 """
 import os
+import sys
 import time
 import json
 import shutil
@@ -24,7 +26,10 @@ def pauseTesting(fname):
         return True
     return False
 
-def getLogger(name="loggerName", logLevel=logging.DEBUG, logFile="/tmp/app.log"):
+
+def getLogger(
+    name="loggerName", logLevel=logging.DEBUG, logFile="/tmp/app.log", logtoStdout=False
+):
     """
     Get or create a logger that works across processes by logging to a file.
     """
@@ -35,10 +40,21 @@ def getLogger(name="loggerName", logLevel=logging.DEBUG, logFile="/tmp/app.log")
         handler = logging.handlers.RotatingFileHandler(
             logFile, maxBytes=10 * 1024 * 1024, backupCount=100
         )
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-        logger.propagate = False  # Prevent duplicate logs if root logger is configured
+
+        if logtoStdout:
+            stdout_handler = logging.StreamHandler(sys.stdout)
+            stdout_handler.setFormatter(formatter)
+            logger.addHandler(stdout_handler)
+
+        logger.propagate = (
+            False  # Prevent duplicate logs from propagating to root logger
+        )
+
     return logger
 
 
@@ -54,6 +70,7 @@ def moveFile(filePath, newDir):
     except Exception as ex:
         print(f"Error moving file: {ex}")
     return None
+
 
 def renameFile(filePath, newDir, newFName):
     """Rename a file and move it to a new directory."""
@@ -76,7 +93,7 @@ def checkCreateDir(workdir):
 
 def timestampToDate(timestamp):
     """Convert a timestamp to a UTC date string in YYYY-MM-DD format."""
-    return datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime('%Y-%m-%d')
+    return datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime("%Y-%m-%d")
 
 
 def getUTCnow():
@@ -87,23 +104,23 @@ def getUTCnow():
 def loadFileJson(filename):
     """Load File"""
     if not os.path.isfile(filename):
-        print(f'Input {filename} is not a file. return empty dict')
+        print(f"Input {filename} is not a file. return empty dict")
         return {}
-    with open(filename, 'rb') as fd:
+    with open(filename, "rb") as fd:
         try:
             return json.loads(fd.read())
         except json.JSONDecodeError as ex:
-            print(f'Error in loading file: {ex}')
+            print(f"Error in loading file: {ex}")
     return {}
 
 
 def dumpFileJson(filename, data):
     """Dump File"""
-    with open(filename, 'wb') as fd:
+    with open(filename, "wb") as fd:
         try:
-            fd.write(json.dumps(data).encode('utf-8'))
+            fd.write(json.dumps(data).encode("utf-8"))
         except json.JSONDecodeError as ex:
-            print(f'Error in dumping file: {ex}')
+            print(f"Error in dumping file: {ex}")
     return {}
 
 
@@ -116,7 +133,7 @@ def loadJson(data):
     try:
         return json.loads(data)
     except json.JSONDecodeError as ex:
-        print(f'Error in loading json dict: {ex}')
+        print(f"Error in loading json dict: {ex}")
     return {}
 
 
@@ -125,7 +142,7 @@ def dumpJson(data):
     try:
         return json.dumps(data)
     except json.JSONDecodeError as ex:
-        print(f'Error in dumping json dict: {ex}')
+        print(f"Error in dumping json dict: {ex}")
     return {}
 
 
@@ -134,7 +151,7 @@ def dumpYaml(data):
     try:
         return ydump(data, default_flow_style=False)
     except json.JSONDecodeError as ex:
-        print(f'Error in dumping yaml dict: {ex}')
+        print(f"Error in dumping yaml dict: {ex}")
     return {}
 
 
@@ -145,9 +162,9 @@ def loadYaml(data):
     try:
         return yload(data)
     except Exception as ex:
-        print('Error in loading yaml dict: %s', ex)
-        print('Data: %s', data)
-        print('Data type: %s', type(data))
+        print("Error in loading yaml dict: %s", ex)
+        print("Data: %s", data)
+        print("Data type: %s", type(data))
     return {}
 
 
@@ -164,7 +181,7 @@ def setSenseEnv(config=None):
     if not config:
         config = getConfig()
     if "sense-auth" in config:
-        os.environ['SENSE_AUTH_OVERRIDE'] = config["sense-auth"]
+        os.environ["SENSE_AUTH_OVERRIDE"] = config["sense-auth"]
         return True
     return False
 
@@ -193,9 +210,10 @@ def fetchRemoteConfig(url, retries=3, sleep_time=30):
         raise Exception("\n".join(errmsg))
     return None
 
+
 def refreshConfig(config):
     """Refresh config from remote location, if no remote - from local and return new config"""
-    if config.get('configlocaction', None):
-        config = loadYaml(fetchRemoteConfig(config['configlocation']))
+    if config.get("configlocaction", None):
+        config = loadYaml(fetchRemoteConfig(config["configlocation"]))
         return config
     return getConfig()

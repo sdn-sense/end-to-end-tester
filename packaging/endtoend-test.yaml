@@ -4,7 +4,7 @@ sense-auth: /etc/sense-o-auth.yaml
 totalThreads: 1
 # No threading - run everything in a single thread: (default False)
 # useful for debugging. Only works if totalThreads == 1
-# nothreading: False
+nothreading: True
 # Once run finishes, next run will start after this many seconds (taken out run startup)
 runInterval: 43200
 # In case run finished earlier - and still not next run, sleep for this many seconds
@@ -23,18 +23,17 @@ timeouts:
 #  retries: 3
 #  timeout: 30
 
+# Flags to control the End-to-End tester actions
+reprovision: true # Once instance reaches create-ready-stable, do cancel, and reprovision
+modify: true # Once instance reaches create-ready-stable (or reinstace-ready-stable), do modify
+
 # Developement entries remain with-in a single site
 entries:
-  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-gen4-01.ampath.net": 
-    site: "T2_US_Ampath"
-    disabled: False  # disabled: False is default;
-  "urn:ogf:network:ultralight.org:2013:sdn-dtn-1-7.ultralight.org":
-    site: "T2_US_Caltech_Dev"
+  "urn:ogf:network:nrp-nautilus-dev.io:2025:node-2-8.sdsc.optiputer.net":
+    site: "T2_US_SDSC_DEV"
     disabled: False
-  #"urn:ogf:network:tier2.ultralight.org:2024:transfer-121.ultralight.org":
-  #  site: "T2_US_Caltech_Prod"
-  "urn:ogf:network:tier2.ultralight.org:2024:transfer-14.ultralight.org": 
-    site: "T2_US_Caltech_Prod"
+  "urn:ogf:network:tier2-dev.ultralight.org:2025:transfer-13.ultralight.org": 
+    site: "T2_US_Caltech_DEV"
     disabled: False
 # Entries dynamic is used to test a specific domain, e.g. ESnet.
 # This will go dynamically to SENSE-O and get all ports associated with the domain
@@ -102,3 +101,7 @@ mappings:
   urn:ogf:network:sense-losa-fabric-testbed.net:2024: "T3_FABRIC_LOSA"
   urn:ogf:network:sense-newy-fabric-testbed.net:2024: "T3_FABRIC_NEWY"
   urn:ogf:network:sense-ucsd-fabric-testbed.net:2024: "T3_FABRIC_UCSD"
+  urn:ogf:network:nrp-nautilus-dev.io:2025: "T2_US_SDSC_DEV"
+  urn:ogf:network:sense-oasis-nrp-nautilus-dev.io:2025: "T2_US_SDSC_OASIS_DEV"
+  urn:ogf:network:sc-test-dev.cenic.net:2025: "NRM_CENIC_DEV"
+  urn:ogf:network:tier2-dev.ultralight.org:2025: "T2_US_Caltech_DEV"
