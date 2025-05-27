@@ -103,8 +103,8 @@ create_pingresults = """CREATE TABLE IF NOT EXISTS pingresults (
     port2 VARCHAR(255) NOT NULL,
     ipto VARCHAR(255) NOT NULL,
     ipfrom VARCHAR(255) NOT NULL,
-    vlanfrom VARCHAR(4) NOT NULL,
-    vlanto VARCHAR(4) NOT NULL,
+    vlanfrom VARCHAR(17) NOT NULL,
+    vlanto VARCHAR(17) NOT NULL,
     insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     failed INTEGER NOT NULL CHECK (failed IN (0,1)),
@@ -152,5 +152,5 @@ delete_models = "DELETE FROM requests"
 delete_deltas = "DELETE FROM actions"
 delete_delta_connections = "DELETE FROM verification"
 delete_requeststates = "DELETE FROM requeststates"
-delete_lockedrequests ="DELETE FROM lockedrequests"
+delete_lockedrequests = "DELETE FROM lockedrequests"
 delete_pingresults = "DELETE FROM pingresults"

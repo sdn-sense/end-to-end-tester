@@ -25,7 +25,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -81,7 +81,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "builder",
           "format": "table",
@@ -136,7 +136,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -186,7 +186,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "builder",
           "format": "table",
@@ -220,7 +220,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "builder",
           "format": "table",
@@ -255,7 +255,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "builder",
           "format": "table",
@@ -290,7 +290,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "builder",
           "format": "table",
@@ -325,7 +325,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "builder",
           "format": "table",
@@ -388,7 +388,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -529,7 +529,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -562,7 +562,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -693,7 +693,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -726,7 +726,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -781,7 +781,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -813,7 +813,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -859,7 +859,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -891,7 +891,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -937,7 +937,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -969,7 +969,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -1015,7 +1015,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1047,7 +1047,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -1093,7 +1093,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1125,7 +1125,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -1181,7 +1181,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1213,7 +1213,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -1259,7 +1259,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1291,7 +1291,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -1452,7 +1452,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1495,7 +1495,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "This looks at success rate of creation and path were successful. This show only for endsites. For activation/deactivation - look at Activation chart.",
       "fieldConfig": {
@@ -1548,7 +1548,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1595,7 +1595,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "This shows what percentage of requests went through with guaranteed capped. The only time it goes to bestEffort - if path finding failed for a to b and 1gb guaranteed capped. ",
       "fieldConfig": {
@@ -1655,7 +1655,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1687,7 +1687,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "This shows what percentage of requests went through with guaranteed capped. The only time it goes to bestEffort - if path finding failed for a to b and 1gb guaranteed capped. ",
       "fieldConfig": {
@@ -1747,7 +1747,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1779,7 +1779,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "This looks at success rate of creation and path were successful. This show only for endsites. For activation/deactivation - look at Activation chart.",
       "fieldConfig": {
@@ -1832,7 +1832,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1879,7 +1879,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "This shows what percentage of requests went through with guaranteed capped. The only time it goes to bestEffort - if path finding failed for a to b and 1gb guaranteed capped. ",
       "fieldConfig": {
@@ -1939,7 +1939,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -1971,7 +1971,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "This shows what percentage of requests went through with guaranteed capped. The only time it goes to bestEffort - if path finding failed for a to b and 1gb guaranteed capped. ",
       "fieldConfig": {
@@ -2031,7 +2031,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -2063,7 +2063,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "This looks at success rate of creation and path were successful. This show only for endsites. For activation/deactivation - look at Activation chart.",
       "fieldConfig": {
@@ -2116,7 +2116,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -2163,7 +2163,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "This looks at success rate of creation and path were successful. This show only for endsites. For activation/deactivation - look at Activation chart.",
       "fieldConfig": {
@@ -2217,7 +2217,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -2264,7 +2264,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -2316,7 +2316,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -2363,7 +2363,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -2443,7 +2443,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -2475,7 +2475,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -2560,7 +2560,7 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -2592,7 +2592,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "fieldConfig": {
         "defaults": {
@@ -2753,7 +2753,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -2796,7 +2796,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "To see specific request - select UUID or use Filter, time range change",
       "fieldConfig": {
@@ -2959,7 +2959,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -3002,7 +3002,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "To see specific request - select UUID or use Filter, time range change",
       "fieldConfig": {
@@ -3165,7 +3165,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -3208,7 +3208,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "To see specific request - select UUID or use Filter, time range change",
       "fieldConfig": {
@@ -3366,7 +3366,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -3409,7 +3409,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "To see specific request - select UUID or use Filter, time range change",
       "fieldConfig": {
@@ -3460,7 +3460,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -3503,7 +3503,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "REPLACEME_DATASOURCE"
+        "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
       },
       "description": "To see specific request - select UUID or use Filter, time range change",
       "fieldConfig": {
@@ -3550,7 +3550,7 @@
           "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
-            "uid": "REPLACEME_DATASOURCE"
+            "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
           },
           "editorMode": "code",
           "format": "table",
@@ -3606,7 +3606,7 @@
         },
         "datasource": {
           "type": "mysql",
-          "uid": "REPLACEME_DATASOURCE"
+          "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
         },
         "definition": "select uuid from requests WHERE $__timeFilter(insertdate);",
         "description": "UUID",
@@ -3632,7 +3632,7 @@
         },
         "datasource": {
           "type": "mysql",
-          "uid": "REPLACEME_DATASOURCE"
+          "uid": "fcd484b6-f3f3-4fa8-b34e-5b21bf7b4391"
         },
         "definition": "SELECT DISTINCT site FROM (\n    SELECT site1 AS site FROM endtoend.requests\n    UNION ALL\n    SELECT site2 FROM endtoend.requests\n) AS combined_sites;",
         "description": "Site",
@@ -3657,7 +3657,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "REPLACEME_TITLE",
+  "title": "End To End Tester ESnet",
   "uid": "a359ae04-2f0b-4ffa-b721-a11b63b1295b",
   "version": 4,
   "weekStart": ""
