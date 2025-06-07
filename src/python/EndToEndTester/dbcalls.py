@@ -99,6 +99,7 @@ create_pingresults = """CREATE TABLE IF NOT EXISTS pingresults (
     uuid VARCHAR(255) NOT NULL,
     site1 VARCHAR(64) NOT NULL,
     site2 VARCHAR(64) NOT NULL,
+    action VARCHAR(255) NOT NULL,
     port1 VARCHAR(255) NOT NULL,
     port2 VARCHAR(255) NOT NULL,
     ipto VARCHAR(255) NOT NULL,
@@ -130,8 +131,8 @@ insert_runnerinfo = """INSERT INTO runnerinfo (alive, totalworkers, totalqueue, 
 VALUES (%(alive)s, %(totalworkers)s, %(totalqueue)s, %(remainingqueue)s, %(lockedrequests)s, FROM_UNIXTIME(%(updatedate)s), FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(starttime)s), FROM_UNIXTIME(%(nextrun)s))"""
 insert_lockedrequests = """INSERT INTO lockedrequests (uuid, port1, port2, finalstate, pathfindissue, vlan, requesttype, insertdate, updatedate, fileloc, site1, site2, failure)
 VALUES (%(uuid)s, %(port1)s, %(port2)s, %(finalstate)s, %(pathfindissue)s, %(vlan)s, %(requesttype)s, FROM_UNIXTIME(%(insertdate)s),FROM_UNIXTIME(%(updatedate)s), %(fileloc)s, %(site1)s, %(site2)s, %(failure)s)"""
-insert_pingresults = """INSERT INTO pingresults (uuid, site1, site2, port1, port2, ipto, ipfrom, vlanto, vlanfrom, insertdate, updatedate, failed, transmitted, received, packetloss, rttmin, rttavg, rttmax, rttmdev)
-VALUES (%(uuid)s, %(site1)s, %(site2)s, %(port1)s, %(port2)s, %(ipto)s, %(ipfrom)s, %(vlanto)s, %(vlanfrom)s, FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s), %(failed)s, %(transmitted)s, %(received)s, %(packetloss)s, %(rttmin)s, %(rttavg)s, %(rttmax)s, %(rttmdev)s)"""
+insert_pingresults = """INSERT INTO pingresults (uuid, site1, site2, action, port1, port2, ipto, ipfrom, vlanto, vlanfrom, insertdate, updatedate, failed, transmitted, received, packetloss, rttmin, rttavg, rttmax, rttmdev)
+VALUES (%(uuid)s, %(site1)s, %(site2)s, %(action)s, %(port1)s, %(port2)s, %(ipto)s, %(ipfrom)s, %(vlanto)s, %(vlanfrom)s, FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s), %(failed)s, %(transmitted)s, %(received)s, %(packetloss)s, %(rttmin)s, %(rttavg)s, %(rttmax)s, %(rttmdev)s)"""
 
 
 # SELECT FROM TABLES

@@ -193,6 +193,7 @@ class SENSEWorker:
         self.workflowPhasedApi = WorkflowPhasedApi()
         self.states = {
             "create": "CREATE - READY",
+            "modifycreate": "MODIFY - READY",
             "cancel": "CANCEL - READY",
             "cancelrep": "CANCEL - READY",
             "reprovision": "REINSTATE - READY",
@@ -205,6 +206,7 @@ class SENSEWorker:
         self.workerheader = f"Worker {self.workerid}"
         self.response = {
             "create": {},
+            "modifycreate": {},
             "cancel": {},
             "cancelrep": {},
             "reprovision": {},
@@ -229,6 +231,7 @@ class SENSEWorker:
         self.timings = {}
         self.response = {
             "create": {},
+            "modifycreate": {},
             "cancel": {},
             "cancelrep": {},
             "reprovision": {},
@@ -723,11 +726,10 @@ class SENSEWorker:
     # MODIFY
     # ==================================================================================================
     @timer_func
-    def modify(self, serviceuuid):
+    def modify(self, serviceuuid, action="division"):
         """Modify a service instance in SENSE-0"""
-        self.currentaction = "modify"
         self.starttime = getUTCnow()
-        self._logTiming("CREATE", "modify", "create", getUTCnow())
+        self._logTiming("CREATE", self.currentaction, "create", getUTCnow())
         status = self.workflowApi.instance_get_status(si_uuid=serviceuuid)
         if "error" in status:
             raise ValueError(status)
@@ -758,10 +760,15 @@ class SENSEWorker:
                 ),
                 None,
             )
-        # Given we are here - we need to modify the request to half of the original capacity.
-        originReq["data"]["connections"][0]["bandwidth"]["capacity"] = str(
-            int(originReq["data"]["connections"][0]["bandwidth"]["capacity"]) // 2
-        )
+        # Given we are here - we need to modify the request based on the request type
+        if action == "division":
+            originReq["data"]["connections"][0]["bandwidth"]["capacity"] = str(
+                int(originReq["data"]["connections"][0]["bandwidth"]["capacity"]) // 2
+            )
+        elif action == "multiply":
+            originReq["data"]["connections"][0]["bandwidth"]["capacity"] = str(
+                int(originReq["data"]["connections"][0]["bandwidth"]["capacity"]) * 2
+            )
         try:
             self.logger.info(f"{self.workerid} Modify instance {originReq}")
             response = self.workflowApi.instance_modify(
@@ -792,10 +799,10 @@ class SENSEWorker:
                 errmsg,
             )
         # Loop Status call for modify and look for final state
-        status = self._loopStatusCall(serviceuuid, "modify")
+        status = self._loopStatusCall(serviceuuid, self.currentaction)
         if bool(status.get("timeout", False)):
             return status
-        if self._validateState(status, "modify"):
+        if self._validateState(status, self.currentaction):
             status["finalstate"] = "OK"
             finalReturn = self._setFinalStats(status, None, serviceuuid)
             if not self.config.get("ignoreping", False):
@@ -820,6 +827,7 @@ class SENSEWorker:
     def run(self, pair):
         """Start loop work"""
         # pylint: disable=too-many-statements
+        modaction = "division"
         self._setWorkerHeader(f"{pair[0]}-{pair[1]}-{self.vlan}")
         if self.checkifJsonExists(pair):
             self.logger.info(
@@ -830,6 +838,7 @@ class SENSEWorker:
         cancelled = False
         try:
             # Create;
+            self.currentaction = "create"
             self.response["create"], errmsg = self.create(pair)
             self.logger.info(f"({self.workerheader}) response: {self.response}")
             serviceuuid = (
@@ -837,6 +846,17 @@ class SENSEWorker:
             )
             if errmsg:
                 raise ValueError(errmsg)
+            # Modify after create;
+            if self.config.get("modifycreate", True):
+                self.currentaction = "modifycreate"
+                self.response["modifycreate"], errmsg = self.modify(
+                    serviceuuid, modaction
+                )
+                modaction = "multiply"
+                if errmsg:
+                    raise ValueError(errmsg)
+            else:
+                del self.response["modifycreate"]
             if self.config.get("reprovision", False):
                 # Cancel;
                 self.currentaction = "cancelrep"
@@ -846,6 +866,7 @@ class SENSEWorker:
                 if errmsg:
                     raise ValueError(errmsg)
                 # Reprovision;
+                self.currentaction = "reprovision"
                 self.response["reprovision"], errmsg = self.reprovision(serviceuuid)
                 if errmsg:
                     raise ValueError(errmsg)
@@ -854,7 +875,8 @@ class SENSEWorker:
                 del self.response["reprovision"]
             if self.config.get("modify", False):
                 # Modify;
-                self.response["modify"], errmsg = self.modify(serviceuuid)
+                self.currentaction = "modify"
+                self.response["modify"], errmsg = self.modify(serviceuuid, modaction)
                 if errmsg:
                     raise ValueError(errmsg)
             else:
