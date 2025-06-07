@@ -135,15 +135,35 @@ class SiteRMApi:
                                 actionPresent = True
                                 break
                         if not actionPresent:
-                            self.logger.info(f"Submitting ping test for {newaction}")
-                            out = self.siterm_debug.submit_ping(**newaction)
-                            newaction["submit_time"] = getUTCnow()
-                            newaction["submit_out"] = out[0]
-                            self.logger.info(
-                                f"Submitted ping test for {newaction}: {out}"
-                            )
-                            ping_out["results"].append(newaction)
-        return ping_out
+                            repeat = 3
+                            tmpout = []
+                            while repeat > 0:
+                                self.logger.info(
+                                    f"Submitting ping test for {newaction}"
+                                )
+                                out = self.siterm_debug.submit_ping(**newaction)
+                                # Check if out [1] is True, which means the action was submitted successfully
+                                # Retry up to 3 times, and
+                                if len(out) == 3 and out[1] is True:
+                                    newaction["submit_time"] = getUTCnow()
+                                    newaction["submit_out"] = out[0]
+                                    self.logger.info(
+                                        f"Submitted ping test for {newaction}: {out}"
+                                    )
+                                    ping_out["results"].append(newaction)
+                                    repeat = 0
+                                else:
+                                    errmsg = f"Failed to submit ping test for {newaction}: {out}"
+                                    self.logger.error(errmsg)
+                                    tmpout.append(out)
+                                    repeat -= 1
+                                    if repeat == 0:
+                                        ping_out["submit_errors"] = tmpout
+                                        errmsg = f"Failed to submit ping test after 3 attempts. Last error: {errmsg}"
+                                        self.logger.error(errmsg)
+                                        return ping_out, False
+                                    time.sleep(10)
+        return ping_out, True
 
     def monitorping(self, **kwargs):
         """Monitor ping tests"""
@@ -158,7 +178,7 @@ class SiteRMApi:
                 monitorendpoints.append({"id": pingid, "sitename": sitename})
             else:
                 output["results"].append(
-                    {"ETE-Status": "FailedSubmit", "id": pingid, "sitename": sitename}
+                    {"Status": "FailedSubmit", "id": pingid, "sitename": sitename}
                 )
         # Now we loop over monitorendpoints and check the status
         monitor = bool(monitorendpoints)
@@ -168,6 +188,9 @@ class SiteRMApi:
             for idx, endpoint in enumerate(monitorendpoints):
                 out = self.siterm_debug.get_debug(
                     sitename=endpoint["sitename"], id=endpoint["id"]
+                )
+                self.logger.debug(
+                    f"Checking ping test {endpoint['sitename']}:{endpoint['id']}. Output: {out}"
                 )
                 if out[0]["state"] not in ["new", "active"]:
                     self.logger.info(
@@ -200,8 +223,9 @@ class SiteRMApi:
     def testPing(self, finalReturn):
         """Test Ping"""
         finalReturn.setdefault("pingresults", {"submit": {}, "final": {}})
-        pingSubmitResults = self.sr_submit_ping(**finalReturn)
+        pingSubmitResults, exitCode = self.sr_submit_ping(**finalReturn)
         finalReturn["pingresults"]["submit"] = pingSubmitResults
-        pingStatusResults = self.monitorping(**finalReturn)
-        finalReturn["pingresults"]["final"] = pingStatusResults
+        if exitCode:
+            pingStatusResults = self.monitorping(**finalReturn)
+            finalReturn["pingresults"]["final"] = pingStatusResults
         return finalReturn

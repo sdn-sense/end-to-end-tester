@@ -18,8 +18,14 @@ timeouts:
   cancel: 2400
 
 # Flags to control the End-to-End tester actions
+# Here is current flow (waiting in each state for final state ):
+# 1) create -> if modifycreate:True: modify -> cancel || cancel
+# 2) cancel -> if reprovision:True: reprovision || None;
+# 3) reprovision -> if modify:True modify || None;
+# 4) Any remaining state -> cancel if not cancelled, archive if failure.
 reprovision: true # Once instance reaches create-ready-stable, do cancel, and reprovision
 modify: true # Once instance reaches create-ready-stable (or reinstace-ready-stable), do modify
+modifycreate: true # Once instance reaches create-ready-stable, do modify-create
 
 # All entries to use for SENSE Request. It will make all possible combination pairs
 # from these
