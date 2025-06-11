@@ -44,6 +44,7 @@ entries:
     site: "T2_US_SDSC"
   "urn:ogf:network:maxgigapop.net:2013:ptxn-sense-v1.maxgigapop.net":
     site: "T2_US_UMD"
+    disabled: true
   "urn:ogf:network:nrp-nautilus-prod.io:2020:ucsd-nrp.cern.ch":
     site: "T3_FABRIC_CERN"
   "urn:ogf:network:starlight.org:2022:r740xd4.it.northwestern.edu":
