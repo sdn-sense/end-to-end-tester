@@ -344,6 +344,8 @@ class FileParser(DBRecorder, Archiver):
         self.defaultvals = {
             "create-verified": "activated",
             "create-unverified": "create-unverified",
+            "modifycreate-verified": "activated",
+            "modifycreate-unverified": "modify-unverified",
             "reprovision-verified": "activated",
             "reprovision-unverified": "reprovision-unverified",
             "modify-verified": "activated",
@@ -541,6 +543,7 @@ class FileParser(DBRecorder, Archiver):
         output = {}
         for key in [
             "create",
+            "modifycreate",
             "cancelrep",
             "reprovision",
             "modify",
@@ -639,6 +642,22 @@ class FileParser(DBRecorder, Archiver):
             "CREATE - COMMITTED%screate",
             "CREATE - READY%screate",
             "CREATE - FAILED%screate",
+            "CREATE%smodifycreate",
+            "MODIFY - PENDING%smodifycreate",
+            "MODIFY - COMPILED%smodifycreate",
+            "MODIFY - PROPAGATED%smodifycreate",
+            "MODIFY - COMMITTING%smodifycreate",
+            "MODIFY - COMMITTED%smodifycreate",
+            "MODIFY - READY%smodifycreate",
+            "MODIFY - FAILED%smodifycreate",
+            "CREATE%smodifycreate",
+            "CREATE - PENDING%smodifycreate",
+            "CREATE - COMPILED%smodifycreate",
+            "CREATE - PROPAGATED%smodifycreate",
+            "CREATE - COMMITTING%smodifycreate",
+            "CREATE - COMMITTED%smodifycreate",
+            "CREATE - READY%smodifycreate",
+            "CREATE - FAILED%smodifycreate",
             "CREATE%scancelrep",
             "CANCEL - PENDING%scancelrep",
             "CANCEL - COMPILED%scancelrep",
@@ -780,6 +799,7 @@ class FileParser(DBRecorder, Archiver):
             "uuid": self.requestentry["uuid"],
             "site1": self.requestentry["site1"],
             "site2": self.requestentry["site2"],
+            "action": "",
             "insertdate": self.requestentry["insertdate"],
             "updatedate": self.requestentry["updatedate"],
             "port1": self.requestentry["port1"],
@@ -805,6 +825,7 @@ class FileParser(DBRecorder, Archiver):
             .get("results", [])
         ):
             self.__resetpingentry()
+            self.newpingentry["action"] = action
             output = loadJson(item.get("output", "{}"))
             # load requestdict and get ipto
             requestdict = loadJson(item.get("requestdict", "{}"))
@@ -864,7 +885,7 @@ class FileParser(DBRecorder, Archiver):
         self.recordactions()
         self.recordverification()
         self.recordrequeststate()
-        for key in ["create", "reprovision", "modify"]:
+        for key in ["create", "reprovision", "modify", "modifycreate"]:
             self.recordpingresults(key)
 
     def checkrunnerinfo(self):
