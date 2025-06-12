@@ -53,6 +53,7 @@ entries:
     site: "T1_US_FNAL"
   "urn:ogf:network:tier2-unl.edu:2024:red-sense-dtn3.unl.edu":
     site: "T2_US_Nebraska"
+    disabled: true
   "urn:ogf:network:mghpcc.org:2025:nrp-sense01.rnd.net2.mghpcc.org":
     site: "T2_US_MGHPCC"
   "urn:ogf:network:uhnet.net:2021:hawaii-scidmz:prp01.ifa.hawaii.edu": 
