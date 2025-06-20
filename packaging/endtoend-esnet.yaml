@@ -1,7 +1,7 @@
 # Sense authentication file location
 sense-auth: /etc/sense-o-auth.yaml
 # Total Threads to run for all pairs
-totalThreads: 5
+totalThreads: 2
 # No threading - run everything in a single thread: (default False)
 # useful for debugging. Only works if totalThreads == 1
 # nothreading: False
