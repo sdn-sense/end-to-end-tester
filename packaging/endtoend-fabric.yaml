@@ -32,6 +32,15 @@ entries: {}
 entriesdynamic: "urn:ogf:network:stack-fabric:2024:topology"
 entriessitename: "FABRIC"
 
+filter:
+  include:
+  - "urn:ogf:network:stack-fabric:2024:topology:node+STAR:port+ESnet-StarLight"
+  - "urn:ogf:network:stack-fabric:2024:topology:node+NEWY:port+ESnet-400G-NEWY"
+  - "urn:ogf:network:stack-fabric:2024:topology:node+LOSA:port+LOSA-HU6-wk2-pci6-p2"
+  - "urn:ogf:network:stack-fabric:2024:topology:node+CERN:port+CERN-HU10-wk3-pci3-p2"
+  - "urn:ogf:network:stack-fabric:2024:topology:node+SALT:port+FP2-SALT"
+  - "urn:ogf:network:stack-fabric:2024:topology:node+UCSD:port+UCSD-HU0-wk3-pci3-p1"
+
 # Submission template to use for requests
 # By default - it will use guaranteedCapped and bestEffort as fallback
 # In case of network testing - we might want to override it;

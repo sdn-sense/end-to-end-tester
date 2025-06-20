@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 5161,
+  "id": 5216,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -442,8 +442,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -534,7 +533,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  UNIX_TIMESTAMP(DATE(insertdate)) AS time,\n  SUM(finalstate = 1) * 100.0 / COUNT(*) AS successful,\n  SUM(finalstate = 0 AND pathfindissue = 1) * 100.0 / COUNT(*) AS failed_pathfind,\n  SUM(finalstate = 0 AND pathfindissue = 0) * 100.0 / COUNT(*) AS failed_other\nFROM requests\nWHERE insertdate >= NOW() - INTERVAL 8 DAY\nAND ($UUID = 'All' OR uuid = ${UUID})\nAND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY DATE(insertdate)\nORDER BY time;",
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(DATE_FORMAT(insertdate, '%Y-%m-%d %H:00:00')) AS time,\n  SUM(finalstate = 1) * 100.0 / COUNT(*) AS successful,\n  SUM(finalstate = 0 AND pathfindissue = 1) * 100.0 / COUNT(*) AS failed_pathfind,\n  SUM(finalstate = 0 AND pathfindissue = 0) * 100.0 / COUNT(*) AS failed_other\nFROM requests\nWHERE insertdate >= NOW() - INTERVAL 8 DAY\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY DATE_FORMAT(insertdate, '%Y-%m-%d %H:00:00')\nORDER BY time;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -607,8 +606,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -698,7 +696,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  UNIX_TIMESTAMP(DATE(insertdate)) AS time,\n  SUM(finalstate = 1) * 100.0 / COUNT(*) AS successful,\n  SUM(finalstate = 0 AND pathfindissue = 1) AS failed_pathfind,\n  SUM(finalstate = 0 AND pathfindissue = 0) AS failed_other\nFROM requests\nWHERE insertdate >= NOW() - INTERVAL 8 DAY\nAND ($UUID = 'All' OR uuid = ${UUID})\nAND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY DATE(insertdate)\nORDER BY time;",
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(DATE_FORMAT(insertdate, '%Y-%m-%d %H:00:00')) AS time,\n  SUM(finalstate = 1) * 100.0 / COUNT(*) AS successful,\n  SUM(finalstate = 0 AND pathfindissue = 1) AS failed_pathfind,\n  SUM(finalstate = 0 AND pathfindissue = 0) AS failed_other\nFROM requests\nWHERE insertdate >= NOW() - INTERVAL 8 DAY\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY DATE_FORMAT(insertdate, '%Y-%m-%d %H:00:00')\nORDER BY time;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -825,8 +823,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -903,8 +900,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -981,8 +977,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
-                "value": null
+                "color": "red"
               }
             ]
           }
@@ -1059,8 +1054,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
-                "value": null
+                "color": "red"
               }
             ]
           }
@@ -1147,8 +1141,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "blue",
-                "value": null
+                "color": "blue"
               }
             ]
           }
@@ -1225,8 +1218,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -1311,8 +1303,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1509,8 +1500,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1608,8 +1598,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
-                "value": null
+                "color": "red"
               },
               {
                 "color": "red",
@@ -1700,8 +1689,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "yellow",
@@ -1793,8 +1781,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1892,8 +1879,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
-                "value": null
+                "color": "red"
               },
               {
                 "color": "red",
@@ -1984,8 +1970,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "yellow",
@@ -2077,8 +2062,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2177,8 +2161,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2277,8 +2260,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2380,8 +2362,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2492,8 +2473,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2612,8 +2592,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2818,8 +2797,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3024,8 +3002,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3230,8 +3207,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3422,8 +3398,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3465,7 +3440,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "  SELECT \n    state, \n    configstate, \n    action, \n    AVG(totaltime) AS timetoreachstatefromprev\nFROM \n    requeststates\nWHERE $__timeFilter(insertdate)\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY \n    state, \n    configstate, \n    action\nORDER BY \n    CASE\n        -- CREATE %s create\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'create' THEN 1\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'UNKNOWN' THEN 2\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'PENDING' THEN 3\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'SCHEDULED' THEN 4\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'UNSTABLE' THEN 5\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'STABLE' THEN 6\n\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'create' THEN 7\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'UNKNOWN' THEN 8\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'PENDING' THEN 9\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'SCHEDULED' THEN 10\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'UNSTABLE' THEN 11\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'STABLE' THEN 12\n\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'create' THEN 13\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 14\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'PENDING' THEN 15\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 16\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 17\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'STABLE' THEN 18\n\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'create' THEN 19\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 20\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'PENDING' THEN 21\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 22\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 23\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'STABLE' THEN 24\n\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'create' THEN 25\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'UNKNOWN' THEN 26\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'PENDING' THEN 27\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'SCHEDULED' THEN 28\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'UNSTABLE' THEN 29\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'STABLE' THEN 30\n\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'create' THEN 31\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 32\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'PENDING' THEN 33\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 34\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 35\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'STABLE' THEN 36\n\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'create' THEN 37\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'UNKNOWN' THEN 38\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'PENDING' THEN 39\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'SCHEDULED' THEN 40\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'UNSTABLE' THEN 41\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'STABLE' THEN 42\n\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'create' THEN 43\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 44\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'PENDING' THEN 45\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 46\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 47\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'STABLE' THEN 48\n\n        -- CANCEL %s cancel\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'create' THEN 49\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 50\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'PENDING' THEN 51\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 52\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 53\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'STABLE' THEN 54\n\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'create' THEN 55\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 56\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'PENDING' THEN 57\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 58\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 59\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'STABLE' THEN 60\n\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'create' THEN 61\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 62\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'PENDING' THEN 63\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 64\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 65\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'STABLE' THEN 66\n\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'create' THEN 67\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 68\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'PENDING' THEN 69\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 70\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 71\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'STABLE' THEN 72\n\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'create' THEN 73\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 74\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'PENDING' THEN 75\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 76\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 77\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'STABLE' THEN 78\n\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'create' THEN 79\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 80\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'PENDING' THEN 81\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 82\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 83\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'STABLE' THEN 84\n\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'create' THEN 85\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 86\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'PENDING' THEN 87\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 88\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 89\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'STABLE' THEN 90\n\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'create' THEN 91\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 92\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'PENDING' THEN 93\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 94\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 95\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'STABLE' THEN 96\n\n        ELSE 999\n    END;\n",
+          "rawSql": "  SELECT \n    rs.state, \n    rs.configstate, \n    rs.action, \n    AVG(rs.totaltime) AS timetoreachstatefromprev\nFROM \n    requeststates rs\nLEFT JOIN stateorder so ON rs.state = so.state AND rs.action = so.action AND rs.configstate = so.configstate\nWHERE $__timeFilter(insertdate)\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (rs.site1 = ${SITE} OR rs.site2 = ${SITE}))\nGROUP BY \n    rs.state, \n    rs.configstate, \n    rs.action\nORDER BY \n  COALESCE(so.orderid, 999);\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -3497,7 +3472,7 @@
           "table": "requests"
         }
       ],
-      "title": "Transition times",
+      "title": "Transition times (Time to reach state from previous state)",
       "type": "bargauge"
     },
     {
@@ -3516,8 +3491,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3526,11 +3500,15 @@
             ]
           }
         },
-           "children1": [],
-              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
-                      "y": 190
+        "overrides": []
       },
-      "id": 29,
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 190
+      },
+      "id": 31,
       "options": {
         "displayMode": "lcd",
         "minVizHeight": 10,
@@ -3547,7 +3525,6 @@
       "pluginVersion": "9.5.19",
       "targets": [
         {
-          "dataset": "endtoend",
           "datasource": {
             "type": "mysql",
             "uid": "REPLACEME_DATASOURCE"
@@ -3555,17 +3532,12 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    rs.state, \n    rs.configstate, \n    rs.action, \n    AVG(rs.sincestart) AS timetoreachstatefromprev\nFROM \n    requeststates rs\nJOIN \n    requests r ON rs.uuid = r.uuid\nWHERE \n    $__timeFilter(rs.insertdate)\n    AND ($UUID = 'All' OR rs.uuid = ${UUID})\n    AND ($SITE = 'All' OR (r.site1 = ${SITE} OR r.site2 = ${SITE}))\n    AND r.finalstate = 1\nGROUP BY \n    state, \n    configstate, \n    action\nORDER BY \n    CASE\n        -- CREATE %s create\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'create' THEN 1\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'UNKNOWN' THEN 2\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'PENDING' THEN 3\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'SCHEDULED' THEN 4\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'UNSTABLE' THEN 5\n        WHEN state = 'CREATE' AND action = 'create' AND configstate = 'STABLE' THEN 6\n\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'create' THEN 7\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'UNKNOWN' THEN 8\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'PENDING' THEN 9\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'SCHEDULED' THEN 10\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'UNSTABLE' THEN 11\n        WHEN state = 'CREATE - PENDING' AND action = 'create' AND configstate = 'STABLE' THEN 12\n\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'create' THEN 13\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 14\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'PENDING' THEN 15\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 16\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 17\n        WHEN state = 'CREATE - COMPILED' AND action = 'create' AND configstate = 'STABLE' THEN 18\n\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'create' THEN 19\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 20\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'PENDING' THEN 21\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 22\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 23\n        WHEN state = 'CREATE - PROPAGATED' AND action = 'create' AND configstate = 'STABLE' THEN 24\n\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'create' THEN 25\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'UNKNOWN' THEN 26\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'PENDING' THEN 27\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'SCHEDULED' THEN 28\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'UNSTABLE' THEN 29\n        WHEN state = 'CREATE - COMMITTING' AND action = 'create' AND configstate = 'STABLE' THEN 30\n\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'create' THEN 31\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 32\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'PENDING' THEN 33\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 34\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 35\n        WHEN state = 'CREATE - COMMITTED' AND action = 'create' AND configstate = 'STABLE' THEN 36\n\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'create' THEN 37\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'UNKNOWN' THEN 38\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'PENDING' THEN 39\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'SCHEDULED' THEN 40\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'UNSTABLE' THEN 41\n        WHEN state = 'CREATE - READY' AND action = 'create' AND configstate = 'STABLE' THEN 42\n\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'create' THEN 43\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'UNKNOWN' THEN 44\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'PENDING' THEN 45\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'SCHEDULED' THEN 46\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'UNSTABLE' THEN 47\n        WHEN state = 'CREATE - FAILED' AND action = 'create' AND configstate = 'STABLE' THEN 48\n\n        -- CANCEL %s cancel\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'create' THEN 49\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 50\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'PENDING' THEN 51\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 52\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 53\n        WHEN state = 'CREATE' AND action = 'cancel' AND configstate = 'STABLE' THEN 54\n\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'create' THEN 55\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 56\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'PENDING' THEN 57\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 58\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 59\n        WHEN state = 'CANCEL - PENDING' AND action = 'cancel' AND configstate = 'STABLE' THEN 60\n\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'create' THEN 61\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 62\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'PENDING' THEN 63\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 64\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 65\n        WHEN state = 'CANCEL - COMPILED' AND action = 'cancel' AND configstate = 'STABLE' THEN 66\n\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'create' THEN 67\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 68\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'PENDING' THEN 69\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 70\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 71\n        WHEN state = 'CANCEL - PROPAGATED' AND action = 'cancel' AND configstate = 'STABLE' THEN 72\n\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'create' THEN 73\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 74\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'PENDING' THEN 75\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 76\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 77\n        WHEN state = 'CANCEL - COMMITTING' AND action = 'cancel' AND configstate = 'STABLE' THEN 78\n\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'create' THEN 79\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 80\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'PENDING' THEN 81\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 82\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 83\n        WHEN state = 'CANCEL - COMMITTED' AND action = 'cancel' AND configstate = 'STABLE' THEN 84\n\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'create' THEN 85\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 86\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'PENDING' THEN 87\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 88\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 89\n        WHEN state = 'CANCEL - READY' AND action = 'cancel' AND configstate = 'STABLE' THEN 90\n\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'create' THEN 91\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'UNKNOWN' THEN 92\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'PENDING' THEN 93\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'SCHEDULED' THEN 94\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'UNSTABLE' THEN 95\n        WHEN state = 'CANCEL - FAILED' AND action = 'cancel' AND configstate = 'STABLE' THEN 96\n\n        ELSE 999\n    END;\n",
+          "rawSql": "  SELECT \n    rs.state, \n    rs.configstate, \n    rs.action, \n    AVG(rs.sincestart) AS timetoreachstatefromprev\nFROM \n    requeststates rs\nLEFT JOIN stateorder so ON rs.state = so.state AND rs.action = so.action AND rs.configstate = so.configstate\nWHERE $__timeFilter(rs.insertdate)\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (rs.site1 = ${SITE} OR rs.site2 = ${SITE}))\n  AND EXISTS (\n        SELECT 1 \n        FROM requests rq \n        WHERE rq.uuid = rs.uuid \n          AND rq.finalstate = 1\n    )\nGROUP BY \n    rs.state, \n    rs.configstate, \n    rs.action\nORDER BY \n  COALESCE(so.orderid, 999);\n",
           "refId": "A",
           "sql": {
             "columns": [
               {
-                "parameters": [
-                  {
-                    "name": "*",
-                    "type": "functionParameter"
-                  }
-                ],
+                "parameters": [],
                 "type": "function"
               }
             ],
@@ -3577,17 +3549,92 @@
                 "type": "groupBy"
               }
             ],
-            "limit": 50,
-            "whereJsonTree": {
-              "children1": [],
-              "id": "8abba8aa-89ab-4cde-b012-3195a3b95c93",
-              "type": "group"
-            }
-          },
-          "table": "requests"
+            "limit": 50
+          }
         }
       ],
       "title": "Transition times (since start, only success)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "REPLACEME_DATASOURCE"
+      },
+      "description": "To see specific request - select UUID or use Filter, time range change",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 204
+      },
+      "id": 32,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.19",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "REPLACEME_DATASOURCE"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    rs.state, \n    rs.configstate, \n    rs.action, \n    AVG(rs.sincestart) AS timetoreachstatefromprev\nFROM \n    requeststates rs\nLEFT JOIN \n    stateorder so ON rs.state = so.state \n                 AND rs.action = so.action \n                 AND rs.configstate = so.configstate\nWHERE \n    $__timeFilter(rs.insertdate)\n    AND ($UUID = 'All' OR rs.uuid = ${UUID})\n    AND ($SITE = 'All' OR (rs.site1 = ${SITE} OR rs.site2 = ${SITE}))\n    AND EXISTS (\n        SELECT 1 \n        FROM requests rq \n        WHERE rq.uuid = rs.uuid \n          AND rq.finalstate = 1\n          AND (\n              (rs.state = 'CREATE - READY' AND rs.configstate = 'STABLE' AND rs.action = 'create') OR\n              (rs.state = 'MODIFY - READY' AND rs.configstate = 'STABLE' AND rs.action = 'modifycreate') OR\n              (rs.state = 'CANCEL - READY' AND rs.configstate = 'STABLE' AND rs.action = 'cancelrep') OR\n              (rs.state = 'REINSTATE - READY' AND rs.configstate = 'STABLE' AND rs.action = 'reprovision') OR\n              (rs.state = 'MODIFY - READY' AND rs.configstate = 'STABLE' AND rs.action = 'modify')\n          )\n    )\nGROUP BY \n    rs.state, \n    rs.configstate, \n    rs.action\nORDER BY \n  COALESCE(so.orderid, 999);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Transition times (only final status, only successful)",
       "type": "bargauge"
     }
   ],
@@ -3657,8 +3704,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "End To End Tester",
+  "title": "REPLACEME_TITLE",
   "uid": "a359ae04-2f0b-4ffa-b721-a11b63b1295b",
-  "version": 4,
+  "version": 6,
   "weekStart": ""
 }
