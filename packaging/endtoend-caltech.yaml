@@ -26,11 +26,27 @@ timeouts:
 #  timeout: 30
 
 # Development entries remain with-in a single site
-entries: {}
+entries:
+  "urn:ogf:network:ultralight.org:2013:sandie-7.ultralight.org:mlx5p1s1": 
+    site: "T2_US_Caltech_Test"
+  "urn:ogf:network:ultralight.org:2013:sandie-5.ultralight.org:mlx4p1s2":
+    site: "T2_US_Caltech_Test"
+  "urn:ogf:network:ultralight.org:2013:sandie-10.ultralight.org:mlx5p1s2":
+    site: "T2_US_Caltech_Test"
+  "urn:ogf:network:ultralight.org:2013:sandie-4.ultralight.org:mlx4p1s1":
+    site: "T2_US_Caltech_Test"
+  "urn:ogf:network:ultralight.org:2013:sandie-1.ultralight.org:mlx4p2s1":
+    site: "T2_US_Caltech_Test"
+  "urn:ogf:network:ultralight.org:2013:sdn-dtn-1-7.ultralight.org:mlx4p1s1":
+    site: "T2_US_Caltech_Test"
+  "urn:ogf:network:ultralight.org:2013:sandie-3.ultralight.org:mlx3p1s1":
+    site: "T2_US_Caltech_Test"
+  "urn:ogf:network:ultralight.org:2013:sandie-6.ultralight.org:mlx4p1s2":
+    site: "T2_US_Caltech_Test"
 # Entries dynamic is used to test a specific domain, e.g. ESnet.
 # This will go dynamically to SENSE-O and get all ports associated with the domain
-entriesdynamic: "urn:ogf:network:ultralight.org:2013"
-entriessitename: "T2_US_Caltech_Test"
+#entriesdynamic: "urn:ogf:network:ultralight.org:2013"
+#entriessitename: "T2_US_Caltech_Test"
 
 # Submission template to use for requests
 # By default - it will use guaranteedCapped and bestEffort as fallback

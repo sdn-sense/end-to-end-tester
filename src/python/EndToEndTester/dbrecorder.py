@@ -13,7 +13,7 @@ from sense.client.workflow_combined_api import WorkflowCombinedApi
 from EndToEndTester.utilities import loadFileJson, loadJson, getConfig, getUTCnow, timestampToDate
 from EndToEndTester.utilities import moveFile, getLogger, setSenseEnv, checkCreateDir, refreshConfig, renameFile
 from EndToEndTester.DBBackend import dbinterface
-from EndtoEndTester.dbcalls import GBCONFIGSTATES, GBCREATESTATES
+from EndToEndTester.dbcalls import GBCONFIGSTATES, GBCREATESTATES
 
 # Loops via all files and records them inside database;
 # Identifies if it is final state (if create/delete is final ok - then final:
