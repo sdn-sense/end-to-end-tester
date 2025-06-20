@@ -3,7 +3,7 @@
 from time import sleep
 import mariadb # type: ignore
 from EndToEndTester.DBBackend import dbinterface
-
+from EndToEndTester.dbcalls import GBCONFIGSTATES, GBCREATESTATES
 
 class DBStarter:
     """Database starter class"""
@@ -41,6 +41,20 @@ class DBStarter:
             return False
         return True
 
+    def populatenewstates(self):
+        """Populate new states"""
+        print('Populate new states. Delete old ones, and put new ones from code-base')
+        # Delete all states in database;
+        for item in self.db.get("stateorder", limit=1000):
+            self.db.delete("stateorder", [["orderid", item["orderid"]]])
+        # Now we readd all new ones;
+        counter = 1
+        for stfind in GBCREATESTATES:
+            for configstate in GBCONFIGSTATES:
+                self.db.insert('stateorder', [{'state': stfind[0], 'action': stfind[1],
+                                               'configstate': configstate, 'orderid': counter}])
+                counter += 1
+
     def start(self):
         """Start the database creation"""
         while not self.dbready():
@@ -48,6 +62,7 @@ class DBStarter:
             sleep(1)
         self.db.createdb()
         self.dboptimize()
+        self.populatenewstates()
         print("Database ready")
 
 

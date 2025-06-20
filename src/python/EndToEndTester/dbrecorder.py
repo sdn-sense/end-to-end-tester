@@ -13,7 +13,7 @@ from sense.client.workflow_combined_api import WorkflowCombinedApi
 from EndToEndTester.utilities import loadFileJson, loadJson, getConfig, getUTCnow, timestampToDate
 from EndToEndTester.utilities import moveFile, getLogger, setSenseEnv, checkCreateDir, refreshConfig, renameFile
 from EndToEndTester.DBBackend import dbinterface
-
+from EndtoEndTester.dbcalls import GBCONFIGSTATES, GBCREATESTATES
 
 # Loops via all files and records them inside database;
 # Identifies if it is final state (if create/delete is final ok - then final:
@@ -624,88 +624,11 @@ class FileParser(DBRecorder, Archiver):
 
     def _calculateTotalTime(self, tmplist):
         """Calculate total time to transition from one state to another"""
-        # 1. Need to define all correct states what state goes to what
-        configstates = [
-            "create",
-            "UNKNOWN",
-            "PENDING",
-            "SCHEDULED",
-            "UNSTABLE",
-            "STABLE",
-        ]
-        createstates = [
-            "CREATE%screate",
-            "CREATE - PENDING%screate",
-            "CREATE - COMPILED%screate",
-            "CREATE - PROPAGATED%screate",
-            "CREATE - COMMITTING%screate",
-            "CREATE - COMMITTED%screate",
-            "CREATE - READY%screate",
-            "CREATE - FAILED%screate",
-            "CREATE%smodifycreate",
-            "MODIFY - PENDING%smodifycreate",
-            "MODIFY - COMPILED%smodifycreate",
-            "MODIFY - PROPAGATED%smodifycreate",
-            "MODIFY - COMMITTING%smodifycreate",
-            "MODIFY - COMMITTED%smodifycreate",
-            "MODIFY - READY%smodifycreate",
-            "MODIFY - FAILED%smodifycreate",
-            "CREATE%smodifycreate",
-            "CREATE - PENDING%smodifycreate",
-            "CREATE - COMPILED%smodifycreate",
-            "CREATE - PROPAGATED%smodifycreate",
-            "CREATE - COMMITTING%smodifycreate",
-            "CREATE - COMMITTED%smodifycreate",
-            "CREATE - READY%smodifycreate",
-            "CREATE - FAILED%smodifycreate",
-            "CREATE%scancelrep",
-            "CANCEL - PENDING%scancelrep",
-            "CANCEL - COMPILED%scancelrep",
-            "CANCEL - PROPAGATED%scancelrep",
-            "CANCEL - COMMITTING%scancelrep",
-            "CANCEL - COMMITTED%scancelrep",
-            "CANCEL - READY%scancelrep",
-            "CANCEL - FAILED%scancelrep",
-            "CREATE%sreprovision",
-            "REINSTATE - PENDING%sreprovision",
-            "REINSTATE - COMPILED%sreprovision",
-            "REINSTATE - PROPAGATED%sreprovision",
-            "REINSTATE - COMMITTING%sreprovision",
-            "REINSTATE - COMMITTED%sreprovision",
-            "REINSTATE - READY%sreprovision",
-            "REINSTATE - FAILED%sreprovision",
-            "CREATE%smodify",
-            "MODIFY - PENDING%smodify",
-            "MODIFY - COMPILED%smodify",
-            "MODIFY - PROPAGATED%smodify",
-            "MODIFY - COMMITTING%smodify",
-            "MODIFY - COMMITTED%smodify",
-            "MODIFY - READY%smodify",
-            "MODIFY - FAILED%smodify",
-            "REINSTATE - READY%smodify",
-            "REINSTATE - FAILED%smodify",
-            "CREATE%scancel",
-            "CANCEL - PENDING%scancel",
-            "CANCEL - COMPILED%scancel",
-            "CANCEL - PROPAGATED%scancel",
-            "CANCEL - COMMITTING%scancel",
-            "CANCEL - COMMITTED%scancel",
-            "CANCEL - READY%scancel",
-            "CANCEL - FAILED%scancel",
-            "CREATE%scancelarch",
-            "CANCEL - PENDING%scancelarch",
-            "CANCEL - COMPILED%scancelarch",
-            "CANCEL - PROPAGATED%scancelarch",
-            "CANCEL - COMMITTING%scancelarch",
-            "CANCEL - COMMITTED%scancelarch",
-            "CANCEL - READY%scancelarch",
-            "CANCEL - FAILED%scancelarch",
-        ]
         lasttimestamp = 0
         firststart = 0
-        for stfind in createstates:
-            for configstate in configstates:
-                findstate = stfind.replace("%s", configstate)
+        for stfind in GBCREATESTATES:
+            for configstate in GBCONFIGSTATES:
+                findstate = f"{stfind[0]}{configstate}{stfind[1]}"
                 # loop via index via tmplist
                 total = len(tmplist)
                 counter = 0

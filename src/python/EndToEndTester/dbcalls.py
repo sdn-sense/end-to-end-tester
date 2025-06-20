@@ -118,6 +118,14 @@ create_pingresults = """CREATE TABLE IF NOT EXISTS pingresults (
     rttmdev FLOAT NOT NULL
 );"""
 
+create_stateorder = """CREATE TABLE IF NOT EXISTS stateorder (
+    state VARCHAR(255),
+    action VARCHAR(255),
+    configstate VARCHAR(255),
+    orderid INT,
+    PRIMARY KEY (state, action, configstate)
+);"""
+
 # INSERT INTO TABLES
 insert_requests = """INSERT INTO requests (uuid, port1, port2, finalstate, pathfindissue, vlan, requesttype, insertdate, updatedate, fileloc, site1, site2, failure)
 VALUES (%(uuid)s, %(port1)s, %(port2)s, %(finalstate)s, %(pathfindissue)s, %(vlan)s, %(requesttype)s, FROM_UNIXTIME(%(insertdate)s),FROM_UNIXTIME(%(updatedate)s), %(fileloc)s, %(site1)s, %(site2)s, %(failure)s)"""
@@ -133,7 +141,7 @@ insert_lockedrequests = """INSERT INTO lockedrequests (uuid, port1, port2, final
 VALUES (%(uuid)s, %(port1)s, %(port2)s, %(finalstate)s, %(pathfindissue)s, %(vlan)s, %(requesttype)s, FROM_UNIXTIME(%(insertdate)s),FROM_UNIXTIME(%(updatedate)s), %(fileloc)s, %(site1)s, %(site2)s, %(failure)s)"""
 insert_pingresults = """INSERT INTO pingresults (uuid, site1, site2, action, port1, port2, ipto, ipfrom, vlanto, vlanfrom, insertdate, updatedate, failed, transmitted, received, packetloss, rttmin, rttavg, rttmax, rttmdev)
 VALUES (%(uuid)s, %(site1)s, %(site2)s, %(action)s, %(port1)s, %(port2)s, %(ipto)s, %(ipfrom)s, %(vlanto)s, %(vlanfrom)s, FROM_UNIXTIME(%(insertdate)s), FROM_UNIXTIME(%(updatedate)s), %(failed)s, %(transmitted)s, %(received)s, %(packetloss)s, %(rttmin)s, %(rttavg)s, %(rttmax)s, %(rttmdev)s)"""
-
+insert_stateorder = """INSERT INTO stateorder (state, action, configstate, orderid) VALUES (%(state)s, %(action)s, %(configstate)s, %(orderid)s)"""
 
 # SELECT FROM TABLES
 get_requests = """SELECT * FROM requests"""
@@ -143,6 +151,7 @@ get_requeststates = """SELECT * FROM requeststates"""
 get_runnerinfo = """SELECT * FROM runnerinfo"""
 get_lockedrequests = """SELECT * FROM lockedrequests"""
 get_pingresults = """SELECT * FROM pingresults"""
+get_stateorder = """SELECT * FROM stateorder"""
 
 # UPDATE TABLES
 update_requests = "UPDATE requests SET updatedate = FROM_UNIXTIME(%(updatedate)s), fileloc = %(fileloc)s WHERE uuid = %(uuid)s"
@@ -155,3 +164,72 @@ delete_delta_connections = "DELETE FROM verification"
 delete_requeststates = "DELETE FROM requeststates"
 delete_lockedrequests = "DELETE FROM lockedrequests"
 delete_pingresults = "DELETE FROM pingresults"
+delete_stateorder = "DELETE FROM stateorder"
+
+# This is state orders (global vars to precreate database order for timings)
+GBCONFIGSTATES = ["create", "UNKNOWN", "PENDING", "SCHEDULED", "UNSTABLE", "STABLE"]
+GBCREATESTATES = [["CREATE", "create"],
+                  ["CREATE - PENDING", "create"],
+                  ["CREATE - COMPILED", "create"],
+                  ["CREATE - PROPAGATED", "create"],
+                  ["CREATE - COMMITTING", "create"],
+                  ["CREATE - COMMITTED", "create"],
+                  ["CREATE - READY", "create"],
+                  ["CREATE - FAILED", "create"],
+                  ["CREATE", "modifycreate"],
+                  ["MODIFY - PENDING", "modifycreate"],
+                  ["MODIFY - COMPILED", "modifycreate"],
+                  ["MODIFY - PROPAGATED", "modifycreate"],
+                  ["MODIFY - COMMITTING", "modifycreate"],
+                  ["MODIFY - COMMITTED", "modifycreate"],
+                  ["MODIFY - READY", "modifycreate"],
+                  ["MODIFY - FAILED", "modifycreate"],
+                  ["CREATE - PENDING", "modifycreate"],
+                  ["CREATE - COMPILED", "modifycreate"],
+                  ["CREATE - PROPAGATED", "modifycreate"],
+                  ["CREATE - COMMITTING", "modifycreate"],
+                  ["CREATE - COMMITTED", "modifycreate"],
+                  ["CREATE - READY", "modifycreate"],
+                  ["CREATE - FAILED", "modifycreate"],
+                  ["CREATE", "cancelrep"],
+                  ["CANCEL - PENDING", "cancelrep"],
+                  ["CANCEL - COMPILED", "cancelrep"],
+                  ["CANCEL - PROPAGATED", "cancelrep"],
+                  ["CANCEL - COMMITTING", "cancelrep"],
+                  ["CANCEL - COMMITTED", "cancelrep"],
+                  ["CANCEL - READY", "cancelrep"],
+                  ["CANCEL - FAILED", "cancelrep"],
+                  ["CREATE", "reprovision"],
+                  ["REINSTATE - PENDING", "reprovision"],
+                  ["REINSTATE - COMPILED", "reprovision"],
+                  ["REINSTATE - PROPAGATED", "reprovision"],
+                  ["REINSTATE - COMMITTING", "reprovision"],
+                  ["REINSTATE - COMMITTED", "reprovision"],
+                  ["REINSTATE - READY", "reprovision"],
+                  ["REINSTATE - FAILED", "reprovision"],
+                  ["CREATE", "modify"],
+                  ["MODIFY - PENDING", "modify"],
+                  ["MODIFY - COMPILED", "modify"],
+                  ["MODIFY - PROPAGATED", "modify"],
+                  ["MODIFY - COMMITTING", "modify"],
+                  ["MODIFY - COMMITTED", "modify"],
+                  ["MODIFY - READY", "modify"],
+                  ["MODIFY - FAILED", "modify"],
+                  ["REINSTATE - READY", "modify"],
+                  ["REINSTATE - FAILED", "modify"],
+                  ["CREATE", "cancel"],
+                  ["CANCEL - PENDING", "cancel"],
+                  ["CANCEL - COMPILED", "cancel"],
+                  ["CANCEL - PROPAGATED", "cancel"],
+                  ["CANCEL - COMMITTING", "cancel"],
+                  ["CANCEL - COMMITTED", "cancel"],
+                  ["CANCEL - READY", "cancel"],
+                  ["CANCEL - FAILED", "cancel"],
+                  ["CREATE", "cancelarch"],
+                  ["CANCEL - PENDING", "cancelarch"],
+                  ["CANCEL - COMPILED", "cancelarch"],
+                  ["CANCEL - PROPAGATED", "cancelarch"],
+                  ["CANCEL - COMMITTING", "cancelarch"],
+                  ["CANCEL - COMMITTED", "cancelarch"],
+                  ["CANCEL - READY", "cancelarch"],
+                  ["CANCEL - FAILED", "cancelarch"]]
