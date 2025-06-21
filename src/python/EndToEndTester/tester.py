@@ -447,6 +447,7 @@ class SENSEWorker:
         """Get final status and all info to output"""
         if newreq:
             output["req"] = newreq
+        output['finalstatetimestamp'] = getUTCnow()
         if uuid and not self._checkpathfindissue(output, "guaranteedCapped"):
             if self.currentaction not in ["cancel", "cancelrep", "cancelarch"]:
                 output = self.__getManifest(output, uuid)

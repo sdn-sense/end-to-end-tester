@@ -636,8 +636,7 @@ class FileParser(DBRecorder, Archiver):
                     fullstate = (
                         tmplist[counter]["state"]
                         + tmplist[counter]["configstate"]
-                        + tmplist[counter]["action"]
-                    )
+                        + tmplist[counter]["action"])
                     if fullstate == findstate:
                         # pop item from list
                         item = tmplist.pop(counter)
@@ -658,6 +657,14 @@ class FileParser(DBRecorder, Archiver):
                                 f"({self.requestentry['uuid']}) Found state transition: {item['state']} - {item['configstate']} - {item['action']} - {diff}. Since start: {item['entertime'] - firststart}"
                             )
                         self.requeststateentries.append(item)
+                        # If tmplist len is 0, now this is the last item
+                        if len(tmplist) == 0:
+                            # Need to get final state timestamp and update the diff and sincestart
+                            tsreq = self.data.get(item['action'], {}).get('finalstatetimestamp', None)
+                            if tsreq:
+                                diff = item["entertime"] - tsreq
+                                self.requeststateentries[-1]["totaltime"] = diff if diff > 0 else 0
+                                self.requeststateentries[-1]["sincestart"] = item["entertime"] - firststart
                         counter = total
                     counter += 1
         # If we still have entries remaining here, we need to loop via them and add
