@@ -442,7 +442,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -606,7 +607,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -696,7 +698,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  UNIX_TIMESTAMP(DATE_FORMAT(insertdate, '%Y-%m-%d %H:00:00')) AS time,\n  SUM(finalstate = 1) * 100.0 / COUNT(*) AS successful,\n  SUM(finalstate = 0 AND pathfindissue = 1) AS failed_pathfind,\n  SUM(finalstate = 0 AND pathfindissue = 0) AS failed_other\nFROM requests\nWHERE insertdate >= NOW() - INTERVAL 8 DAY\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY DATE_FORMAT(insertdate, '%Y-%m-%d %H:00:00')\nORDER BY time;",
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(DATE_FORMAT(insertdate, '%Y-%m-%d %H:00:00')) AS time,\n  SUM(finalstate = 1) AS successful,\n  SUM(finalstate = 0 AND pathfindissue = 1) AS failed_pathfind,\n  SUM(finalstate = 0 AND pathfindissue = 0) AS failed_other\nFROM requests\nWHERE insertdate >= NOW() - INTERVAL 8 DAY\n  AND ($UUID = 'All' OR uuid = ${UUID})\n  AND ($SITE = 'All' OR (site1 = ${SITE} OR site2 = ${SITE}))\nGROUP BY DATE_FORMAT(insertdate, '%Y-%m-%d %H:00:00')\nORDER BY time;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -823,7 +825,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -900,7 +903,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -977,7 +981,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red"
+                "color": "red",
+                "value": null
               }
             ]
           }
@@ -1054,7 +1059,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red"
+                "color": "red",
+                "value": null
               }
             ]
           }
@@ -1141,7 +1147,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "blue"
+                "color": "blue",
+                "value": null
               }
             ]
           }
@@ -1218,7 +1225,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -1303,7 +1311,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1500,7 +1509,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1598,7 +1608,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red"
+                "color": "red",
+                "value": null
               },
               {
                 "color": "red",
@@ -1689,7 +1700,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "yellow",
@@ -1781,7 +1793,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1879,7 +1892,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red"
+                "color": "red",
+                "value": null
               },
               {
                 "color": "red",
@@ -1970,7 +1984,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "yellow",
@@ -2062,7 +2077,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2161,7 +2177,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2260,7 +2277,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2362,7 +2380,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2473,7 +2492,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2592,7 +2612,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2797,7 +2818,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3002,7 +3024,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3207,7 +3230,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3398,7 +3422,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3491,7 +3516,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3572,7 +3598,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3613,7 +3640,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    rs.state, \n    rs.configstate, \n    rs.action, \n    AVG(rs.sincestart) AS timetoreachstatefromprev\nFROM \n    requeststates rs\nLEFT JOIN \n    stateorder so ON rs.state = so.state \n                 AND rs.action = so.action \n                 AND rs.configstate = so.configstate\nWHERE \n    $__timeFilter(rs.insertdate)\n    AND ($UUID = 'All' OR rs.uuid = ${UUID})\n    AND ($SITE = 'All' OR (rs.site1 = ${SITE} OR rs.site2 = ${SITE}))\n    AND EXISTS (\n        SELECT 1 \n        FROM requests rq \n        WHERE rq.uuid = rs.uuid \n          AND rq.finalstate = 1\n          AND (\n              (rs.state = 'CREATE - READY' AND rs.configstate = 'STABLE' AND rs.action = 'create') OR\n              (rs.state = 'MODIFY - READY' AND rs.configstate = 'STABLE' AND rs.action = 'modifycreate') OR\n              (rs.state = 'CANCEL - READY' AND rs.configstate = 'STABLE' AND rs.action = 'cancelrep') OR\n              (rs.state = 'REINSTATE - READY' AND rs.configstate = 'STABLE' AND rs.action = 'reprovision') OR\n              (rs.state = 'MODIFY - READY' AND rs.configstate = 'STABLE' AND rs.action = 'modify')\n          )\n    )\nGROUP BY \n    rs.state, \n    rs.configstate, \n    rs.action\nORDER BY \n  COALESCE(so.orderid, 999);",
+          "rawSql": "SELECT \n    rs.state, \n    rs.configstate, \n    rs.action, \n    AVG(rs.sincestart) AS timetoreachstatefromprev\nFROM \n    requeststates rs\nLEFT JOIN \n    stateorder so ON rs.state = so.state \n                 AND rs.action = so.action \n                 AND rs.configstate = so.configstate\nWHERE \n    $__timeFilter(rs.insertdate)\n    AND ($UUID = 'All' OR rs.uuid = ${UUID})\n    AND ($SITE = 'All' OR (rs.site1 = ${SITE} OR rs.site2 = ${SITE}))\n    AND EXISTS (\n        SELECT 1 \n        FROM requests rq \n        WHERE rq.uuid = rs.uuid \n          AND rq.finalstate = 1\n          AND (\n              (rs.state = 'CREATE - READY' AND rs.configstate = 'STABLE' AND rs.action = 'create') OR\n              (rs.state = 'MODIFY - READY' AND rs.configstate = 'STABLE' AND rs.action = 'modifycreate') OR\n              (rs.state = 'CANCEL - READY' AND rs.configstate = 'STABLE' AND rs.action = 'cancelrep') OR\n              (rs.state = 'REINSTATE - READY' AND rs.configstate = 'STABLE' AND rs.action = 'reprovision') OR\n              (rs.state = 'MODIFY - READY' AND rs.configstate = 'STABLE' AND rs.action = 'modify') OR\n              (rs.state = 'CANCEL - READY' AND rs.configstate = 'STABLE' AND rs.action = 'cancel')\n          )\n    )\nGROUP BY \n    rs.state, \n    rs.configstate, \n    rs.action\nORDER BY \n  COALESCE(so.orderid, 999);",
           "refId": "A",
           "sql": {
             "columns": [
@@ -3705,7 +3732,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "REPLACEME_TITLE",
-  "uid": "a359ae04-2f0b-4ffa-b721-a11b63b1295b",
-  "version": 6,
+  "version": 9,
   "weekStart": ""
 }
