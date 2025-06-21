@@ -180,7 +180,7 @@ def setSenseEnv(config=None):
     """Set SENSE Environment point to configuration file"""
     if not config:
         config = getConfig()
-    os.environ['SENSE_RETRIES'] = config.get('sense-retries', 3)
+    os.environ['SENSE_RETRIES'] = str(config.get('sense-retries', 3))
     if "sense-auth" in config:
         os.environ["SENSE_AUTH_OVERRIDE"] = config["sense-auth"]
         return True
