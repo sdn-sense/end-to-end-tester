@@ -42,6 +42,30 @@ entries: {}
 entriesdynamic: "urn:ogf:network:al2s.internet2.edu:2023"
 entriessitename: "Internet2"
 # Filter out entries that are most important for us. Support include or exclude. Default is include all
+filter:
+  include:
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.phoe:port+HundredGigE0_0_0_24"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.kans:port+Bundle-Ether100"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.atla:port+HundredGigE0_0_0_24"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.loui:port+HundredGigE0_0_0_24"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.ashb:port+HundredGigE0_0_0_26"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.atla:port+Bundle-Ether80"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.star:port+HundredGigE0_0_0_20"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.newy32aoa:port+Bundle-Ether240"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.wash:port+HundredGigE0_0_0_28"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.star:port+HundredGigE0_0_0_27"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.houh:port+HundredGigE0_0_0_24"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.sunn:port+HundredGigE0_0_0_24"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.pitt:port+HundredGigE0_0_0_24"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.atla:port+HundredGigE0_0_0_26"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.rale:port+Bundle-Ether250"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+agg1.losa2:port+Bundle-Ether100"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.phil:port+Bundle-Ether1"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.salt:port+HundredGigE0_0_0_24"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.dall:port+HundredGigE0_0_0_24"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.clev:port+HundredGigE0_0_0_26"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.jack:port+HundredGigE0_0_0_26"
+  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.newy32aoa:port+HundredGigE0_0_0_24"
 # Submission template to use for requests
 # By default - it will use guaranteedCapped and bestEffort as fallback
 # In case of network testing - we might want to override it;

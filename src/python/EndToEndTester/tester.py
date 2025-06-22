@@ -361,6 +361,8 @@ class SENSEWorker:
             raise ValueError("Create status in SENSE-O is FAILED.")
         if status.get("state") == "CANCEL - FAILED":
             raise ValueError("Cancel status in SENSE-O is FAILED.")
+        if status.get("state") == "REINSTATE - FAILED":
+            raise ValueError("Reinstate status in SENSE-O is FAILED.")
         if status.get("state") == self.states[call]:
             states.append(True)
         if status.get("configState") == "STABLE":
