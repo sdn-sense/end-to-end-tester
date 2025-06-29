@@ -3,7 +3,7 @@ sense-auth: /etc/sense-o-auth.yaml
 # Sense Retries (Retries for http failures). Default 3
 # sense-retries: 3
 # Total Threads to run for all pairs
-totalThreads: 1
+totalThreads: 2
 # Once run finishes, next run will start after this many seconds (taken out run startup)
 runInterval: 86400
 
