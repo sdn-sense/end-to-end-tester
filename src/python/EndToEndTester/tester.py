@@ -118,7 +118,42 @@ net_request = {
         },
     }
 }
-
+l3_request = {
+    "l3_request": {
+        "data": {
+            "type": "Site-L3 over P2P VLAN",
+            "connections": [
+                {
+                    "bandwidth": {
+                        "qos_class": "guaranteedCapped",
+                        "capacity": "2000"
+                    },
+                    "name": "Connection 1",
+                    "ip_address_pool": {
+                        "netmask": "/64",
+                        "name": "RUCIO-BGP-P2P-Slash64-Pool"
+                    },
+                    "terminals": [
+                        {
+                            "vlan_tag": "any",
+                            "assign_ip": True,
+                            "ipv6_prefix_list": "REPLACEME",
+                            "uri": "REPLACEME"
+                        },
+                        {
+                            "vlan_tag": "any",
+                            "assign_ip": True,
+                            "ipv6_prefix_list": "REPLACEME",
+                            "uri": "REPLACEME"
+                        }
+                    ]
+                }
+            ]
+        },
+        "service": "dnc",
+        "alias": "REPLACEME"
+    }
+}
 
 def getFullTraceback(ex):
     """Get full traceback"""
@@ -492,6 +527,8 @@ class SENSEWorker:
         submittests = {}
         if self.config.get("submissiontemplate", None) == "nettest":
             submittests = net_request
+        elif self.config.get("submissiontemplate", None) == "l3_request":
+            submittests = l3_request
         else:
             submittests = requests
         for reqtype, template in submittests.items():
@@ -543,6 +580,16 @@ class SENSEWorker:
                 ret = part
         return ret
 
+    def _getIPRange(self, pairname):
+        """Get IP Range for the pair"""
+        # Get the IPv6 Range from config
+        iprange = self.config.get("entries", {}).get(pairname, {}).get("ipv6_prefix", None)
+        if not iprange:
+            errmsg = (f"({self.workerheader}) No IPv6 prefix found for {pairname} in config. Cannot create L3 request.")
+            self.logger.error(errmsg)
+            return None, errmsg
+        return iprange, None
+
     def _getAlias(self, pair):
         """Get alias for the pair"""
         return f"{timestampToDate(getUTCnow())} {self.__getpart(pair[0])}-{self.__getpart(pair[1])}-{self.vlan}"
@@ -562,8 +609,23 @@ class SENSEWorker:
         }
         newreq["data"]["connections"][0]["terminals"][0]["vlan_tag"] = self.vlan
         newreq["data"]["connections"][0]["terminals"][0]["uri"] = pair[0]
+        # In case it is L3 request, we need to get the IPv6 Range to use
+        if self.config.get("submissiontemplate", None) == "l3_request":
+            # Get the IPv6 Range from config
+            iprange, errmsg = self._getIPRange(pair[0])
+            if errmsg:
+                return {"error": errmsg}, newreq, None
+            newreq["data"]["connections"][0]["terminals"][0]["ipv6_prefix_list"] = iprange
+        # Set the VLAN tag and URI for the second terminal
         newreq["data"]["connections"][0]["terminals"][1]["vlan_tag"] = self.vlan
         newreq["data"]["connections"][0]["terminals"][1]["uri"] = pair[1]
+        # In case it is L3 requests, we need to set the IPv6 Range to use
+        if self.config.get("submissiontemplate", None) == "l3_request":
+            # Get the IPv6 Range from config
+            iprange, errmsg = self._getIPRange(pair[1])
+            if errmsg:
+                return {"error": errmsg}, newreq, None
+            newreq["data"]["connections"][0]["terminals"][1]["ipv6_prefix_list"] = iprange
         newreq["alias"] = self._getAlias(pair)
         self.response["info"]["req"] = newreq
         self.workflowApi.si_uuid = None
@@ -1034,6 +1096,13 @@ def getAllGroupedHosts(config, mlogger):
                 f"Entry {key} is disabled. Will not include in test. Config params for entry: {val}"
             )
             continue
+        # if this is l3 request, check that ipv6_range is set
+        if config.get("submissiontemplate", None) == "l3_request":
+            if not val.get("ipv6_prefix", None):
+                mlogger.error(
+                    f"Entry {key} is L3 request, but ipv6_prefix is not set. Will not include in test."
+                )
+                continue
         allEntries.append(key)
     # Second - if not available - we check if dynamic parameter set for a specific domain
     # entriesdynamic: <domainname>
