@@ -8,7 +8,7 @@ totalThreads: 1
 # useful for debugging. Only works if totalThreads == 1
 nothreading: False
 # Once run finishes, next run will start after this many seconds (taken out run startup)
-runInterval: 43200
+runInterval: 1
 # In case run finished earlier - and still not next run, sleep for this many seconds
 sleepbetweenruns: 1 # Sleep if timer has not passed
 # Work directory to save all files;
@@ -57,6 +57,9 @@ entries:
     disabled: False
   "urn:ogf:network:sense-ucsd-fabric-testbed.net:2025:frr_s0:e2":
     site: "T3_FABRIC_UCSD"
+    disabled: False
+  "urn:ogf:network:sense-amst-fabric-testbed.net:2025:frr_s0:e2":
+    site: "T3_FABRIC_AMST"
     disabled: False
 # Entries dynamic is used to test a specific domain, e.g. ESnet.
 # This will go dynamically to SENSE-O and get all ports associated with the domain
