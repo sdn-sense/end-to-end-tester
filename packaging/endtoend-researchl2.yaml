@@ -1,0 +1,136 @@
+# Sense authentication file location
+sense-auth: /etc/sense-o-auth.yaml
+# Sense Retries (Retries for http failures). Default 3
+# sense-retries: 3
+# Total Threads to run for all pairs
+totalThreads: 1
+# No threading - run everything in a single thread: (default False)
+# useful for debugging. Only works if totalThreads == 1
+nothreading: False
+# Once run finishes, next run will start after this many seconds (taken out run startup)
+runInterval: 43200
+# In case run finished earlier - and still not next run, sleep for this many seconds
+sleepbetweenruns: 1 # Sleep if timer has not passed
+# Work directory to save all files;
+workdir: /opt/end-to-end-tester/outputfiles/
+# Timeouts for state runtime in SENSE-O in Seconds. Goes create -> cancel
+# Means create must finish with-in defined number of seconds
+timeouts:
+  create: 2400
+  cancel: 2400
+
+# HTTP Retries for SENSE-O
+# Default 3 retries with 30 seconds timeout
+#httpretries:
+#  retries: 3
+#  timeout: 30
+
+# Flags to control the End-to-End tester actions
+# Here is current flow (waiting in each state for final state ):
+# 1) create -> if modifycreate:True: modify -> cancel || cancel
+# 2) cancel -> if reprovision:True: reprovision || None;
+# 3) reprovision -> if modify:True modify || None;
+# 4) Any remaining state -> cancel if not cancelled, archive if failure.
+reprovision: true # Once instance reaches create-ready-stable, do cancel, and reprovision
+modify: true # Once instance reaches create-ready-stable (or reinstace-ready-stable), do modify
+modifycreate: true # Once instance reaches create-ready-stable, do modify-create
+
+# Developement entries remain with-in a single site
+entries:
+  "urn:ogf:network:ultralight.org:2013:sdn-dtn-1-7.ultralight.org:mlx4p1s1":
+    site: "T2_US_Caltech_Test"
+    disabled: False
+  "urn:ogf:network:nrp-nautilus.io:2020:k8s-gen5-01.sdsc.optiputer.net:ens1f0np0": 
+    site: "T2_US_SDSC"
+    disabled: False
+  "urn:ogf:network:sense-star-fabric-testbed.net:2025:frr_s0:e2"
+    site: "T3_FABRIC_STAR"
+    disabled: False
+  "urn:ogf:network:sense-cern1-fabric-testbed.net:2025:frr_s0:e2"
+    site: "T3_FABRIC_CERN1"
+    disabled: False
+  "urn:ogf:network:sense-losa-fabric-testbed.net:2025:frr_s0:e2"
+    site: "T3_FABRIC_LOSA"
+    disabled: False
+  "urn:ogf:network:sense-newy-fabric-testbed.net:2025:frr_s0:e2"
+    site: "T3_FABRIC_NEWY"
+    disabled: False
+  "urn:ogf:network:sense-ucsd-fabric-testbed.net:2025:frr_s0:e2"
+    site: "T3_FABRIC_UCSD"
+    disabled: False
+# Entries dynamic is used to test a specific domain, e.g. ESnet.
+# This will go dynamically to SENSE-O and get all ports associated with the domain
+# entriesdynamic: "urn:ogf:network:es.net:2013:"
+# entriessitename: "ESnet"
+# Submission template to use for requests
+# By default - it will use guaranteedCapped and bestEffort as fallback
+# In case of network testing - we might want to override it;
+# It supports only nettest flag - any other flag will be ignored and it will use default
+# submissiontemplate: "nettest"
+
+# Ignore ping test (default: False)
+# If set to True, it will not run ping test
+ignoreping: True
+
+# Max pairs - control how many pairs to run in a single run
+# Default: 100
+# Useful in case of big model and a lot of pairs. Will choose first 100 from randomized list
+maxpairs: 100
+
+# Location to fetch config file from. Very helpful if we need to control
+# or change list of nodes without restarting service.
+# This is fetch for every new run.
+# p.s. It points to this config file - you can have it on Github/your own server
+# and control a list of entries to test.
+# configlocation: 'https://raw.githubusercontent.com/sdn-sense/end-to-end-tester/refs/heads/main/packaging/endtoend-test.yaml'
+
+# All mappings used to map full path to a SiteName
+mappings:
+  urn:ogf:network:al2s.internet2.edu:2023: "Internet2"
+  urn:ogf:network:calit2.optiputer.net:2020:prism-core: "NSI_UCSD"
+  urn:ogf:network:es.net:2013: "ESnet"
+  urn:ogf:network:fnal.gov:2023: "T1_US_FNAL"
+  urn:ogf:network:icair.org:2013:mren8700: "NSI_STARLIGHT"
+  urn:ogf:network:nsi.geant.net:2021:topology-1-fra-de: "NSI_GEANT_FRA"
+  urn:ogf:network:lsanca.pacificwave.net:2016:losa4-pw-agg-01: "NSI_PACWAVE_LOSA4"
+  urn:ogf:network:lsanca.pacificwave.net:2016:pw-losa2-1: "NSI_PACWAVE_LOSA2"
+  urn:ogf:network:maxgigapop.net:2013: "T2_US_UMD"
+  urn:ogf:network:nrp-nautilus-prod.io:2020: "T2_US_UCSD"
+  urn:ogf:network:sense-oasis-nrp-nautilus.io:2020: "T2_US_SDSC_OASIS"
+  urn:ogf:network:nrp-nautilus.io:2020: "T2_US_SDSC"
+  urn:ogf:network:snvaca.pacificwave.net:2016:pw-snvl2-1: "NSI_PACWAVE_SNVL2"
+  urn:ogf:network:stack-fabric:2024:topology: "FABRIC"
+  urn:ogf:network:starlight.org:2022: "T3_US_Starlight"
+  urn:ogf:network:sttlwa.pacificwave.net:2016:pw-sttl1-1: "NSI_PACWAVE_STTL1"
+  urn:ogf:network:surf.nl:2020:production: "NSI_SURF"
+  urn:ogf:network:uhnet.net:2021:guam-gorex: "NSI_HAWAII_GUAM"
+  urn:ogf:network:uhnet.net:2021:hawaii-scidmz: "NSI_HAWAII"
+  urn:ogf:network:ultralight.org:2013: "T2_US_Caltech_Test"
+  urn:ogf:network:tier2-unl.edu:2024: "T2_US_Nebraska"
+  urn:ogf:network:ampath.net:2013:topology: "AMPATH"
+  urn:ogf:network:tier2.ultralight.org:2024: "T2_US_Caltech"
+  urn:ogf:network:canarie.ca:2017:topology: "NSI_CANARIE"
+  urn:ogf:network:aws.amazon.com:aws-cloud: "AWS-CLOUD"
+  urn:ogf:network:google.com:gcp-cloud: "GCP-CLOUD"
+  urn:ogf:network:unl.edu:2023: "T2_US_Nebraska_Test"
+  urn:ogf:network:nsi.geant.net:2021:topology-1-lon-uk: "NSI_GEANT_LON"
+  urn:ogf:network:sc-test.cenic.net:2020: "NRM_CENIC"
+  urn:ogf:network:sense-gpn-nrp-nautilus.io:2024: "NRM_GPN"
+  urn:ogf:network:mghpcc.org:2025: "T2_US_MGHPCC"
+  urn:ogf:network:gridka.de:2024: "T1_DE_KIT"
+  urn:ogf:network:sense-cern-fabric-testbed.net:2024: "T3_FABRIC_CERN"
+  urn:ogf:network:dev.surf.nl:2022:dev: "NSI_SURF_DEV"
+  urn:ogf:network:aws.amazon.com:aws-cloud:us-west-1: "AWS-CLOUD-US-WEST"
+  urn:ogf:network:sense-losa-fabric-testbed.net:2024: "T3_FABRIC_LOSA"
+  urn:ogf:network:sense-newy-fabric-testbed.net:2024: "T3_FABRIC_NEWY"
+  urn:ogf:network:sense-ucsd-fabric-testbed.net:2024: "T3_FABRIC_UCSD"
+  urn:ogf:network:nrp-nautilus-dev.io:2025: "T2_US_SDSC_DEV"
+  urn:ogf:network:sense-oasis-nrp-nautilus-dev.io:2025: "T2_US_SDSC_OASIS_DEV"
+  urn:ogf:network:sc-test-dev.cenic.net:2025: "NRM_CENIC_DEV"
+  urn:ogf:network:tier2-dev.ultralight.org:2025: "T2_US_Caltech_DEV"
+  urn:ogf:network:sense-star-fabric-testbed.net:2025: "T3_FABRIC_STAR"
+  urn:ogf:network:sense-cern1-fabric-testbed.net:2025: "T3_FABRIC_CERN1"
+  urn:ogf:network:sense-losa-fabric-testbed.net:2025: "T3_FABRIC_LOSA"
+  urn:ogf:network:sense-newy-fabric-testbed.net:2025: "T3_FABRIC_NEWY"
+  urn:ogf:network:sense-ucsd-fabric-testbed.net:2025: "T3_FABRIC_UCSD"
+  urn:ogf:network:sense-amst-fabric-testbed.net:2025: "T3_FABRIC_AMST"
