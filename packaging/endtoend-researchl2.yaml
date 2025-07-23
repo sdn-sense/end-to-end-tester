@@ -43,19 +43,19 @@ entries:
   "urn:ogf:network:nrp-nautilus.io:2020:k8s-gen5-01.sdsc.optiputer.net:ens1f0np0": 
     site: "T2_US_SDSC"
     disabled: False
-  "urn:ogf:network:sense-star-fabric-testbed.net:2025:frr_s0:e2"
+  "urn:ogf:network:sense-star-fabric-testbed.net:2025:frr_s0:e2":
     site: "T3_FABRIC_STAR"
     disabled: False
-  "urn:ogf:network:sense-cern1-fabric-testbed.net:2025:frr_s0:e2"
+  "urn:ogf:network:sense-cern1-fabric-testbed.net:2025:frr_s0:e2":
     site: "T3_FABRIC_CERN1"
     disabled: False
-  "urn:ogf:network:sense-losa-fabric-testbed.net:2025:frr_s0:e2"
+  "urn:ogf:network:sense-losa-fabric-testbed.net:2025:frr_s0:e2":
     site: "T3_FABRIC_LOSA"
     disabled: False
-  "urn:ogf:network:sense-newy-fabric-testbed.net:2025:frr_s0:e2"
+  "urn:ogf:network:sense-newy-fabric-testbed.net:2025:frr_s0:e2":
     site: "T3_FABRIC_NEWY"
     disabled: False
-  "urn:ogf:network:sense-ucsd-fabric-testbed.net:2025:frr_s0:e2"
+  "urn:ogf:network:sense-ucsd-fabric-testbed.net:2025:frr_s0:e2":
     site: "T3_FABRIC_UCSD"
     disabled: False
 # Entries dynamic is used to test a specific domain, e.g. ESnet.
