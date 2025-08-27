@@ -429,7 +429,7 @@ class SENSEWorker:
             )
             if runUntil - getUTCnow() <= 0:
                 return {
-                    "error": "Timeout while validating cancel for instance",
+                    "error": "Timeout while validating instance",
                     "timeout": True,
                     "finalstate": "NOTOK",
                     "state": status["state"],
@@ -661,7 +661,8 @@ class SENSEWorker:
         response["state"] = state
         self.logger.info(f"({self.workerheader}) provision complete")
         if bool(status.get("timeout", False)):
-            errmsg = f'Create timeout. Please check {response["service_uuid"]}'
+            minutes = self.timeouts.get("create", 1200) // 60
+            errmsg = f'Create timeout of {minutes} minutes. Please check {response["service_uuid"]}'
             return (
                 {"error": errmsg, "state": state, "response": response},
                 newreq,
@@ -731,7 +732,9 @@ class SENSEWorker:
         # Loop Status call for cancel and look for final state
         status = self._loopStatusCall(serviceuuid, self.currentaction)
         if bool(status.get("timeout", False)):
-            return status
+            minutes = self.timeouts.get("cancel", 1200) // 60
+            return {"finalstate": "NOTOK",
+                    "response": f"Timeout of {minutes} minutes was reached while cancelling instance and instance did not reach final state"}
         self.logger.info(f"({self.workerheader}) Final cancel status: {status}")
         if archive and delete:
             self.logger.debug("Archive and Delete set at same time. Should not happen!")
@@ -771,7 +774,8 @@ class SENSEWorker:
         # Loop Status call for cancel and look for final state
         status = self._loopStatusCall(serviceuuid, "reprovision")
         if bool(status.get("timeout", False)):
-            return status
+            minutes = self.timeouts.get("reprovision", 1200) // 60
+            return status, f"Timeout of {minutes} minutes was reached while reprovisioning instance and instance did not reach final state"
         if self._validateState(status, "reprovision"):
             status["finalstate"] = "OK"
             finalReturn = self._setFinalStats(status, None, serviceuuid)
@@ -866,7 +870,8 @@ class SENSEWorker:
         # Loop Status call for modify and look for final state
         status = self._loopStatusCall(serviceuuid, self.currentaction)
         if bool(status.get("timeout", False)):
-            return status
+            minutes = self.timeouts.get("modify", 1200) // 60
+            return status, f"Timeout of {minutes} minutes was reached while modifying instance and instance did not reach final state"
         if self._validateState(status, self.currentaction):
             status["finalstate"] = "OK"
             finalReturn = self._setFinalStats(status, None, serviceuuid)
