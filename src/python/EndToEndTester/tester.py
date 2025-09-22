@@ -697,7 +697,18 @@ class SENSEWorker:
         """Cancel a service instance in SENSE-0"""
         try:
             retDict = self.__cancel(serviceuuid, delete, archive)
-            return self._setFinalStats(retDict, None, serviceuuid), retDict.get("error")
+            finalout = self._setFinalStats(retDict, None, serviceuuid)
+            if retDict.get("finalstate", "NOTOKUNKNOWN") != "NOTOKUNKNOWN":
+                if archive and delete:
+                    self.logger.debug("Archive and Delete set at same time. Should not happen!")
+                elif self._validateState(retDict["response"], self.currentaction):
+                    if delete:
+                        self.workflowApi.instance_delete(si_uuid=serviceuuid)
+                    if archive:
+                        self.workflowApi.instance_archive(si_uuid=serviceuuid)
+                elif archive:
+                    self.workflowApi.instance_archive(si_uuid=serviceuuid)
+            return finalout, retDict.get("error")
         except Exception as ex:
             self.logger.debug(getFullTraceback(ex))
             return (
@@ -740,14 +751,11 @@ class SENSEWorker:
             self.logger.debug("Archive and Delete set at same time. Should not happen!")
         elif self._validateState(status, self.currentaction):
             if delete:
-                self.workflowApi.instance_delete(si_uuid=serviceuuid)
                 return {"finalstate": "OK", "response": status}
             if archive:
-                self.workflowApi.instance_archive(si_uuid=serviceuuid)
                 return {"finalstate": "OKARCHIVE", "response": status}
             return {"finalstate": "OK", "response": status}
         elif archive:
-            self.workflowApi.instance_archive(si_uuid=serviceuuid)
             return {"finalstate": "NOTOKARCHIVE", "response": status}
         self.logger.info(f"({self.workerheader}) cancel complete")
         return {"finalstate": "NOTOKDELETE", "response": status}

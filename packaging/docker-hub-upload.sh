@@ -12,7 +12,7 @@ count=`docker images | grep sense-endtoend | grep latest | awk '{print $3}' | wc
 if [ "$count" -ne "1" ]; then
   echo "Count of docker images != 1. Which docker image you want to tag?"
   echo "Here is full list of docker images locally:"
-  docker images | grep -i 'rtmon\|REPOSITORY'
+  docker images | grep -i 'sense-endtoend\|REPOSITORY'
   echo "Please enter IMAGE ID:"
   read dockerimageid
 else
