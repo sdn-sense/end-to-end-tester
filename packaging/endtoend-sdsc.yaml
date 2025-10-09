@@ -31,9 +31,9 @@ timeouts:
 # 2) cancel -> if reprovision:True: reprovision || None;
 # 3) reprovision -> if modify:True modify || None;
 # 4) Any remaining state -> cancel if not cancelled, archive if failure.
-reprovision: true # Once instance reaches create-ready-stable, do cancel, and reprovision
-modify: true # Once instance reaches create-ready-stable (or reinstace-ready-stable), do modify
-modifycreate: true # Once instance reaches create-ready-stable, do modify-create
+reprovision: false # Once instance reaches create-ready-stable, do cancel, and reprovision
+modify: false # Once instance reaches create-ready-stable (or reinstace-ready-stable), do modify
+modifycreate: false # Once instance reaches create-ready-stable, do modify-create
 
 # Developement entries remain with-in a single site
 
@@ -42,37 +42,15 @@ modifycreate: true # Once instance reaches create-ready-stable, do modify-create
 # NOTE: It must have entries (+ optional vlans, vlansto) defined OR (entriesdynamic + entriessitename)
 # Entries allow to preselect specific ports to test
 entries:
-  "urn:ogf:network:nrp-nautilus.io:2020:node-2-10.sdsc.optiputer.net:enp65s0f0np0": 
+  "urn:ogf:network:nrp-nautilus.io:2020:k8s-gen5-02.sdsc.optiputer.net":
     site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:node-2-11.sdsc.optiputer.net:enp65s0f1np1":
-    site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:node-2-7.sdsc.optiputer.net:enp65s0f1np1":
-    site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:k8s-gen5-02.sdsc.optiputer.net:enp168s0np0":
-    site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:k8s-gen5-02.sdsc.optiputer.net:ens1f0np0":
-    site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:node-2-8.sdsc.optiputer.net:enp65s0f1np1":
-    site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:node-2-9.sdsc.optiputer.net:enp65s0f1np1":
-    site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:k8s-gen5-01.sdsc.optiputer.net:ens1f0np0":
-    site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:k8s-gen5-01.sdsc.optiputer.net:enp168s0np0":
-    site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus.io:2020:node-2-6.sdsc.optiputer.net:enp65s0f1np1":
-    site: "T2_US_SDSC"
-  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-igrok-02.calit2.optiputer.net:enp33s0f1np1":
-    site: "T2_US_UCSD"
-  "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-igrok-01.calit2.optiputer.net:enp33s0f1np1":
-    site: "T2_US_UCSD"
 
 # Vlans to will be used to test all specific vlans between any of the entries
 # and entry below. 
-vlans: [1779-1799, 3110-3139]
+vlans: [1400-1499,1779-1799,3110-3139,3140-3189,3600-3610,3873-3874,3911-3912,3985-3989,4016-4024]
 # Vlansto entries must be defined in the entries above.
 vlansto:
-- "urn:ogf:network:nrp-nautilus-prod.io:2020:k8s-igrok-02.calit2.optiputer.net:enp33s0f1np1"
+- "urn:ogf:network:t2-us-ucsd.edu:2025:dtn-01.t2.ucsd.edu"
 
 # Entries dynamic is used to test a specific domain, e.g. ESnet.
 # This will go dynamically to SENSE-O and get all ports associated with the domain
@@ -95,7 +73,7 @@ archiveifFailure: False
 # Max pairs - control how many pairs to run in a single run
 # Default: 100
 # Useful in case of big model and a lot of pairs. Will choose first 100 from randomized list
-maxpairs: 100
+maxpairs: 1000
 
 # Location to fetch config file from. Very helpful if we need to control
 # or change list of nodes without restarting service.
