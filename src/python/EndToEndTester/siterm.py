@@ -64,7 +64,7 @@ class SiteRMApi:
                     self.logger.warning(f"Debug action {jsonOut} has no ID. Skipping.")
                     continue
                 ditem = self.siterm_debug.get_debug(
-                    sitename=kwargs.get("sitename"), id=jsonOut["id"]
+                    sitename=kwargs.get("sitename"), id=jsonOut["id"], details=True
                 )
                 if ditem and ditem[0]:
                     ditem = ditem[0]
@@ -187,8 +187,10 @@ class SiteRMApi:
             delitems = []
             for idx, endpoint in enumerate(monitorendpoints):
                 out = self.siterm_debug.get_debug(
-                    sitename=endpoint["sitename"], id=endpoint["id"]
+                    sitename=endpoint["sitename"], id=endpoint["id"], details=True
                 )
+                if out and out[0]:
+                    out = out[0]
                 self.logger.debug(
                     f"Checking ping test {endpoint['sitename']}:{endpoint['id']}. Output: {out}"
                 )
