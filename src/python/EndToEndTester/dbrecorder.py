@@ -292,11 +292,10 @@ class DBRecorder:
     def writepingresults(self):
         """Write Ping results"""
         for ping in self.pingresults:
-            searchparams = [
-                [key, value]
-                for key, value in ping.items()
-                if key not in ["insertdate", "updatedate"]
-            ]
+            searchparams = []
+            for key, value in ping.items():
+                if key not in ["insertdate", "updatedate"] and isinstance(value, str):
+                    searchparams.append([key, value])
             dbentry = self.db.get("pingresults", search=searchparams)
             if not dbentry:
                 self.db.insert("pingresults", [ping])
