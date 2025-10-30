@@ -777,8 +777,7 @@ class SENSEWorker:
                 f"({self.workerid}) cannot reprovision an instance in '{status}' status..."
             )
         self.workflowApi.instance_operate(
-            "reprovision", si_uuid=serviceuuid, sync="true"
-        )
+            "reprovision", si_uuid=serviceuuid, async_req=True, sync=False)
         # Loop Status call for cancel and look for final state
         status = self._loopStatusCall(serviceuuid, "reprovision")
         if bool(status.get("timeout", False)):
