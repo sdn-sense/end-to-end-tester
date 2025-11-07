@@ -8,4 +8,4 @@ docker run \
   -v "$(pwd)/endtoend-test-l3.yaml:/etc/endtoend.yaml:ro" \
   --restart always \
   --env-file endtoend-environment \
-  sense-endtoend
+  sdnsense/sense-endtoend:dev
