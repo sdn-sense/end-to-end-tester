@@ -87,6 +87,7 @@ mappings:
   urn:ogf:network:al2s.internet2.edu:2023: "Internet2"
   urn:ogf:network:calit2.optiputer.net:2020:prism-core: "NSI_UCSD"
   urn:ogf:network:es.net:2013: "ESnet"
+  urn:ogf:network:staging.es.net:2013: "ESnet-STAGING"
   urn:ogf:network:fnal.gov:2023: "T1_US_FNAL"
   urn:ogf:network:icair.org:2013:mren8700: "NSI_STARLIGHT"
   urn:ogf:network:nsi.geant.net:2021:topology-1-fra-de: "NSI_GEANT_FRA"

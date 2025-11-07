@@ -3,12 +3,12 @@ sense-auth: /etc/sense-o-auth.yaml
 # Sense Retries (Retries for http failures). Default 3
 # sense-retries: 3
 # Total Threads to run for all pairs
-totalThreads: 2
+totalThreads: 1
 # No threading - run everything in a single thread: (default False)
 # useful for debugging. Only works if totalThreads == 1
 # nothreading: False
 # Once run finishes, next run will start after this many seconds (taken out run startup)
-runInterval: 46400
+runInterval: 86400
 # In case run finished earlier - and still not next run, sleep for this many seconds
 sleepbetweenruns: 60 # Sleep if timer has not passed
 # Work directory to save all files;
@@ -39,33 +39,17 @@ modifycreate: true # Once instance reaches create-ready-stable, do modify-create
 entries: {}
 # Entries dynamic is used to test a specific domain, e.g. ESnet.
 # This will go dynamically to SENSE-O and get all ports associated with the domain
-entriesdynamic: "urn:ogf:network:al2s.internet2.edu:2023"
-entriessitename: "Internet2"
+entriesdynamic: "urn:ogf:network:staging.es.net:2013:"
+entriessitename: "ESnet"
 # Filter out entries that are most important for us. Support include or exclude. Default is include all
 filter:
   include:
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.phoe:port+HundredGigE0_0_0_24"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.kans:port+Bundle-Ether100"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.atla:port+HundredGigE0_0_0_24"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.loui:port+HundredGigE0_0_0_24"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.ashb:port+HundredGigE0_0_0_26"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.atla:port+Bundle-Ether80"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.star:port+HundredGigE0_0_0_20"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.newy32aoa:port+Bundle-Ether240"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.wash:port+HundredGigE0_0_0_28"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.star:port+HundredGigE0_0_0_27"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.houh:port+HundredGigE0_0_0_24"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.sunn:port+HundredGigE0_0_0_24"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.pitt:port+HundredGigE0_0_0_24"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.atla:port+HundredGigE0_0_0_26"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.rale:port+Bundle-Ether250"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+agg1.losa2:port+Bundle-Ether100"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.phil:port+Bundle-Ether1"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.salt:port+HundredGigE0_0_0_24"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.dall:port+HundredGigE0_0_0_24"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.clev:port+HundredGigE0_0_0_26"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core1.jack:port+HundredGigE0_0_0_26"
-  - "urn:ogf:network:al2s.internet2.edu:2023:node+core2.newy32aoa:port+HundredGigE0_0_0_24"
+  - "urn:ogf:network:staging.es.net:2013::losa-cr6:2_1_c4_1:+"
+  - "urn:ogf:network:staging.es.net:2013::fnalfcc-cr6:lag-2:+"
+  - "urn:ogf:network:staging.es.net:2013::star-cr6:2_1_c5_1:+"
+  - "urn:ogf:network:staging.es.net:2013::newy32aoa-cr6:1_1_c26_1:mghpcc"
+  - "urn:ogf:network:staging.es.net:2013::newy32aoa-cr6:1_1_c13_1:fabric"
+  - "urn:ogf:network:staging.es.net:2013::kans-cr6:lag-30:+"
 # Submission template to use for requests
 # By default - it will use guaranteedCapped and bestEffort as fallback
 # In case of network testing - we might want to override it;
@@ -82,14 +66,14 @@ archiveifFailure: False
 # Max pairs - control how many pairs to run in a single run
 # Default: 100
 # Useful in case of big model and a lot of pairs. Will choose first 100 from randomized list
-maxpairs: 15
+maxpairs: 50
 
 # Location to fetch config file from. Very helpful if we need to control
 # or change list of nodes without restarting service.
 # This is fetch for every new run.
 # p.s. It points to this config file - you can have it on Github/your own server
 # and control a list of entries to test.
-configlocation: 'https://raw.githubusercontent.com/sdn-sense/end-to-end-tester/refs/heads/main/packaging/endtoend-i2.yaml'
+configlocation: 'https://raw.githubusercontent.com/sdn-sense/end-to-end-tester/refs/heads/main/packaging/endtoend-esnetstaging.yaml'
 
 # All mappings used to map full path to a SiteName
 mappings:
