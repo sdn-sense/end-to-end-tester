@@ -848,30 +848,28 @@ class SENSEWorker:
         try:
             self.logger.info(f"{self.workerid} Modify instance {originReq}")
             response = self.workflowApi.instance_modify(json.dumps(originReq), si_uuid=serviceuuid, async_req=True, sync=False)
-            self.logger.info(
-                f"({self.workerheader}) modify service instance: {response}"
-            )
+            self.logger.info(f"({self.workerheader}) modify service instance: {response}")
         except ValueError as ex:
             errmsg = f"Error during modify: {ex}"
             self.logger.error(errmsg)
-            return (
-                self._setFinalStats(
-                    {"finalstate": "NOTOK", "error": errmsg, "errorlevel": "senseo"},
-                    originReq,
-                    serviceuuid,
-                ),
-                errmsg,
-            )
+            #return (
+            #    self._setFinalStats(
+            #        {"finalstate": "NOTOK", "error": errmsg, "errorlevel": "senseo"},
+            #        originReq,
+            #        serviceuuid,
+            #    ),
+            #    errmsg,
+            #)
         except Exception as ex:
             errmsg = f"Exception error during modify: {ex}"
             self.logger.error(errmsg)
             self.logger.debug(getFullTraceback(ex))
-            return (
-                self._setFinalStats(
-                    {"finalstate": "NOTOK", "error": errmsg}, originReq, serviceuuid
-                ),
-                errmsg,
-            )
+            #return (
+            #    self._setFinalStats(
+            #        {"finalstate": "NOTOK", "error": errmsg}, originReq, serviceuuid
+            #    ),
+            #    errmsg,
+            #)
         # Loop Status call for modify and look for final state
         status = self._loopStatusCall(serviceuuid, self.currentaction)
         if bool(status.get("timeout", False)):
