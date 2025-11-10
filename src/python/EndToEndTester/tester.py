@@ -847,9 +847,7 @@ class SENSEWorker:
             )
         try:
             self.logger.info(f"{self.workerid} Modify instance {originReq}")
-            response = self.workflowApi.instance_modify(
-                json.dumps(originReq), si_uuid=serviceuuid
-            )
+            response = self.workflowApi.instance_modify(json.dumps(originReq), si_uuid=serviceuuid, async_req=True, sync=False)
             self.logger.info(
                 f"({self.workerheader}) modify service instance: {response}"
             )
